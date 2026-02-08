@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ConductActivity"
+            android:name=".activities.GuideActivity"
             android:exported="false" />
     </application>
 

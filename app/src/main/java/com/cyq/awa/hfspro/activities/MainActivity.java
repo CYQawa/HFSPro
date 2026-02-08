@@ -8,8 +8,8 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.cyq.awa.hfspro.R;
-import com.cyq.awa.hfspro.fragments.HomeFragment;
-import com.cyq.awa.hfspro.fragments.MineFragment;
+import com.cyq.awa.hfspro.fragments.main.HomeFragment;
+import com.cyq.awa.hfspro.fragments.main.MineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     
-    startActivity(new Intent(MainActivity.this, ConductActivity.class));
+    startActivity(new Intent(MainActivity.this, GuideActivity.class));
+        finish();
     
     fragmentContainerView = findViewById(R.id.fragment_container);
     BottomNavigationView bottomNavigationView = findViewById(R.id.main_nav_view);
