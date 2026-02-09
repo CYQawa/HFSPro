@@ -185,10 +185,6 @@ public class GuideFrament3 extends Fragment {
 
   public void dialog(String title, String msg) {
     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-    builder
-        .setTitle(title)
-        .setMessage(msg)
-        .setPositiveButton("确定", null)
-        .show();
+    builder.setTitle(title).setMessage(msg).setPositiveButton("确定", null).show();
   }
 }
