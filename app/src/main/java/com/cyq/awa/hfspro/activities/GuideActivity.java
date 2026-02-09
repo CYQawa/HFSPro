@@ -8,18 +8,18 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.cyq.awa.hfspro.R;
-import com.cyq.awa.hfspro.fragments.guide.GuideFrament1;
-import com.cyq.awa.hfspro.fragments.guide.GuideFrament2;
-import com.cyq.awa.hfspro.fragments.guide.GuideFrament3;
+import com.cyq.awa.hfspro.fragments.guide.GuideFragment1;
+import com.cyq.awa.hfspro.fragments.guide.GuideFragment2;
+import com.cyq.awa.hfspro.fragments.guide.GuideFragment3;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 public class GuideActivity extends AppCompatActivity {
   private FragmentContainerView fragmentContainerView;
   private FragmentManager fragmentManager;
   private Fragment nowFragment;
-  private GuideFrament1 gf1;
-  private GuideFrament2 gf2;
-  private GuideFrament3 gf3;
+  private GuideFragment1 gf1;
+  private GuideFragment2 gf2;
+  private GuideFragment3 gf3;
   private int page;
 
   @Override
@@ -27,9 +27,9 @@ public class GuideActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_guide);
 
-    gf1 = new GuideFrament1();
-    gf2 = new GuideFrament2();
-    gf3 = new GuideFrament3();
+    gf1 = new GuideFragment1();
+    gf2 = new GuideFragment2();
+    gf3 = new GuideFragment3();
 
     fragmentContainerView = findViewById(R.id.fragment_guide);
 
