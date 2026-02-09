@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+        <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -18,6 +20,8 @@
             </intent-filter>
         </activity>
         <activity
+        android:networkSecurityConfig="@xml/network_security_config"
+    android:usesCleartextTraffic="true"
             android:name=".activities.GuideActivity"
             android:exported="false" />
     </application>

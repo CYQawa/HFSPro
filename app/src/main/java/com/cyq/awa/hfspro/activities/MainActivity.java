@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.fragments.main.HomeFragment;
 import com.cyq.awa.hfspro.fragments.main.MineFragment;
+import com.cyq.awa.hfspro.tools.Databases;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,10 +24,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    
-    startActivity(new Intent(MainActivity.this, GuideActivity.class));
-        finish();
-    
+    Databases db = Databases.getInstance(this);
+    if (!db.hasToken()) {
+      startActivity(new Intent(MainActivity.this, GuideActivity.class));
+      finish();
+    }
     fragmentContainerView = findViewById(R.id.fragment_container);
     BottomNavigationView bottomNavigationView = findViewById(R.id.main_nav_view);
 
