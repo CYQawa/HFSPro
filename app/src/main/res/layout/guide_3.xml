@@ -1,34 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:background="@color/bl">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior">
+    <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:gravity="center_horizontal"
+         android:orientation="vertical"
+         android:layout_gravity="center">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light" />
+        <com.google.android.material.card.MaterialCardView
+             android:layout_height="100dp"
+             android:layout_width="100dp"
+             android:clickable="true"
+             app:strokeColor="#E0E0E0"
+             app:cardElevation="0dp"
+             app:strokeWidth="2dp"
+             app:cardBackgroundColor="#DFE2EB"
+             android:layout_marginTop="50dp"
+             app:cardCornerRadius="75dp"
+             android:focusable="true"
+             android:foreground="?attr/selectableItemBackground">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <LinearLayout
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"
+                 android:gravity="center">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+                <ImageView
+                     android:layout_height="60dp"
+                     android:layout_width="60dp"
+                     android:scaleType="centerCrop"
+                     android:src="@drawable/ic_login"
+                     android:tint="@color/md_theme_primary" />
 
-        <!-- Your content below appbar right here -->
+            </LinearLayout>
 
+        </com.google.android.material.card.MaterialCardView>
 
-    </androidx.core.widget.NestedScrollView>
+        <com.google.android.material.textview.MaterialTextView
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:gravity="center"
+             android:textSize="24sp"
+             android:paddingBottom="20dp"
+             android:textColor="@color/md_theme_primary"
+             android:text="登陆"
+             android:textStyle="bold"
+             android:paddingTop="20dp" />
+
+        <LinearLayout
+             android:layout_height="match_parent"
+             android:layout_width="match_parent"
+             android:paddingRight="26dp"
+             android:orientation="vertical"
+             android:paddingBottom="10dp"
+             android:paddingLeft="26dp"
+             android:paddingTop="10dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                 android:layout_height="wrap_content"
+                 android:layout_width="wrap_content"
+                 android:gravity="center"
+                 android:textSize="18sp"
+                 android:textColor="@color/md_theme_primary"
+                 android:text="使用你的好分数账号，登陆HFSPro"
+                 android:textStyle="bold" />
+
+            <com.google.android.material.textview.MaterialTextView
+                 android:layout_height="wrap_content"
+                 android:layout_width="wrap_content"
+                 android:layout_marginBottom="10dp"
+                 android:gravity="center"
+                 android:textSize="14sp"
+                 android:textColor="@color/md_theme_outline"
+                 android:text="更好的好分数" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                 android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                     android:layout_height="wrap_content"
+                     android:layout_width="fill_parent"
+                     android:hint="邮箱/用户名/手机号"
+                     android:id="@+id/account" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                 android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                     android:layout_height="wrap_content"
+                     android:layout_width="fill_parent"
+                     android:hint="密码"
+                     android:id="@+id/password" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:hint="请选择登录方式"
+                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                 android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                     android:layout_height="wrap_content"
+                     android:layout_width="match_parent"
+                     android:focusableInTouchMode="false"
+                     android:inputType="none"
+                     android:focusable="false"
+                     android:id="@+id/loginType" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                 android:layout_height="wrap_content"
+                 android:layout_width="wrap_content"
+                 android:layout_marginTop="16dp"
+                 android:id="@+id/zhtext"
+                 android:text="@string/wjmm" />
+
+            <com.google.android.material.textview.MaterialTextView
+                 android:layout_height="wrap_content"
+                 android:layout_width="wrap_content"
+                 android:layout_marginTop="16dp"
+                 android:text="如果你的密码不是数字,字母,符号组成，可能登陆失败，需要前往好分数app手机端修改密码或找回密码" />
+
+            <com.google.android.material.button.MaterialButton
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:layout_marginTop="16dp"
+                 android:text="登陆" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
