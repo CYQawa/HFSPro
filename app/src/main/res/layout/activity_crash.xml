@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+             android:layout_height="200dp"
+             android:layout_width="match_parent"
+             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+             app:title="HFSPro崩溃了喵~">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                 android:layout_height="?attr/actionBarSize"
+                 android:layout_width="match_parent"
+                 app:layout_collapseMode="pin"
+                 app:titleCentered="true"
+                 app:titleTextColor="@color/md_theme_primary">
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:padding="16dp"
+             android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:background="#ffffff"
+                 android:padding="12dp"
+                 android:textSize="12sp"
+                 android:fontFamily="monospace"
+                 android:textColor="#333333"
+                 android:id="@+id/tv_crash_info" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         app:icon="@drawable/ic_copy"
+         android:layout_marginBottom="45dp"
+         android:layout_marginRight="20dp"
+         android:text="复制"
+         android:id="@+id/copy"
+         android:layout_gravity="bottom|right" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

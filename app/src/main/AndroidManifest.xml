@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-        <uses-permission android:name="android.permission.INTERNET" />
+ <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
-    android:name=".App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
@@ -21,9 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-        android:networkSecurityConfig="@xml/network_security_config"
-    android:usesCleartextTraffic="true"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:usesCleartextTraffic="true"
             android:name=".activities.GuideActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CrashActivity"
             android:exported="false" />
     </application>
 
