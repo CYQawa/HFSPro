@@ -1,4 +1,4 @@
-package com.cyq.awa.hfspro.tools;
+package com.cyq.awa.hfspro.tools.network;
 
 import com.google.gson.annotations.SerializedName;
 

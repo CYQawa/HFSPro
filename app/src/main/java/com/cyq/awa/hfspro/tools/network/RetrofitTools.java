@@ -1,8 +1,8 @@
-package com.cyq.awa.hfspro.tools;
+package com.cyq.awa.hfspro.tools.network;
 
 import android.content.Context;
-import com.cyq.awa.hfspro.tools.GsonModel.LoginResponse;
-import com.cyq.awa.hfspro.tools.GsonModel.LoginRequest;
+import com.cyq.awa.hfspro.tools.network.GsonModel.LoginResponse;
+import com.cyq.awa.hfspro.tools.network.GsonModel.LoginRequest;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -11,7 +11,7 @@ import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
-
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -113,8 +113,8 @@ public class RetrofitTools {
                     // 其他请求需要添加token
                     String token = null;
                     if (appContext != null) {
-                        Databases databases = Databases.getInstance(appContext);
-                        token = databases.getToken();
+                        DatabaseManager dbm = DatabaseManager.getInstance();
+                        token = dbm.getToken();
                     }
                     
                     okhttp3.Request.Builder requestBuilder = original.newBuilder()

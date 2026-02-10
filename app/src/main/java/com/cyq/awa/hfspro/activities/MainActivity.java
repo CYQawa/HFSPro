@@ -10,7 +10,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.fragments.main.HomeFragment;
 import com.cyq.awa.hfspro.fragments.main.MineFragment;
-import com.cyq.awa.hfspro.tools.Databases;
+
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,8 +25,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    Databases db = Databases.getInstance(this);
-    if (!db.hasToken()) {
+    
+    DatabaseManager dbm = DatabaseManager.getInstance();
+    
+    
+    if (!dbm.hasToken()) {
       startActivity(new Intent(MainActivity.this, GuideActivity.class));
       finish();
     }
