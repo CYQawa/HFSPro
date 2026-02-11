@@ -17,10 +17,80 @@
              android:padding="16dp"
              android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-            android:text="我的页"
+            <com.google.android.material.card.MaterialCardView
                  android:layout_height="wrap_content"
-                 android:layout_width="match_parent" />
+                 android:layout_width="match_parent"
+                 android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:gravity="center"
+                     android:padding="16dp"
+                     android:orientation="vertical">
+
+                    <com.google.android.material.card.MaterialCardView
+                         android:layout_height="65dp"
+                         android:layout_width="65dp">
+
+                        <ImageView
+                             android:layout_height="match_parent"
+                             android:layout_width="match_parent"
+                             android:src="@drawable/icon"
+                             app:strokeColor="#E0E0E0"
+                             app:cardElevation="0dp"
+                             app:strokeWidth="2dp"
+                             app:cardCornerRadius="75dp"
+                             android:focusable="true"
+                             android:foreground="?attr/selectableItemBackground" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:gravity="center"
+                         android:padding="5dp"
+                         android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                             android:layout_height="wrap_content"
+                             android:layout_width="wrap_content"
+                             android:textSize="15sp"
+                             android:textStyle="bold"
+                             android:text="HFSPro" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                             android:layout_height="wrap_content"
+                             android:layout_width="wrap_content"
+                             android:textSize="10sp"
+                             android:text="by CYQawa" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 app:icon="@drawable/ic_key_outline"
+                 android:layout_marginBottom="16dp"
+                 android:id="@+id/btn_checktoken"
+                 android:text="查看token" />
+
+            <com.google.android.material.button.MaterialButton
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 app:icon="@drawable/ic_logout"
+                 app:strokeColor="@color/md_theme_error"
+                 app:iconTint="@color/md_theme_error"
+                 app:strokeWidth="1dp"
+                 android:textColor="?attr/colorError"
+                 style="@style/Widget.Material3.Button.OutlinedButton"
+                 android:id="@+id/btn_logout"
+                 android:text="退出登录" />
 
         </LinearLayout>
 

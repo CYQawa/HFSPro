@@ -49,7 +49,7 @@
              android:textSize="24sp"
              android:paddingBottom="20dp"
              android:textColor="@color/md_theme_primary"
-             android:text="登陆"
+             android:text="登录"
              android:textStyle="bold"
              android:paddingTop="20dp" />
 
@@ -136,7 +136,7 @@
                  android:layout_height="wrap_content"
                  android:layout_width="wrap_content"
                  android:layout_marginTop="16dp"
-                 android:text="如果你的密码不是数字,字母,符号组成，可能提示密码过于简单，需要前往好分数app手机端修改密码或找回密码" />
+                 android:text="如果你没有设置密码请前往好分数app设置密码，或找回密码。密码需数字密码符号组成" />
 
             <com.google.android.material.button.MaterialButton
             android:id="@+id/loginButton"

@@ -3,7 +3,7 @@
     android:interpolator="@android:interpolator/linear_out_slow_in"
     android:duration="250">
     <translate
-        android:fromYDelta="0.20000005%p"
+        android:fromYDelta="5%p"
         android:toYDelta="0.0" />
     <alpha
         android:fromAlpha="0.0"
