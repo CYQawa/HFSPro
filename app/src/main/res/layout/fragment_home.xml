@@ -6,42 +6,21 @@
      android:layout_width="match_parent"
      android:id="@+id/coordinator">
 
-    <com.google.android.material.appbar.AppBarLayout
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-             android:layout_height="200dp"
-             android:layout_width="match_parent"
-             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-             app:title="HFSPro"
-             android:id="@+id/collapsing_toolbar">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                 android:layout_height="?attr/actionBarSize"
-                 android:layout_width="match_parent"
-                 app:layout_collapseMode="pin"
-                 app:titleCentered="true"
-                 app:titleTextColor="@color/md_theme_primary"
-                 android:id="@+id/t">
-
-            </com.google.android.material.appbar.MaterialToolbar>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.core.widget.NestedScrollView
          android:layout_height="match_parent"
          android:layout_width="match_parent"
-         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-         android:id="@+id/nested_scroll_view">
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
              android:layout_height="wrap_content"
              android:layout_width="match_parent"
              android:padding="16dp"
              android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+            android:text="主页"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent" />
 
         </LinearLayout>
 

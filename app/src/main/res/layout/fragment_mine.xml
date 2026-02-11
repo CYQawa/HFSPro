@@ -6,27 +6,24 @@
      android:layout_width="match_parent"
      android:id="@+id/coordinator">
 
-    <com.google.android.material.appbar.AppBarLayout
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent"
-         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior"
-         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-         android:id="@+id/appbar">
-
-        <com.google.android.material.appbar.MaterialToolbar
-             android:layout_height="?attr/actionBarSize"
-             android:layout_width="match_parent"
-             app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
-             android:id="@+id/toolbar">
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.core.widget.NestedScrollView
          android:layout_height="match_parent"
          android:layout_width="match_parent"
-         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-         android:id="@+id/nested_scroll_view" />
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:padding="16dp"
+             android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+            android:text="我的页"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
