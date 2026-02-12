@@ -14,9 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.MainActivity;
-    
-import com.cyq.awa.hfspro.tools.network.GsonModel.LoginRequest;
-import com.cyq.awa.hfspro.tools.network.GsonModel.LoginResponse;
+import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.ApiService;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.RetrofitClient;
@@ -111,14 +109,15 @@ public class GuideFragment3 extends Fragment {
 
     int roleType = isStudent() ? 1 : 2;
     LoginRequest loginRequest = new LoginRequest(account, encodeToBase64(password), roleType);
-    Call<LoginResponse> call = apiService.login(loginRequest);
+    Call<ApiResponse<LoginData>> call = apiService.login(loginRequest);
 
     call.enqueue(
-        new Callback<LoginResponse>() {
+        new Callback<ApiResponse<LoginData>>() {
           @Override
-          public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+          public void onResponse(
+              Call<ApiResponse<LoginData>> call, Response<ApiResponse<LoginData>> response) {
             if (response.isSuccessful() && response.body() != null) {
-              LoginResponse loginResponse = response.body();
+              ApiResponse<LoginData> loginResponse = response.body();
 
               if (loginResponse.isSuccess()) {
                 // 登陆成功
@@ -127,7 +126,7 @@ public class GuideFragment3 extends Fragment {
 
                 DatabaseManager dbm = DatabaseManager.getInstance();
                 dbm.saveToken(token);
-                
+
                 // 显示成功消息并跳转
                 showToast("登录成功");
                 navigateToMainActivity();
@@ -144,7 +143,7 @@ public class GuideFragment3 extends Fragment {
           }
 
           @Override
-          public void onFailure(Call<LoginResponse> call, Throwable t) {
+          public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
             showDialog("登陆失败", "网络请求失败！");
           }
         });

@@ -66,15 +66,7 @@ public class GsonModel {
     }
 
     
-    public static class LoginResponse extends ApiResponse<LoginData> {
-        public boolean isSuccess() {
-            return getCode() == 0;
-        }
-        
-        public String getMessage() {
-            return getMsg();
-        }
-    }
+     
 
     // 通用的API响应类
     public static class ApiResponse<T> {

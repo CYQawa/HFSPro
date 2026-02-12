@@ -1,8 +1,9 @@
 package com.cyq.awa.hfspro.tools.network;
 
 import android.content.Context;
-import com.cyq.awa.hfspro.tools.network.GsonModel.LoginResponse;
-import com.cyq.awa.hfspro.tools.network.GsonModel.LoginRequest;
+import com.cyq.awa.hfspro.tools.network.GsonModel.*;;
+ 
+
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -30,8 +31,9 @@ public class RetrofitTools {
     
     public interface ApiService {
         @POST("v2/users/sessions")
-        Call<LoginResponse> login(@Body LoginRequest request);
-    }
+        Call<ApiResponse<LoginData>> login(@Body LoginRequest request);
+    } 
+    
 
     public static class RetrofitClient {
         private static final String BASE_URL = "https://hfs-be.yunxiao.com/";
@@ -99,7 +101,6 @@ public class RetrofitTools {
                 
                 // 获取请求路径
                 String path = original.url().encodedPath();
-                
                 // 如果是登录请求，不添加token
                 if (path.equals("/v2/users/sessions")) {
                     // 登录请求只需要基础header

@@ -17,10 +17,34 @@
              android:padding="16dp"
              android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-            android:text="主页"
+            <com.google.android.material.card.MaterialCardView
+            android:id="@+id/exam"
                  android:layout_height="wrap_content"
-                 android:layout_width="match_parent" />
+                 android:layout_width="match_parent">
+
+                <LinearLayout
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:gravity="center"
+                     android:padding="16dp"
+                     android:orientation="vertical">
+
+                    <ImageView
+                         android:layout_height="30dp"
+                         android:layout_width="30dp"
+                         android:src="@drawable/ic_exam"
+                         android:tint="@color/md_theme_primary" />
+
+                    <TextView
+                    android:textStyle="bold"
+                         android:layout_height="wrap_content"
+                         android:layout_width="wrap_content"
+                         android:layout_marginTop="5dp"
+                         android:text="考试" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
