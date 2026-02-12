@@ -3,50 +3,65 @@
      xmlns:android="http://schemas.android.com/apk/res/android"
      xmlns:app="http://schemas.android.com/apk/res-auto"
      android:layout_height="wrap_content"
-     android:layout_width="fill_parent"
-     android:layout_margin="16dp">
+     android:layout_width="match_parent"
+     android:layout_marginVertical="8dp"
+     android:layout_marginHorizontal="16dp"
+     app:cardElevation="0dp"
+     app:strokeWidth="1dp"
+     app:cardCornerRadius="12dp">
 
-    <LinearLayout
-         android:layout_height="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+         android:layout_height="wrap_content"
          android:layout_width="match_parent"
-         android:padding="10dp"
-         android:orientation="vertical">
+         android:paddingVertical="16dp"
+         android:paddingHorizontal="20dp">
 
-        <LinearLayout
-             android:layout_height="match_parent"
-             android:layout_width="match_parent"
-             android:orientation="horizontal">
+        <ImageView
+             android:layout_height="40dp"
+             android:layout_width="40dp"
+             android:src="@drawable/ic_exam"
+             app:layout_constraintTop_toTopOf="parent"
+             android:importantForAccessibility="no"
+             app:layout_constraintStart_toStartOf="parent"
+             android:tint="@color/md_theme_primary"
+             app:layout_constraintBottom_toBottomOf="parent"
+             android:id="@+id/exam_icon" />
 
-            <ImageView
-                 android:layout_height="30dp"
-                 android:layout_width="30dp"
-                 android:src="@drawable/ic_exam"
-                 android:layout_marginRight="5dp"
-                 android:tint="@color/md_theme_primary" />
+        <com.google.android.material.textview.MaterialTextView
+             android:layout_height="wrap_content"
+             android:layout_width="0dp"
+             android:textAppearance="?attr/textAppearanceTitleMedium"
+             app:layout_constraintTop_toTopOf="parent"
+             android:ellipsize="end"
+             app:layout_constraintStart_toEndOf="@+id/exam_icon"
+             app:layout_constraintEnd_toStartOf="@+id/action_icon"
+             android:layout_marginStart="12dp"
+             android:maxLines="1"
+             android:id="@+id/exam_name" />
 
-            <LinearLayout
-                 android:layout_height="match_parent"
-                 android:layout_width="match_parent"
-                 android:orientation="vertical">
+        <com.google.android.material.textview.MaterialTextView
+             android:layout_height="wrap_content"
+             android:layout_width="0dp"
+             android:textAppearance="?attr/textAppearanceBodyMedium"
+             android:ellipsize="end"
+             app:layout_constraintStart_toEndOf="@+id/exam_icon"
+             app:layout_constraintEnd_toStartOf="@+id/action_icon"
+             android:layout_marginStart="12dp"
+             android:maxLines="1"
+             app:layout_constraintTop_toBottomOf="@+id/exam_name"
+             android:id="@+id/exam_time" />
 
-                <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/exam_name"
-                     android:layout_height="wrap_content"
-                     android:layout_width="wrap_content"
-                     android:textStyle="bold"
-                     android:text="考试name" />
+        <ImageView
+             android:layout_height="24dp"
+             android:layout_width="24dp"
+             android:src="@drawable/ic_arrow"
+             app:layout_constraintTop_toTopOf="parent"
+             android:importantForAccessibility="no"
+             android:tint="@color/md_theme_primary"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintBottom_toBottomOf="parent"
+             android:id="@+id/action_icon" />
 
-                <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/exam_id"
-                     android:layout_height="wrap_content"
-                     android:layout_width="wrap_content"
-                     android:textStyle="bold"
-                     android:text="考试id" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

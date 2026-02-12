@@ -85,19 +85,26 @@ public class HomeFragment extends Fragment {
 
                       dialog.show();
                       hideLoading();
-                      // 请求成功
 
                     } else {
-                      // 业务逻辑错误
+                      String errorMsg = examResponse.getMsg();
+                      hideLoading();
+                      showDialog(
+                          "请求失败",
+                          String.format("请求失败: %s\ncode: %d", errorMsg, examResponse.getCode()));
                     }
                   } else {
                     // HTTP错误（如404, 500等）
-
+                    showDialog("请求失败", "服务器错误: " + response.code());
+                    hideLoading();
                   }
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t) {}
+                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t) {
+                    hideLoading();
+                  showDialog("请求失败", "网络请求失败！");
+                }
               });
         });
   }
@@ -128,5 +135,14 @@ public class HomeFragment extends Fragment {
     if (loadingDialog != null && loadingDialog.isShowing()) {
       loadingDialog.dismiss();
     }
+  }
+
+  private void showDialog(String title, String message) {
+    requireActivity()
+        .runOnUiThread(
+            () -> {
+              MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+              builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
+            });
   }
 }
