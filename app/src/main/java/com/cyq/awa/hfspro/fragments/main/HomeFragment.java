@@ -29,8 +29,7 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
   private RetrofitTools.ApiService apiService;
 
-  public HomeFragment() {
-  }
+  public HomeFragment() {}
 
   @Override
   public View onCreateView(
@@ -49,11 +48,16 @@ public class HomeFragment extends Fragment {
         v -> {
           showLoading();
           BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
-
           View sheetView =
               LayoutInflater.from(requireContext())
                   .inflate(R.layout.exam_list_bottom_sheet_dialog, null);
           dialog.setContentView(sheetView);
+
+          View bottomSheet =
+              dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+          if (bottomSheet != null) {
+            bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
+          }
 
           Call<ApiResponse<ExamHomeData>> call = apiService.getExamHomePage();
           call.enqueue(
@@ -79,7 +83,7 @@ public class HomeFragment extends Fragment {
                         ExamItem e = listexamtiem.get(i);
                         dataList.add(new MyExam(e));
                       }
-                      ExamListAdapter adapter = new ExamListAdapter(requireContext(),dataList);
+                      ExamListAdapter adapter = new ExamListAdapter(requireContext(), dataList);
                       recyclerView.setAdapter(adapter);
 
                       dialog.show();
@@ -101,7 +105,7 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t) {
-                    hideLoading();
+                  hideLoading();
                   showDialog("请求失败", "网络请求失败！");
                 }
               });
