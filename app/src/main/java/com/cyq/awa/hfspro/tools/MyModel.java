@@ -2,18 +2,21 @@ package com.cyq.awa.hfspro.tools;
 
 import com.cyq.awa.hfspro.tools.network.GsonModel.ExamItem;
 import com.cyq.awa.hfspro.tools.network.GsonModel.PaperItem; // 新增导入
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyModel {
 
-  public static class MyExam {
+  public static class MyExam implements Serializable{
         private long examId;
         private String name;
         private long time;
         private int manfen;
         private String score;
         private List<MyPaperItem> papers;
+        
+        public MyExam(){}
 
         //ExamItem -> MyExam
         public MyExam(ExamItem examitem) {
@@ -41,12 +44,13 @@ public class MyModel {
         public List<MyPaperItem> getPapers() { return papers; }
     }
 
-    public static class MyPaperItem {
+    public static class MyPaperItem implements Serializable{
         private String id;
         private String subject;
         private int manfen;
         private String score;
         
+        public MyPaperItem(){}
         public MyPaperItem(PaperItem item) {
             this.id = item.getId();
             this.subject = item.getSubject();

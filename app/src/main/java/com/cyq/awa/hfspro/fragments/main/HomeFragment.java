@@ -30,7 +30,6 @@ public class HomeFragment extends Fragment {
   private RetrofitTools.ApiService apiService;
 
   public HomeFragment() {
-    // 必需的空构造函数
   }
 
   @Override
@@ -80,7 +79,7 @@ public class HomeFragment extends Fragment {
                         ExamItem e = listexamtiem.get(i);
                         dataList.add(new MyExam(e));
                       }
-                      ExamListAdapter adapter = new ExamListAdapter(dataList);
+                      ExamListAdapter adapter = new ExamListAdapter(requireContext(),dataList);
                       recyclerView.setAdapter(adapter);
 
                       dialog.show();
