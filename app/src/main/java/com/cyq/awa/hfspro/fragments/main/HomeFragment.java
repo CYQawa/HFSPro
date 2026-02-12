@@ -6,13 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import android.widget.ProgressBar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.adapter.ExamListAdapter;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.*;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
+import java.util.List;
+import java.util.ArrayList;
+import com.cyq.awa.hfspro.tools.MyModel.MyExam;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,41 +48,85 @@ public class HomeFragment extends Fragment {
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     exam.setOnClickListener(
         v -> {
+          showLoading();
           BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
 
           View sheetView =
               LayoutInflater.from(requireContext())
                   .inflate(R.layout.exam_list_bottom_sheet_dialog, null);
           dialog.setContentView(sheetView);
-          
-//          Call<ApiResponse<ExamHomeData>> call = apiService.getExamHomePage();
-//          call.enqueue(
-//              new Callback<ApiResponse<ExamHomeData>>() {
-//                @Override
-//                public void onResponse(
-//                    Call<ApiResponse<ExamHomeData>> call,
-//                    Response<ApiResponse<ExamHomeData>> response) {
-//                  if (response.isSuccessful() && response.body() != null) {
-//                    ApiResponse<ExamHomeData> loginResponse = response.body();
-//
-//                    if (loginResponse.isSuccess()) {
-//                      // 请求成功
-//
-//                    } else {
-//                      // 业务逻辑错误
-//                    }
-//                  } else {
-//                    // HTTP错误（如404, 500等）
-//
-//                  }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t) {}
-//              });
-//              
-              
-          dialog.show();
+
+          Call<ApiResponse<ExamHomeData>> call = apiService.getExamHomePage();
+          call.enqueue(
+              new Callback<ApiResponse<ExamHomeData>>() {
+                @Override
+                public void onResponse(
+                    Call<ApiResponse<ExamHomeData>> call,
+                    Response<ApiResponse<ExamHomeData>> response) {
+                  if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<ExamHomeData> examResponse = response.body();
+
+                    if (examResponse.isSuccess()) {
+                      List<ExamItem> listexamtiem = examResponse.getData().getList();
+                      RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
+                      recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+                      // 模拟数据
+                      List<MyExam> dataList = new ArrayList<>();
+
+                      // 添加元素...
+
+                      for (int i = 0; i < listexamtiem.size(); i++) {
+                        ExamItem e = listexamtiem.get(i);
+                        dataList.add(new MyExam(e));
+                      }
+                      ExamListAdapter adapter = new ExamListAdapter(dataList);
+                      recyclerView.setAdapter(adapter);
+
+                      dialog.show();
+                      hideLoading();
+                      // 请求成功
+
+                    } else {
+                      // 业务逻辑错误
+                    }
+                  } else {
+                    // HTTP错误（如404, 500等）
+
+                  }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t) {}
+              });
         });
+  }
+
+  private AlertDialog createLoadingDialog() {
+    // 创建ProgressBar
+
+    // 创建对话框
+    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+    builder.setTitle("请稍候");
+    builder.setMessage("正在加载中...");
+    builder.setCancelable(false); // 禁止点击外部取消
+
+    return builder.create();
+  }
+
+  // 使用示例
+  private AlertDialog loadingDialog;
+
+  public void showLoading() {
+    if (loadingDialog == null) {
+      loadingDialog = createLoadingDialog();
+    }
+    loadingDialog.show();
+  }
+
+  public void hideLoading() {
+    if (loadingDialog != null && loadingDialog.isShowing()) {
+      loadingDialog.dismiss();
+    }
   }
 }

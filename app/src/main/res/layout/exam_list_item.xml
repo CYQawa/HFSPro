@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="wrap_content"
+     android:layout_width="fill_parent"
+     android:layout_margin="16dp">
+
+    <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:padding="10dp"
+         android:orientation="vertical">
+
+        <LinearLayout
+             android:layout_height="match_parent"
+             android:layout_width="match_parent"
+             android:orientation="horizontal">
+
+            <ImageView
+                 android:layout_height="30dp"
+                 android:layout_width="30dp"
+                 android:src="@drawable/ic_exam"
+                 android:layout_marginRight="5dp"
+                 android:tint="@color/md_theme_primary" />
+
+            <LinearLayout
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"
+                 android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/exam_name"
+                     android:layout_height="wrap_content"
+                     android:layout_width="wrap_content"
+                     android:textStyle="bold"
+                     android:text="考试name" />
+
+                <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/exam_id"
+                     android:layout_height="wrap_content"
+                     android:layout_width="wrap_content"
+                     android:textStyle="bold"
+                     android:text="考试id" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
