@@ -1,99 +1,160 @@
 package com.cyq.awa.hfspro.tools.network;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class GsonModel {
-    // LoginRequest.java - 请求体模型
-    public static class LoginRequest {
-        @SerializedName("loginName")
-        private String loginName;
+  // Login请求体模型
+  public static class LoginRequest {
+    @SerializedName("loginName")
+    private String loginName;
 
-        @SerializedName("password")
-        private String password;
+    @SerializedName("password")
+    private String password;
 
-        @SerializedName("roleType")
-        private int roleType;
+    @SerializedName("roleType")
+    private int roleType;
 
-        @SerializedName("loginType")
-        private int loginType = 1; // 固定值
+    @SerializedName("loginType")
+    private int loginType = 1; // 固定值
 
-        @SerializedName("rememberMe")
-        private int rememberMe = 1; // 固定值
+    @SerializedName("rememberMe")
+    private int rememberMe = 1; // 固定值
 
-        public LoginRequest(String loginName, String password, int s) {
-            this.loginName = loginName;
-            this.password = password;
-            this.roleType = s;
-        }
+    public LoginRequest(String loginName, String password, int s) {
+      this.loginName = loginName;
+      this.password = password;
+      this.roleType = s;
+    }
+  }
+
+  // Login登录响应
+  public static class LoginData {
+    @SerializedName("token")
+    private String token;
+
+    public String getToken() {
+      return this.token;
     }
 
-    // LoginData.java - 登录数据模型
-    public static class LoginData {
-        @SerializedName("token")
-        private String token;
+    public void setToken(String token) {
+      this.token = token;
+    }
+  }
 
-        @SerializedName("userId")
-        private String userId;
 
-        @SerializedName("expiresIn")
-        private long expiresIn;
+  public static class ExamHomeData {
+    @SerializedName("list")
+    private List<ExamItem> list;
 
-        // 其他可能的字段...
+    public List<ExamItem> getList() {
+      return list;
+    }
+  }
 
-        public String getToken() {
-            return this.token;
-        }
+  // 单个考试项
+  public static class ExamItem {
+    @SerializedName("examId")
+    private long examId;
 
-        public void setToken(String token) {
-            this.token = token;
-        }
+    @SerializedName("name")
+    private String name;
 
-        public String getUserId() {
-            return this.userId;
-        }
+    @SerializedName("time")
+    private long time;
 
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
+    @SerializedName("manfen")
+    private int manfen;
 
-        public long getExpiresIn() {
-            return this.expiresIn;
-        }
+    @SerializedName("score")
+    private String score;
 
-        public void setExpiresIn(long expiresIn) {
-            this.expiresIn = expiresIn;
-        }
+    @SerializedName("papers")
+    private List<PaperItem> papers;
+
+    // 只取需要的字段，加 getter
+    public long getExamId() {
+      return examId;
     }
 
-    
-     
-
-    // 通用的API响应类
-    public static class ApiResponse<T> {
-        @SerializedName("code")
-        private int code;
-
-        @SerializedName("msg")
-        private String msg;
-
-        @SerializedName("data")
-        private T data;
-
-        public int getCode() {
-            return this.code;
-        }
-
-        public String getMsg() {
-            return this.msg;
-        }
-
-        public T getData() {
-            return this.data;
-        }
-        
-        // 通用方法
-        public boolean isSuccess() {
-            return code == 0;
-        }
+    public String getName() {
+      return name;
     }
+
+    public long getTime() {
+      return time;
+    }
+
+    public int getManfen() {
+      return manfen;
+    }
+
+    public String getScore() {
+      return score;
+    }
+
+    public List<PaperItem> getPapers() {
+      return papers;
+    }
+  }
+
+  // 试卷科目项
+  public static class PaperItem {
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("subject")
+    private String subject;
+
+    @SerializedName("manfen")
+    private int manfen;
+
+    @SerializedName("score")
+    private String score;
+
+    public String getId() {
+      return id;
+    }
+
+    public String getSubject() {
+      return subject;
+    }
+
+    public int getManfen() {
+      return manfen;
+    }
+
+    public String getScore() {
+      return score;
+    }
+  }
+
+  // 通用的API响应类
+  public static class ApiResponse<T> {
+    @SerializedName("code")
+    private int code;
+
+    @SerializedName("msg")
+    private String msg;
+
+    @SerializedName("data")
+    private T data;
+
+    public int getCode() {
+      return this.code;
+    }
+
+    public String getMsg() {
+      return this.msg;
+    }
+
+    public T getData() {
+      return this.data;
+    }
+
+    // 通用方法
+    public boolean isSuccess() {
+      return code == 0;
+    }
+  }
 }

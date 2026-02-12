@@ -122,8 +122,7 @@ public class GuideFragment3 extends Fragment {
               if (loginResponse.isSuccess()) {
                 // 登陆成功
                 String token = loginResponse.getData().getToken();
-                String userId = loginResponse.getData().getUserId();
-
+                
                 DatabaseManager dbm = DatabaseManager.getInstance();
                 dbm.saveToken(token);
 

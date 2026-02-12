@@ -16,11 +16,9 @@ public class Daos {
       this.dbHelper = helper;
     }
 
-    /** 保存 token（先清空旧数据，再插入新数据） */
     public void saveToken(String token) {
       SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-      // 清空表（因为只需要一个token）
       db.delete(TABLE_USER, null, null);
 
       // 插入新token
@@ -31,7 +29,6 @@ public class Daos {
       db.close();
     }
 
-    /** 获取 token */
     public String getToken() {
       SQLiteDatabase db = dbHelper.getReadableDatabase();
       String token = null;
@@ -48,7 +45,6 @@ public class Daos {
       return token;
     }
 
-    /** 检查是否有 token */
     public boolean hasToken() {
       return getToken() != null;
     }

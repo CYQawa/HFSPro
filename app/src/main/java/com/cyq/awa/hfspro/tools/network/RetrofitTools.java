@@ -1,7 +1,7 @@
 package com.cyq.awa.hfspro.tools.network;
 
 import android.content.Context;
-import com.cyq.awa.hfspro.tools.network.GsonModel.*;;
+import com.cyq.awa.hfspro.tools.network.GsonModel.*;
  
 
 
@@ -18,6 +18,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public class RetrofitTools {
@@ -32,6 +33,9 @@ public class RetrofitTools {
     public interface ApiService {
         @POST("v2/users/sessions")
         Call<ApiResponse<LoginData>> login(@Body LoginRequest request);
+        
+        @GET("v4/exam/home-page")
+        Call<ApiResponse<ExamHomeData>> getExamHomePage();
     } 
     
 
