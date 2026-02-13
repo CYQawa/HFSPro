@@ -35,6 +35,9 @@ public class RetrofitTools {
         
         @GET("v4/exam/home-page")
         Call<ApiResponse<ExamHomeData>> getExamHomePage();
+        
+        @GET("v3/exam/list?start=0&limit=10")
+        Call<ApiResponse<ExamListData>> getExamList();
     } 
     
 

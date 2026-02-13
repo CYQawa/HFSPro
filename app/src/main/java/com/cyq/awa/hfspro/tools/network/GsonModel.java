@@ -4,7 +4,39 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class GsonModel {
-  // Login请求体模型
+  public class ExamListData {
+
+    @SerializedName("list")
+    private List<ExamListItem> list;
+
+    public List<ExamListItem> getList() {
+      return list;
+    }
+  }
+
+  public static class ExamListItem {
+    @SerializedName("examId")
+    private long examId;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("time")
+    private long time;
+
+    public long getExamId() {
+      return examId;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public long getTime() {
+      return time;
+    }
+  }
+
   public static class LoginRequest {
     @SerializedName("loginName")
     private String loginName;
@@ -42,7 +74,6 @@ public class GsonModel {
     }
   }
 
-
   public static class ExamHomeData {
     @SerializedName("list")
     private List<ExamItem> list;
@@ -72,7 +103,6 @@ public class GsonModel {
     @SerializedName("papers")
     private List<PaperItem> papers;
 
-    // 只取需要的字段，加 getter
     public long getExamId() {
       return examId;
     }

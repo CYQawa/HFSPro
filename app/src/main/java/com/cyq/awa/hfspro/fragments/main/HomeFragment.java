@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import java.util.List;
 import java.util.ArrayList;
-import com.cyq.awa.hfspro.tools.MyModel.MyExam;
+import com.cyq.awa.hfspro.tools.MyModel.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,43 +58,43 @@ public class HomeFragment extends Fragment {
           if (bottomSheet != null) {
             bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
           }
+          Call<ApiResponse<ExamListData>> call = apiService.getExamList();
 
-          Call<ApiResponse<ExamHomeData>> call = apiService.getExamHomePage();
           call.enqueue(
-              new Callback<ApiResponse<ExamHomeData>>() {
+              new Callback<ApiResponse<ExamListData>>() {
                 @Override
                 public void onResponse(
-                    Call<ApiResponse<ExamHomeData>> call,
-                    Response<ApiResponse<ExamHomeData>> response) {
+                    Call<ApiResponse<ExamListData>> call,
+                    Response<ApiResponse<ExamListData>> response) {
+                  ApiResponse<ExamListData> examlistResponse = response.body();
                   if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<ExamHomeData> examResponse = response.body();
-
-                    if (examResponse.isSuccess()) {
-                      List<ExamItem> listexamtiem = examResponse.getData().getList();
+                    ExamListData data = response.body().getData();
+                    if (examlistResponse.isSuccess()) {
+                      List<ExamListItem> listexamtiem = examlistResponse.getData().getList();
                       RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
                       recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
                       // 模拟数据
-                      List<MyExam> dataList = new ArrayList<>();
+                      List<MyExamList> dataList = new ArrayList<>();
 
                       // 添加元素...
 
                       for (int i = 0; i < listexamtiem.size(); i++) {
-                        ExamItem e = listexamtiem.get(i);
-                        dataList.add(new MyExam(e));
+                        ExamListItem e = listexamtiem.get(i);
+                        dataList.add(new MyExamList(e));
                       }
                       ExamListAdapter adapter = new ExamListAdapter(requireContext(), dataList);
                       recyclerView.setAdapter(adapter);
 
                       dialog.show();
                       hideLoading();
-
                     } else {
-                      String errorMsg = examResponse.getMsg();
+                      String errorMsg = examlistResponse.getMsg();
                       hideLoading();
                       showDialog(
                           "请求失败",
-                          String.format("请求失败: %s\ncode: %d", errorMsg, examResponse.getCode()));
+                          String.format(
+                              "请求失败: %s\ncode: %d", errorMsg, examlistResponse.getCode()));
                     }
                   } else {
                     // HTTP错误（如404, 500等）
@@ -104,11 +104,66 @@ public class HomeFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t) {
-                  hideLoading();
-                  showDialog("请求失败", "网络请求失败！");
+                public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
+                  // 错误处理
                 }
               });
+
+          //          Call<ApiResponse<ExamHomeData>> call = apiService.getExamHomePage();
+          //          call.enqueue(
+          //              new Callback<ApiResponse<ExamHomeData>>() {
+          //                @Override
+          //                public void onResponse(
+          //                    Call<ApiResponse<ExamHomeData>> call,
+          //                    Response<ApiResponse<ExamHomeData>> response) {
+          //                  if (response.isSuccessful() && response.body() != null) {
+          //                    ApiResponse<ExamHomeData> examResponse = response.body();
+          //
+          //                    if (examResponse.isSuccess()) {
+          //                      List<ExamItem> listexamtiem = examResponse.getData().getList();
+          //                      RecyclerView recyclerView =
+          // sheetView.findViewById(R.id.recyclerView);
+          //                      recyclerView.setLayoutManager(new
+          // LinearLayoutManager(requireContext()));
+          //
+          //                      // 模拟数据
+          //                      List<MyExam> dataList = new ArrayList<>();
+          //
+          //                      // 添加元素...
+          //
+          //                      for (int i = 0; i < listexamtiem.size(); i++) {
+          //                        ExamItem e = listexamtiem.get(i);
+          //                        dataList.add(new MyExam(e));
+          //                      }
+          //                      ExamListAdapter adapter = new ExamListAdapter(requireContext(),
+          // dataList);
+          //                      recyclerView.setAdapter(adapter);
+          //
+          //                      dialog.show();
+          //                      hideLoading();
+          //
+          //                    } else {
+          //                      String errorMsg = examResponse.getMsg();
+          //                      hideLoading();
+          //                      showDialog(
+          //                          "请求失败",
+          //                          String.format("请求失败: %s\ncode: %d", errorMsg,
+          // examResponse.getCode()));
+          //                    }
+          //                  } else {
+          //                    // HTTP错误（如404, 500等）
+          //                    showDialog("请求失败", "服务器错误: " + response.code());
+          //                    hideLoading();
+          //                  }
+          //                }
+          //
+          //                @Override
+          //                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t)
+          // {
+          //                  hideLoading();
+          //                  showDialog("请求失败", "网络请求失败！");
+          //                }
+          //              });
         });
   }
 

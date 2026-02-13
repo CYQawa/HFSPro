@@ -17,13 +17,13 @@ import android.widget.TextView;
 import android.view.View;
 import com.cyq.awa.hfspro.R;
 import android.view.LayoutInflater;
-import com.cyq.awa.hfspro.tools.MyModel.MyExam;
+import com.cyq.awa.hfspro.tools.MyModel.MyExamList;
 
 public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHolder> {
-  private List<MyExam> list;
+  private List<MyExamList> list;
   private Context context;
 
-  public ExamListAdapter(Context context, List<MyExam> list) {
+  public ExamListAdapter(Context context, List<MyExamList> list) {
     this.context = context;
     this.list = list;
   }
