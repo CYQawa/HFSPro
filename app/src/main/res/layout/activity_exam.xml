@@ -46,7 +46,8 @@
 
             <com.google.android.material.card.MaterialCardView
                  android:layout_height="wrap_content"
-                 android:layout_width="fill_parent">
+                 android:layout_width="fill_parent"
+                 android:id="@+id/top_card">
 
                 <LinearLayout
                      android:layout_height="match_parent"
@@ -73,15 +74,36 @@
                          android:layout_gravity="center_vertical" />
 
                     <com.google.android.material.textview.MaterialTextView
-                    android:fontFamily="sans-serif-thin"
-                    android:id="@+id/manfen"
                          android:layout_height="match_parent"
                          android:layout_width="wrap_content"
                          android:layout_marginBottom="0dp"
                          android:gravity="center"
+                         android:fontFamily="sans-serif-thin"
                          android:textSize="32sp"
+                         android:id="@+id/manfen"
                          android:text="/91"
                          android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 android:layout_marginTop="10dp"
+                 android:id="@+id/bottom_card">
+
+                <LinearLayout
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:padding="10dp"
+                     android:orientation="horizontal">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                         android:layout_height="match_parent"
+                         android:layout_width="match_parent"
+                         android:id="@+id/paperRecyclerView" />
 
                 </LinearLayout>
 

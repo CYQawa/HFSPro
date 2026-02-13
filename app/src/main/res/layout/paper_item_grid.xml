@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="wrap_content"
+     android:layout_width="match_parent"
+     android:padding="8dp"
+     android:orientation="vertical">
+
+    <com.google.android.material.textview.MaterialTextView
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:scaleType="centerCrop"
+         android:textSize="12sp"
+         android:textStyle="bold"
+         android:text="数学"
+         android:id="@+id/name" />
+
+    <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:orientation="horizontal"
+         android:layout_marginTop="4dp">
+
+        <com.google.android.material.textview.MaterialTextView
+             android:layout_height="match_parent"
+             android:layout_width="wrap_content"
+             android:textSize="12sp"
+             android:textColor="@color/md_theme_primary"
+             android:layout_marginTop="4dp"
+             android:text="9178"
+             android:textStyle="bold"
+             android:id="@+id/score" />
+
+        <com.google.android.material.textview.MaterialTextView
+             android:layout_height="match_parent"
+             android:layout_width="wrap_content"
+             android:fontFamily="sans-serif-thin"
+             android:textSize="12sp"
+             android:layout_marginTop="4dp"
+             android:id="@+id/manfen"
+             android:text="/91" />
+
+    </LinearLayout>
+
+</LinearLayout>
