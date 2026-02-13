@@ -8,29 +8,30 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
-import com.cyq.awa.hfspro.tools.MyModel.MyPaperItem;
+import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.google.android.material.textview.MaterialTextView;
 import java.util.List;
 
 public class PaperGridAdapter extends RecyclerView.Adapter<PaperGridAdapter.ViewHolder> {
-  private List<MyPaperItem> list;
+  private List<MyPaperOverview> list;
 
-  public PaperGridAdapter(List<MyPaperItem> MyPaperItem) {
-      list = MyPaperItem;
+  public PaperGridAdapter(List<MyPaperOverview> MyPaperItem) {
+    list = MyPaperItem;
   }
 
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.paper_item_grid, parent, false);
+    View view =
+        LayoutInflater.from(parent.getContext()).inflate(R.layout.paper_item_grid, parent, false);
     return new ViewHolder(view);
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-      holder.name.setText(list.get(position).getSubject());
-     holder.score.setText(list.get(position).getScore());
-     holder.manfen.setText("/"+list.get(position).getManfen());
+    holder.name.setText(list.get(position).getSubject());
+    holder.score.setText("" + list.get(position).getScore());
+    holder.manfen.setText("/" + list.get(position).getManfen());
   }
 
   @Override
@@ -41,7 +42,7 @@ public class PaperGridAdapter extends RecyclerView.Adapter<PaperGridAdapter.View
   public static class ViewHolder extends RecyclerView.ViewHolder {
     MaterialTextView name;
     MaterialTextView score;
-        MaterialTextView manfen;
+    MaterialTextView manfen;
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);

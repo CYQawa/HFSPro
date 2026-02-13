@@ -4,6 +4,66 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class GsonModel {
+  public static class ExamOverviewData {
+    @SerializedName("score")
+    private double score;
+
+    @SerializedName("manfen")
+    private int manfen;
+
+    @SerializedName("papers")
+    private List<PaperOverview> papers; 
+
+    public double getScore() {
+      return score;
+    }
+
+    public int getManfen() {
+      return manfen;
+    }
+
+    public List<PaperOverview> getPapers() {
+      return papers;
+    }
+  }
+  
+  public static class PaperOverview {
+    @SerializedName("paperId")
+    private String paperId;
+
+    @SerializedName("subject")
+    private String subject;
+
+    @SerializedName("score")
+    private double score; 
+
+    @SerializedName("manfen")
+    private int manfen; 
+
+    @SerializedName("weakAdvantageStatus")
+    private int weakAdvantageStatus; 
+
+    public String getPaperId() {
+      return paperId;
+    }
+
+    public String getSubject() {
+      return subject;
+    }
+
+    public double getScore() {
+      return score;
+    }
+
+    public int getManfen() {
+      return manfen;
+    }
+
+    public int getWeakAdvantageStatus() {
+      return weakAdvantageStatus;
+    }
+  }
+
   public class ExamListData {
 
     @SerializedName("list")
@@ -48,10 +108,10 @@ public class GsonModel {
     private int roleType;
 
     @SerializedName("loginType")
-    private int loginType = 1; // 固定值
+    private int loginType = 1; 
 
     @SerializedName("rememberMe")
-    private int rememberMe = 1; // 固定值
+    private int rememberMe = 1; 
 
     public LoginRequest(String loginName, String password, int s) {
       this.loginName = loginName;
@@ -74,92 +134,6 @@ public class GsonModel {
     }
   }
 
-  public static class ExamHomeData {
-    @SerializedName("list")
-    private List<ExamItem> list;
-
-    public List<ExamItem> getList() {
-      return list;
-    }
-  }
-
-  // 单个考试项
-  public static class ExamItem {
-    @SerializedName("examId")
-    private long examId;
-
-    @SerializedName("name")
-    private String name;
-
-    @SerializedName("time")
-    private long time;
-
-    @SerializedName("manfen")
-    private int manfen;
-
-    @SerializedName("score")
-    private String score;
-
-    @SerializedName("papers")
-    private List<PaperItem> papers;
-
-    public long getExamId() {
-      return examId;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public long getTime() {
-      return time;
-    }
-
-    public int getManfen() {
-      return manfen;
-    }
-
-    public String getScore() {
-      return score;
-    }
-
-    public List<PaperItem> getPapers() {
-      return papers;
-    }
-  }
-
-  // 试卷科目项
-  public static class PaperItem {
-    @SerializedName("id")
-    private String id;
-
-    @SerializedName("subject")
-    private String subject;
-
-    @SerializedName("manfen")
-    private int manfen;
-
-    @SerializedName("score")
-    private String score;
-
-    public String getId() {
-      return id;
-    }
-
-    public String getSubject() {
-      return subject;
-    }
-
-    public int getManfen() {
-      return manfen;
-    }
-
-    public String getScore() {
-      return score;
-    }
-  }
-
-  // 通用的API响应类
   public static class ApiResponse<T> {
     @SerializedName("code")
     private int code;

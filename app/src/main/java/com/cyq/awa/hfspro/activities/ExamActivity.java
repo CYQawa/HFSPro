@@ -1,25 +1,34 @@
 package com.cyq.awa.hfspro.activities;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.TypedValue;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
+import com.cyq.awa.hfspro.tools.MyModel.MyExamList;
+import com.cyq.awa.hfspro.tools.network.GsonModel.*;
+import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.cyq.awa.hfspro.tools.MyModel.MyExamList;
 import com.google.android.material.card.MaterialCardView;
-import android.content.Context;
-import com.google.android.material.shape.ShapeAppearanceModel;
-import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.textview.MaterialTextView;
+import java.util.ArrayList;
+import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ExamActivity extends AppCompatActivity {
+  private RetrofitTools.ApiService apiService;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -35,38 +44,85 @@ public class ExamActivity extends AppCompatActivity {
     MaterialCardView bottom_card = findViewById(R.id.bottom_card);
     RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
 
-//    scoretext.setText(exam.getScore());
-//    manfent.setText("/" + exam.getManfen());
-//    setCustomCardCorners(top_card, 16, 16, 0, 0);
-//    setCustomCardCorners(bottom_card, 0, 0, 16, 16);
-//
-//    toolbar.setNavigationOnClickListener(
-//        v -> {
-//          finish();
-//        });
-//    tooltitle.setTitle(exam.getName());
-//    progressIndicator.setIndeterminate(false);
-//
-//    try {
-//      double score = Double.parseDouble(exam.getScore());
-//      int manfen = exam.getManfen();
-//
-//      if (manfen > 0) {
-//        int progress = (int) Math.round((score / manfen) * 100);
-//        progressIndicator.setProgress(progress);
-//      } else {
-//        progressIndicator.setProgress(0);
-//      }
-//    } catch (NumberFormatException e) {
-//      e.printStackTrace();
-//      // 分数格式非法时，进度归零
-//      progressIndicator.setProgress(0);
-//    }
-//    
-//    GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
-//    paperRecyclerView.setLayoutManager(layoutManager);
-//    PaperGridAdapter adapter = new PaperGridAdapter(exam.getPapers());
-//    paperRecyclerView.setAdapter(adapter);
+    apiService = RetrofitTools.RetrofitClient.getAuthService();
+    Call<ApiResponse<ExamOverviewData>> call = apiService.getExamOverview(exam.getExamId());
+    showLoading();
+    call.enqueue(
+        new Callback<ApiResponse<ExamOverviewData>>() {
+          @Override
+          public void onResponse(
+              Call<ApiResponse<ExamOverviewData>> call,
+              Response<ApiResponse<ExamOverviewData>> response) {
+            ApiResponse<ExamOverviewData> body = response.body();
+            if (response.isSuccessful() && response.body() != null) {
+              ExamOverviewData data = body.getData();
+              if (body.isSuccess()) {
+                scoretext.setText("" + data.getScore());
+                manfent.setText("/" + data.getManfen());
+
+                try {
+                  double score = data.getScore();
+                  int manfen = data.getManfen();
+
+                  if (manfen > 0) {
+                    int progress = (int) Math.round((score / manfen) * 100);
+                    progressIndicator.setProgress(progress);
+                  } else {
+                    progressIndicator.setProgress(0);
+                  }
+                } catch (NumberFormatException e) {
+                  e.printStackTrace();
+                  // 分数格式非法时，进度归零
+                  progressIndicator.setProgress(0);
+                }
+
+                GridLayoutManager layoutManager = new GridLayoutManager(ExamActivity.this, 3);
+                paperRecyclerView.setLayoutManager(layoutManager);
+
+                List<MyPaperOverview> dataList = new ArrayList<>();
+                List<PaperOverview> paperGson = data.getPapers();
+
+                // 添加元素...
+
+                for (int i = 0; i < paperGson.size(); i++) {
+                  PaperOverview e = paperGson.get(i);
+                  dataList.add(new MyPaperOverview(e));
+                }
+
+                PaperGridAdapter adapter = new PaperGridAdapter(dataList);
+                paperRecyclerView.setAdapter(adapter);
+
+                hideLoading();
+              } else {
+                String errorMsg = body.getMsg();
+                hideLoading();
+                showDialog("请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, body.getCode()));
+              }
+            } else {
+              // HTTP错误（如404, 500等）
+              showDialog("请求失败", "服务器错误: " + response.code());
+              hideLoading();
+            }
+          }
+
+          @Override
+          public void onFailure(Call<ApiResponse<ExamOverviewData>> call, Throwable t) {
+            hideLoading();
+                  showDialog("请求失败", "网络请求失败！");
+          }
+        });
+
+    
+    setCustomCardCorners(top_card, 16, 16, 0, 0);
+    setCustomCardCorners(bottom_card, 0, 0, 16, 16);
+
+    toolbar.setNavigationOnClickListener(
+        v -> {
+          finish();
+        });
+    tooltitle.setTitle(exam.getName());
+    progressIndicator.setIndeterminate(false);
+
   }
 
   public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {
@@ -92,5 +148,41 @@ public class ExamActivity extends AppCompatActivity {
   // dp 转像素工具方法
   private float dpToPx(Context context, float dp) {
     return dp * context.getResources().getDisplayMetrics().density;
+  }
+
+  private AlertDialog createLoadingDialog() {
+    // 创建ProgressBar
+
+    // 创建对话框
+    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+    builder.setTitle("请稍候");
+    builder.setMessage("正在加载中...");
+    builder.setCancelable(false); // 禁止点击外部取消
+
+    return builder.create();
+  }
+
+  // 使用示例
+  private AlertDialog loadingDialog;
+
+  public void showLoading() {
+    if (loadingDialog == null) {
+      loadingDialog = createLoadingDialog();
+    }
+    loadingDialog.show();
+  }
+
+  public void hideLoading() {
+    if (loadingDialog != null && loadingDialog.isShowing()) {
+      loadingDialog.dismiss();
+    }
+  }
+
+  private void showDialog(String title, String message) {
+    runOnUiThread(
+        () -> {
+          MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+          builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
+        });
   }
 }

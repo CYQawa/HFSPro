@@ -74,10 +74,7 @@ public class HomeFragment extends Fragment {
                       RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
                       recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-                      // 模拟数据
                       List<MyExamList> dataList = new ArrayList<>();
-
-                      // 添加元素...
 
                       for (int i = 0; i < listexamtiem.size(); i++) {
                         ExamListItem e = listexamtiem.get(i);
@@ -106,64 +103,10 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
                   // 错误处理
+                  hideLoading();
+                  showDialog("请求失败", "网络请求失败！");
                 }
               });
-
-          //          Call<ApiResponse<ExamHomeData>> call = apiService.getExamHomePage();
-          //          call.enqueue(
-          //              new Callback<ApiResponse<ExamHomeData>>() {
-          //                @Override
-          //                public void onResponse(
-          //                    Call<ApiResponse<ExamHomeData>> call,
-          //                    Response<ApiResponse<ExamHomeData>> response) {
-          //                  if (response.isSuccessful() && response.body() != null) {
-          //                    ApiResponse<ExamHomeData> examResponse = response.body();
-          //
-          //                    if (examResponse.isSuccess()) {
-          //                      List<ExamItem> listexamtiem = examResponse.getData().getList();
-          //                      RecyclerView recyclerView =
-          // sheetView.findViewById(R.id.recyclerView);
-          //                      recyclerView.setLayoutManager(new
-          // LinearLayoutManager(requireContext()));
-          //
-          //                      // 模拟数据
-          //                      List<MyExam> dataList = new ArrayList<>();
-          //
-          //                      // 添加元素...
-          //
-          //                      for (int i = 0; i < listexamtiem.size(); i++) {
-          //                        ExamItem e = listexamtiem.get(i);
-          //                        dataList.add(new MyExam(e));
-          //                      }
-          //                      ExamListAdapter adapter = new ExamListAdapter(requireContext(),
-          // dataList);
-          //                      recyclerView.setAdapter(adapter);
-          //
-          //                      dialog.show();
-          //                      hideLoading();
-          //
-          //                    } else {
-          //                      String errorMsg = examResponse.getMsg();
-          //                      hideLoading();
-          //                      showDialog(
-          //                          "请求失败",
-          //                          String.format("请求失败: %s\ncode: %d", errorMsg,
-          // examResponse.getCode()));
-          //                    }
-          //                  } else {
-          //                    // HTTP错误（如404, 500等）
-          //                    showDialog("请求失败", "服务器错误: " + response.code());
-          //                    hideLoading();
-          //                  }
-          //                }
-          //
-          //                @Override
-          //                public void onFailure(Call<ApiResponse<ExamHomeData>> call, Throwable t)
-          // {
-          //                  hideLoading();
-          //                  showDialog("请求失败", "网络请求失败！");
-          //                }
-          //              });
         });
   }
 

@@ -6,6 +6,61 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyModel {
+  // 考试概览数据（对应 v3/exam/{examId}/overview 的 data 字段）
+  public static class MyExamOverviewData {
+    private double score;
+    private int manfen;
+    private List<MyPaperOverview> papers;
+
+    public double getScore() {
+      return score;
+    }
+
+    public int getManfen() {
+      return manfen;
+    }
+
+    public List<MyPaperOverview> getPapers() {
+      return papers;
+    }
+  }
+
+  // 试卷概览信息（对应 papers 数组中的每一项）
+  public static class MyPaperOverview {
+    private String paperId;
+    private String subject;
+    private double score; // 该卷得分
+    private int manfen; // 该卷满分
+    private int weakAdvantageStatus; 
+
+    public MyPaperOverview(PaperOverview p) {
+      paperId = p.getPaperId();
+      subject = p.getSubject();
+      score = p.getScore();
+      manfen = p.getManfen();
+      weakAdvantageStatus = p.getWeakAdvantageStatus();
+    }
+
+    public String getPaperId() {
+      return paperId;
+    }
+
+    public String getSubject() {
+      return subject;
+    }
+
+    public double getScore() {
+      return score;
+    }
+
+    public int getManfen() {
+      return manfen;
+    }
+
+    public int getWeakAdvantageStatus() {
+      return weakAdvantageStatus;
+    }
+  }
 
   public static class MyExamList implements Serializable {
     private long examId;
@@ -13,9 +68,9 @@ public class MyModel {
     private long time;
 
     public MyExamList(ExamListItem examlistitem) {
-        examId = examlistitem.getExamId();
-        name = examlistitem.getName();
-        time = examlistitem.getTime(); 
+      examId = examlistitem.getExamId();
+      name = examlistitem.getName();
+      time = examlistitem.getTime();
     }
 
     public long getExamId() {
@@ -28,92 +83,6 @@ public class MyModel {
 
     public long getTime() {
       return time;
-    }
-  }
-
-  public static class MyExam implements Serializable {
-    private long examId;
-    private String name;
-    private long time;
-    private int manfen;
-    private String score;
-    private List<MyPaperItem> papers;
-
-    public MyExam() {}
-
-    // ExamItem -> MyExam
-    public MyExam(ExamItem examitem) {
-      this.examId = examitem.getExamId();
-      this.name = examitem.getName();
-      this.time = examitem.getTime();
-      this.manfen = examitem.getManfen();
-      this.score = examitem.getScore();
-
-      // 转换 papers 列表
-      if (examitem.getPapers() != null) {
-        this.papers = new ArrayList<>();
-        for (PaperItem paper : examitem.getPapers()) {
-          this.papers.add(new MyPaperItem(paper));
-        }
-      }
-    }
-
-    // getters
-    public long getExamId() {
-      return examId;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public long getTime() {
-      return time;
-    }
-
-    public int getManfen() {
-      return manfen;
-    }
-
-    public String getScore() {
-      return score;
-    }
-
-    public List<MyPaperItem> getPapers() {
-      return papers;
-    }
-  }
-
-  public static class MyPaperItem implements Serializable {
-    private String id;
-    private String subject;
-    private int manfen;
-    private String score;
-
-    public MyPaperItem() {}
-
-    public MyPaperItem(PaperItem item) {
-      this.id = item.getId();
-      this.subject = item.getSubject();
-      this.manfen = item.getManfen();
-      this.score = item.getScore();
-    }
-
-    // getters
-    public String getId() {
-      return id;
-    }
-
-    public String getSubject() {
-      return subject;
-    }
-
-    public int getManfen() {
-      return manfen;
-    }
-
-    public String getScore() {
-      return score;
     }
   }
 }
