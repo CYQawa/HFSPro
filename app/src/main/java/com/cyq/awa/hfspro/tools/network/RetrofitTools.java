@@ -22,7 +22,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public class RetrofitTools {
-    // 保存上下文用于获取 Databases 实例
     private static Context appContext;
     
     // 初始化上下文（需要在 Application 中调用）

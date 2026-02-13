@@ -7,14 +7,30 @@
      android:padding="8dp"
      android:orientation="vertical">
 
-    <com.google.android.material.textview.MaterialTextView
-         android:layout_height="match_parent"
+    <LinearLayout
+         android:layout_height="wrap_content"
          android:layout_width="match_parent"
-         android:scaleType="centerCrop"
-         android:textSize="12sp"
-         android:textStyle="bold"
-         android:text="数学"
-         android:id="@+id/name" />
+         android:gravity="center_vertical"
+         android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+             android:layout_height="match_parent"
+             android:layout_width="0dp"
+             android:scaleType="centerCrop"
+             android:textSize="12sp"
+             android:layout_weight="1"
+             android:id="@+id/name"
+             android:text="数学"
+             android:textStyle="bold" />
+
+        <ImageView
+        android:tint="@color/md_theme_primary"
+             android:layout_height="15dp"
+             android:layout_width="15dp"
+             android:src="@drawable/ic_arrow"
+             android:id="@+id/iv_right" />
+
+    </LinearLayout>
 
     <LinearLayout
          android:layout_height="match_parent"
@@ -28,15 +44,15 @@
              android:textSize="12sp"
              android:textColor="@color/md_theme_primary"
              android:layout_marginTop="4dp"
+             android:id="@+id/score"
              android:text="9178"
-             android:textStyle="bold"
-             android:id="@+id/score" />
+             android:textStyle="bold" />
 
         <com.google.android.material.textview.MaterialTextView
              android:layout_height="match_parent"
              android:layout_width="wrap_content"
-             android:fontFamily="sans-serif-thin"
              android:textSize="12sp"
+             android:fontFamily="sans-serif-thin"
              android:layout_marginTop="4dp"
              android:id="@+id/manfen"
              android:text="/91" />
