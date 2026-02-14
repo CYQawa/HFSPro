@@ -4,6 +4,32 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class GsonModel {
+  public static class CompareRankData {
+    @SerializedName("compare")
+    private Compare compare;
+
+    public Compare getCompare() {
+      return this.compare;
+    }
+
+    public void setCompare(Compare compare) {
+      this.compare = compare;
+    }
+  }
+
+  public static class Compare {
+    @SerializedName("curGradeRank")
+    private Integer curGradeRank;
+
+    public Integer getCurGradeRank() {
+      return this.curGradeRank;
+    }
+
+    public void setCurGradeRank(Integer curGradeRank) {
+      this.curGradeRank = curGradeRank;
+    }
+  }
+
   public static class ExamOverviewData {
     @SerializedName("name")
     private String name;
@@ -13,6 +39,7 @@ public class GsonModel {
 
     @SerializedName("manfen")
     private int manfen;
+
     @SerializedName("papers")
     private List<PaperOverview> papers;
 

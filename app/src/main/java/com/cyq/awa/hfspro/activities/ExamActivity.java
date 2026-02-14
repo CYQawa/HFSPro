@@ -2,6 +2,10 @@ package com.cyq.awa.hfspro.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,13 +32,14 @@ import retrofit2.Response;
 
 public class ExamActivity extends AppCompatActivity {
   private RetrofitTools.ApiService apiService;
+  private MyExamList exam;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_exam);
 
-    MyExamList exam = (MyExamList) getIntent().getSerializableExtra("myexam");
+    exam = (MyExamList) getIntent().getSerializableExtra("myexam");
     MaterialToolbar toolbar = findViewById(R.id.toolbar);
     CollapsingToolbarLayout tooltitle = findViewById(R.id.tooltitle);
     CircularProgressIndicator progressIndicator = findViewById(R.id.btn_ProgressIndicator);
@@ -44,6 +49,7 @@ public class ExamActivity extends AppCompatActivity {
     MaterialCardView bottom_card = findViewById(R.id.bottom_card);
     RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
 
+    setSupportActionBar(toolbar);
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     Call<ApiResponse<ExamOverviewData>> call = apiService.getExamOverview(exam.getExamId());
     showLoading();
@@ -180,5 +186,69 @@ public class ExamActivity extends AppCompatActivity {
           MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
           builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
         });
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    // 加载菜单资源文件
+    getMenuInflater().inflate(R.menu.exam_menu, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    int id = item.getItemId();
+
+    if (id == R.id.rank) {
+      Call<ApiResponse<CompareRankData>> call = apiService.getCompareRank(exam.getExamId());
+      showLoading();
+      call.enqueue(
+          new Callback<ApiResponse<CompareRankData>>() {
+            @Override
+            public void onResponse(
+                Call<ApiResponse<CompareRankData>> call,
+                Response<ApiResponse<CompareRankData>> response) {
+              ApiResponse<CompareRankData> body = response.body();
+              if (response.isSuccessful() && response.body() != null) {
+                CompareRankData data = body.getData();
+                if (body.isSuccess()) {
+
+                  if (data.getCompare() != null) {
+                    if (data.getCompare().getCurGradeRank() != null) {
+                      hideLoading();
+                      showDialog(
+                          "获取成功！！", "总分年段排名：" + data.getCompare().getCurGradeRank() + " 名！！！");
+                    } else {
+                      hideLoading();
+                      showDialog("获取失败~", "没有curGradeRank字段哦~");
+                    }
+                  } else {
+                    hideLoading();
+                    showDialog("获取失败~", "没有compare字段哦~");
+                  }
+
+                  hideLoading();
+                } else {
+                  String errorMsg = body.getMsg();
+                  hideLoading();
+                  showDialog("请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, body.getCode()));
+                }
+              } else {
+                // HTTP错误（如404, 500等）
+                showDialog("请求失败", "服务器错误: " + response.code());
+                hideLoading();
+              }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<CompareRankData>> call, Throwable t) {
+              hideLoading();
+              showDialog("请求失败", "网络请求失败！");
+            }
+          });
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 }

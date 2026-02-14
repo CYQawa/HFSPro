@@ -19,6 +19,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public class RetrofitTools {
   private static Context appContext;
@@ -37,6 +38,9 @@ public class RetrofitTools {
 
     @GET("v3/exam/{examId}/overview")
     Call<ApiResponse<ExamOverviewData>> getExamOverview(@Path("examId") long examId);
+
+    @GET("v4/exam/overview")
+    Call<ApiResponse<CompareRankData>> getCompareRank(@Query("examId") long examId);
   }
 
   public static class RetrofitClient {
