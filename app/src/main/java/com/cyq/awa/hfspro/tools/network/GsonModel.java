@@ -5,14 +5,16 @@ import java.util.List;
 
 public class GsonModel {
   public static class ExamOverviewData {
+    @SerializedName("name")
+    private String name;
+
     @SerializedName("score")
     private double score;
 
     @SerializedName("manfen")
     private int manfen;
-
     @SerializedName("papers")
-    private List<PaperOverview> papers; 
+    private List<PaperOverview> papers;
 
     public double getScore() {
       return score;
@@ -25,8 +27,12 @@ public class GsonModel {
     public List<PaperOverview> getPapers() {
       return papers;
     }
+
+    public String getName() {
+      return this.name;
+    }
   }
-  
+
   public static class PaperOverview {
     @SerializedName("paperId")
     private String paperId;
@@ -35,13 +41,13 @@ public class GsonModel {
     private String subject;
 
     @SerializedName("score")
-    private double score; 
+    private double score;
 
     @SerializedName("manfen")
-    private int manfen; 
+    private int manfen;
 
     @SerializedName("weakAdvantageStatus")
-    private int weakAdvantageStatus; 
+    private int weakAdvantageStatus;
 
     public String getPaperId() {
       return paperId;
@@ -108,10 +114,10 @@ public class GsonModel {
     private int roleType;
 
     @SerializedName("loginType")
-    private int loginType = 1; 
+    private int loginType = 1;
 
     @SerializedName("rememberMe")
-    private int rememberMe = 1; 
+    private int rememberMe = 1;
 
     public LoginRequest(String loginName, String password, int s) {
       this.loginName = loginName;

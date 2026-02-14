@@ -192,7 +192,4 @@ public class GuideFragment3 extends Fragment {
     byte[] data = text.getBytes(StandardCharsets.UTF_8);
     return Base64.encodeToString(data, Base64.DEFAULT);
   }
-// 创建基本加载弹窗
-
-
 }

@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="wrap_content"
+     android:layout_width="match_parent"
+     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center"
-        android:text="考试列表"
-        android:textSize="16sp"/>
+         android:layout_height="48dp"
+         android:layout_width="match_parent"
+         android:gravity="center"
+         android:textSize="16sp"
+         android:text="考试列表" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
-        android:overScrollMode="never"/>
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:nestedScrollingEnabled="false"
+         android:id="@+id/recyclerView"
+         android:overScrollMode="never" />
+
+    <com.google.android.material.button.MaterialButton
+    android:id="@+id/enter_id"
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:layout_marginHorizontal="16dp"
+         android:text="输入examid" />
 
 </LinearLayout>

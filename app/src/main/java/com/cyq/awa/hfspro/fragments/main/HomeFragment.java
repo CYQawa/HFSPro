@@ -1,5 +1,6 @@
 package com.cyq.awa.hfspro.fragments.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,21 +8,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import android.widget.ProgressBar;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.activities.ExamActivity;
 import com.cyq.awa.hfspro.adapter.ExamListAdapter;
+import com.cyq.awa.hfspro.tools.MyModel.*;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.*;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import java.util.List;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
-import com.cyq.awa.hfspro.tools.MyModel.*;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,7 +97,6 @@ public class HomeFragment extends Fragment {
                               "请求失败: %s\ncode: %d", errorMsg, examlistResponse.getCode()));
                     }
                   } else {
-                    // HTTP错误（如404, 500等）
                     showDialog("请求失败", "服务器错误: " + response.code());
                     hideLoading();
                   }
@@ -102,17 +104,51 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
-                  // 错误处理
                   hideLoading();
                   showDialog("请求失败", "网络请求失败！");
                 }
+              });
+
+          MaterialButton button = sheetView.findViewById(R.id.enter_id);
+          button.setOnClickListener(
+              vv -> {
+                View dialogView =
+                    LayoutInflater.from(requireContext()).inflate(R.layout.dialog_input, null);
+                TextInputEditText inputEditText = dialogView.findViewById(R.id.token_text);
+
+                new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("请输入examid")
+                    .setMessage("超过120天的考试也能看哦，只要你记得examid的话~~")
+                    .setView(dialogView)
+                    .setPositiveButton(
+                        "确定",
+                        (dialog1, which) -> {
+                          String inputText = inputEditText.getText().toString().trim();
+                          if (!inputText.isEmpty()) {
+                            try {
+                              Long id = Long.parseLong(inputText);
+                              MyExamList item = new MyExamList(id, null, null);
+
+                              Intent intent = new Intent(requireContext(), ExamActivity.class);
+                              intent.putExtra("myexam", item);
+                              requireContext().startActivity(intent);
+                            } catch (NumberFormatException e) {
+                              new MaterialAlertDialogBuilder(requireContext())
+                                  .setTitle("提示")
+                                  .setMessage("请输入有效的数字ID哦~")
+                                  .setPositiveButton("确定", null)
+                                  .show();
+                            }
+                          }
+                        })
+                    .setNegativeButton("取消", null)
+                    .show();
               });
         });
   }
 
   private AlertDialog createLoadingDialog() {
     // 创建ProgressBar
-
     // 创建对话框
     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
     builder.setTitle("请稍候");

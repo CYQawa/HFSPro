@@ -59,6 +59,7 @@ public class ExamActivity extends AppCompatActivity {
               if (body.isSuccess()) {
                 scoretext.setText("" + data.getScore());
                 manfent.setText("/" + data.getManfen());
+                tooltitle.setTitle(data.getName());
 
                 try {
                   double score = data.getScore();
@@ -81,8 +82,6 @@ public class ExamActivity extends AppCompatActivity {
 
                 List<MyPaperOverview> dataList = new ArrayList<>();
                 List<PaperOverview> paperGson = data.getPapers();
-
-                // 添加元素...
 
                 for (int i = 0; i < paperGson.size(); i++) {
                   PaperOverview e = paperGson.get(i);
@@ -108,11 +107,10 @@ public class ExamActivity extends AppCompatActivity {
           @Override
           public void onFailure(Call<ApiResponse<ExamOverviewData>> call, Throwable t) {
             hideLoading();
-                  showDialog("请求失败", "网络请求失败！");
+            showDialog("请求失败", "网络请求失败！");
           }
         });
 
-    
     setCustomCardCorners(top_card, 16, 16, 0, 0);
     setCustomCardCorners(bottom_card, 0, 0, 16, 16);
 
@@ -120,9 +118,7 @@ public class ExamActivity extends AppCompatActivity {
         v -> {
           finish();
         });
-    tooltitle.setTitle(exam.getName());
     progressIndicator.setIndeterminate(false);
-
   }
 
   public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {

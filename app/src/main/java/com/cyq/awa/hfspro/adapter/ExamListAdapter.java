@@ -44,6 +44,7 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
         new SimpleDateFormat("yyyy-MM-dd").format(new Date(list.get(position).getTime()));
     holder.nametextView.setText(list.get(position).getName());
     holder.timetextView.setText(time);
+        holder.idtextView.setText("examId："+list.get(position).getExamId());
 
     holder.itemView.setOnClickListener(
         v -> {
@@ -61,11 +62,13 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
   static class ViewHolder extends RecyclerView.ViewHolder {
     MaterialTextView nametextView;
     MaterialTextView timetextView;
+    MaterialTextView idtextView;
 
     ViewHolder(View itemView) {
       super(itemView);
       nametextView = itemView.findViewById(R.id.exam_name);
       timetextView = itemView.findViewById(R.id.exam_time);
+      idtextView = itemView.findViewById(R.id.exam_id);
     }
   }
 }

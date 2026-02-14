@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         app:hintEnabled="true"
-        android:hint="请输入你的token"
+        android:hint="请输入"
         app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText

@@ -31,7 +31,7 @@ public class MyModel {
     private String subject;
     private double score; // 该卷得分
     private int manfen; // 该卷满分
-    private int weakAdvantageStatus; 
+    private int weakAdvantageStatus;
 
     public MyPaperOverview(PaperOverview p) {
       paperId = p.getPaperId();
@@ -65,12 +65,18 @@ public class MyModel {
   public static class MyExamList implements Serializable {
     private long examId;
     private String name;
-    private long time;
+    private Long time;
 
     public MyExamList(ExamListItem examlistitem) {
       examId = examlistitem.getExamId();
       name = examlistitem.getName();
       time = examlistitem.getTime();
+    }
+
+    public MyExamList(long examId, String name, Long time) {
+      this.examId = examId;
+      this.name = name;
+      this.time = time;
     }
 
     public long getExamId() {

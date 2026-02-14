@@ -70,7 +70,6 @@
                          android:textColor="@color/md_theme_primary"
                          android:id="@+id/scoretext"
                          android:textStyle="bold"
-                         android:text="114514"
                          android:layout_gravity="center_vertical" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -81,7 +80,6 @@
                          android:fontFamily="sans-serif-thin"
                          android:textSize="32sp"
                          android:id="@+id/manfen"
-                         android:text="/91"
                          android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
