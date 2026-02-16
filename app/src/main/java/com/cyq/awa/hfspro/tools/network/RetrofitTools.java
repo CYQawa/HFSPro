@@ -41,6 +41,9 @@ public class RetrofitTools {
 
     @GET("v4/exam/overview")
     Call<ApiResponse<CompareRankData>> getCompareRank(@Query("examId") long examId);
+    
+    @GET("v2/students/last-exam-overview")
+    Call<ApiResponse<LastExamData>> getLastExam();
   }
 
   public static class RetrofitClient {

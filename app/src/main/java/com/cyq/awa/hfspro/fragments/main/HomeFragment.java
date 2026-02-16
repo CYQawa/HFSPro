@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.ExamActivity;
+import com.cyq.awa.hfspro.activities.LastExamActivity;
 import com.cyq.awa.hfspro.adapter.ExamListAdapter;
 import com.cyq.awa.hfspro.tools.MyModel.*;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     MaterialCardView exam = view.findViewById(R.id.exam);
+    MaterialCardView lastexam = view.findViewById(R.id.lastExam);
 
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     exam.setOnClickListener(
@@ -144,6 +146,11 @@ public class HomeFragment extends Fragment {
                     .setNegativeButton("取消", null)
                     .show();
               });
+        });
+    lastexam.setOnClickListener(
+        v -> {
+          Intent intent = new Intent(requireContext(), LastExamActivity.class);
+          requireContext().startActivity(intent);
         });
   }
 

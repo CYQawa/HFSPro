@@ -18,9 +18,9 @@
              android:id="@+id/tooltitle">
 
             <com.google.android.material.appbar.MaterialToolbar
-            app:menu="@menu/exam_menu"
                  android:layout_height="?attr/actionBarSize"
                  android:layout_width="match_parent"
+                 app:menu="@menu/exam_menu"
                  app:layout_collapseMode="pin"
                  app:titleCentered="true"
                  app:titleTextColor="@color/md_theme_primary"

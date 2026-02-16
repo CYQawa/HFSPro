@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+             android:layout_height="150dp"
+             android:layout_width="match_parent"
+             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+             app:title="最近考试排名~"
+             android:id="@+id/tooltitle">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                 android:layout_height="?attr/actionBarSize"
+                 android:layout_width="match_parent"
+                 app:layout_collapseMode="pin"
+                 app:titleCentered="true"
+                 app:titleTextColor="@color/md_theme_primary"
+                 app:navigationIcon="?attr/homeAsUpIndicator"
+                 android:id="@+id/toolbar">
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+         android:id="@+id/content_container">
+
+        <LinearLayout
+             android:layout_height="wrap_content"
+             android:layout_width="fill_parent"
+             android:padding="16dp"
+             android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 android:id="@+id/top_card">
+
+                <LinearLayout
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:padding="16dp"
+                     android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                         android:layout_height="match_parent"
+                         android:layout_width="wrap_content"
+                         android:layout_marginBottom="0dp"
+                         android:gravity="center"
+                         android:textSize="12sp"
+                         android:textColor="@color/md_theme_primary"
+                         android:id="@+id/nametext"
+                         android:textStyle="bold"
+                         android:layout_gravity="center_vertical" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                         android:layout_height="match_parent"
+                         android:layout_width="wrap_content"
+                         android:layout_marginBottom="0dp"
+                         android:gravity="center"
+                         android:textSize="12sp"
+                         android:textColor="@color/md_theme_primary"
+                         android:id="@+id/idtext"
+                         android:textStyle="bold"
+                         android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 android:layout_marginTop="10dp"
+                 android:id="@+id/middle_card">
+
+                <LinearLayout
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:padding="16dp"
+                     android:orientation="horizontal">
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                         android:layout_height="50dp"
+                         android:layout_width="50dp"
+                         android:layout_marginRight="5dp"
+                         android:id="@+id/btn_ProgressIndicator" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                         android:layout_height="match_parent"
+                         android:layout_width="wrap_content"
+                         android:layout_marginBottom="0dp"
+                         android:gravity="center"
+                         android:textSize="32sp"
+                         android:textColor="@color/md_theme_primary"
+                         android:id="@+id/scoretext"
+                         android:textStyle="bold"
+                         android:layout_gravity="center_vertical" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                         android:layout_height="match_parent"
+                         android:layout_width="wrap_content"
+                         android:layout_marginBottom="0dp"
+                         android:gravity="center"
+                         android:fontFamily="sans-serif-thin"
+                         android:textSize="32sp"
+                         android:id="@+id/manfen"
+                         android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 android:layout_marginTop="10dp"
+                 android:id="@+id/bottom_card">
+
+                <LinearLayout
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:padding="10dp"
+                     android:orientation="horizontal">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                         android:layout_height="match_parent"
+                         android:layout_width="match_parent"
+                         android:id="@+id/paperRecyclerView" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                 android:layout_height="wrap_content"
+                 android:layout_width="fill_parent"
+                 android:layout_marginTop="10dp"
+                 android:id="@+id/bottom2_card">
+
+                <LinearLayout
+                     android:layout_height="wrap_content"
+                     android:layout_width="match_parent"
+                     android:padding="20dp"
+                     android:orientation="vertical">
+
+                    <LinearLayout
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:gravity="center"
+                         android:orientation="horizontal">
+
+                        <ImageView
+                             android:layout_height="30dp"
+                             android:layout_width="30dp"
+                             android:src="@drawable/ic_rank"
+                             android:tint="@color/md_theme_primary" />
+
+                        <LinearLayout
+                             android:layout_height="wrap_content"
+                             android:layout_width="match_parent"
+                             android:orientation="vertical"
+                             android:layout_marginLeft="10dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:layout_marginBottom="0dp"
+                                 android:gravity="center"
+                                 android:textSize="15sp"
+                                 android:textColor="@color/md_theme_primary"
+                                 android:text="班级排名"
+                                 android:id="@+id/classrank"
+                                 android:textStyle="bold" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:layout_marginBottom="0dp"
+                                 android:gravity="center"
+                                 android:fontFamily="sans-serif-thin"
+                                 android:textSize="12sp"
+                                 android:textColor="@color/md_theme_primary"
+                                 android:text="班级人数"
+                                 android:id="@+id/classstunum" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:layout_marginVertical="10dp"
+                         android:background="?attr/colorOutline" />
+
+                    <LinearLayout
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:gravity="center"
+                         android:orientation="horizontal">
+
+                        <ImageView
+                             android:layout_height="30dp"
+                             android:layout_width="30dp"
+                             android:src="@drawable/ic_rank"
+                             android:tint="@color/md_theme_primary" />
+
+                        <LinearLayout
+                             android:layout_height="wrap_content"
+                             android:layout_width="match_parent"
+                             android:orientation="vertical"
+                             android:layout_marginLeft="10dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:layout_marginBottom="0dp"
+                                 android:gravity="center"
+                                 android:textSize="15sp"
+                                 android:textColor="@color/md_theme_primary"
+                                 android:text="年段排名"
+                                 android:id="@+id/graderank"
+                                 android:textStyle="bold" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:layout_marginBottom="0dp"
+                                 android:gravity="center"
+                                 android:fontFamily="sans-serif-thin"
+                                 android:textSize="12sp"
+                                 android:textColor="@color/md_theme_primary"
+                                 android:text="年段人数"
+                                 android:id="@+id/gradestunum" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+         android:visibility="gone"
+         android:gravity="center"
+         android:background="?android:attr/windowBackground"
+         android:orientation="vertical"
+         android:id="@+id/error_container">
+
+        <ImageView
+             android:layout_height="50dp"
+             android:layout_width="50dp"
+             android:src="@drawable/ic_error"
+             android:tint="@color/md_theme_primary" />
+
+        <TextView
+        android:textColor="@color/md_theme_error"
+        android:text="没有data数据啦~你来晚力"
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

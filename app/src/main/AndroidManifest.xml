@@ -31,6 +31,9 @@
         <activity
             android:name=".activities.ExamActivity"
             android:exported="false" />
+             <activity
+            android:name=".activities.LastExamActivity"
+            android:exported="false" />
     </application>
 
 
