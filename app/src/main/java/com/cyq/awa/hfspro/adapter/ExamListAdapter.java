@@ -40,22 +40,19 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     // 毫秒级时间戳转标准时间
-    String time =
-        new SimpleDateFormat("yyyy-MM-dd").format(new Date(list.get(position).getTime()));
+    String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date(list.get(position).getTime()));
     holder.nametextView.setText(list.get(position).getName());
     holder.timetextView.setText(time);
-        holder.idtextView.setText("examId："+list.get(position).getExamId());
+    holder.idtextView.setText("examId：" + list.get(position).getExamId());
 
     holder.itemView.setOnClickListener(
         v -> {
           Intent intent = new Intent(context, ExamActivity.class);
-          intent.putExtra("myexam", list.get(position)); 
+          intent.putExtra("myexam", list.get(position));
           context.startActivity(intent);
         });
-        
-        if(list.get(position).getIs_network()){
-            holder.status.setVisibility(View.GONE);
-        }
+
+    holder.status.setVisibility(list.get(position).getIs_network() ? View.GONE : View.VISIBLE);
   }
 
   @Override
@@ -67,14 +64,14 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
     MaterialTextView nametextView;
     MaterialTextView timetextView;
     MaterialTextView idtextView;
-        MaterialTextView status;
+    MaterialTextView status;
 
     ViewHolder(View itemView) {
       super(itemView);
       nametextView = itemView.findViewById(R.id.exam_name);
       timetextView = itemView.findViewById(R.id.exam_time);
       idtextView = itemView.findViewById(R.id.exam_id);
-      status =itemView.findViewById(R.id.status);
+      status = itemView.findViewById(R.id.status);
     }
   }
 }

@@ -20,6 +20,7 @@ import com.cyq.awa.hfspro.tools.MyModel.*;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.*;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -56,6 +57,7 @@ public class HomeFragment extends Fragment {
         v -> {
           showLoading();
           BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+
           View sheetView =
               LayoutInflater.from(requireContext())
                   .inflate(R.layout.exam_list_bottom_sheet_dialog, null);
@@ -110,6 +112,14 @@ public class HomeFragment extends Fragment {
                       recyclerView.setAdapter(adapter);
 
                       dialog.show();
+                      BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                      // 设置为展开状态
+                      behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                      // 可选：设置滑出高度为屏幕高度（全屏效果）
+                      int screenHeight = getResources().getDisplayMetrics().heightPixels;
+                      behavior.setPeekHeight(screenHeight); // 或根据
+
                       hideLoading();
                     } else {
                       String errorMsg = examlistResponse.getMsg();
@@ -166,6 +176,59 @@ public class HomeFragment extends Fragment {
                         })
                     .setNegativeButton("取消", null)
                     .show();
+              });
+          MaterialButton button2 = sheetView.findViewById(R.id.getallexam);
+          button2.setOnClickListener(
+              vvv -> {
+                showLoading();
+                Call<ApiResponse<List<moreExamlist>>> call2 =
+                    RetrofitClient.getAuthService().getMoreExamList();
+                ;
+                call2.enqueue(
+                    new Callback<ApiResponse<List<moreExamlist>>>() {
+                      @Override
+                      public void onResponse(
+                          Call<ApiResponse<List<moreExamlist>>> call,
+                          Response<ApiResponse<List<moreExamlist>>> response) {
+                        if (response.isSuccessful()
+                            && response.body() != null
+                            && response.body().isSuccess()) {
+                          List<moreExamlist> data = response.body().getData();
+                          Set<Long> seenExamIds = new HashSet<>();
+                          List<MyExamListItem> distinctExams = new ArrayList<>();
+
+                          for (moreExamlist subject : data) {
+                            for (moreExamItem exam : subject.getExamList()) {
+                              if (!seenExamIds.contains(exam.getExamId())) {
+                                seenExamIds.add(exam.getExamId());
+                                distinctExams.add(
+                                    new MyExamListItem(
+                                        exam.getExamId(), exam.getExamName(), exam.getExamTime()));
+                              }
+                            }
+                          }
+                          // 现在 distinctExams 中包含去重后的考试信息
+                          DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
+                          hideLoading();
+                          showDialog("加载全部考试成功","加载成功，共"+distinctExams.size()+"场考试");
+                          dialog.dismiss();
+                        }else{
+                            String errorMsg = response.body().getMsg();
+                      hideLoading();
+                      showDialog(
+                          "请求失败",
+                          String.format(
+                              "请求失败: %s\ncode: %d", errorMsg, response.body().getCode()));
+                        }
+                      }
+
+                      @Override
+                      public void onFailure(
+                          Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
+                        hideLoading();
+                        showDialog("请求失败", "网络请求失败！");
+                      }
+                    });
               });
         });
     lastexam.setOnClickListener(

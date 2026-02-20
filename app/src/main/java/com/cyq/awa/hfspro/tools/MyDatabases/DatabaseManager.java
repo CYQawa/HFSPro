@@ -43,14 +43,32 @@ public class DatabaseManager {
 
   /** exam方法 */
   public List<Long> getAllExamIds() {
+      //，获取全部考试记录id
     return examDao.getAllExamIds();
   }
 
   public void insertOrUpdateExam(MyModel.MyExamListItem exam) {
+      //，插入考试记录
     examDao.insertOrUpdateExam(exam);
   }
 
   public List<MyModel.MyExamListItem> getAllExams() {
+      //，获取全部考试记录
     return examDao.getAllExams();
+  }
+
+  public void insertOrUpdateExams(List<MyModel.MyExamListItem> exams) {
+      //，批量插入考试记录
+    examDao.insertOrUpdateExams(exams);
+  }
+
+  public void deleteExamById(long examId) {
+      //，通过id删除考试记录
+    examDao.deleteExamById(examId);
+  }
+  
+  public void clearAllExams() {
+      //，清除全部考试记录
+    examDao.clearAllExams();
   }
 }

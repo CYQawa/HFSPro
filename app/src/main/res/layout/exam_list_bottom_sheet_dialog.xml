@@ -1,29 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:orientation="vertical">
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:orientation="vertical">
 
     <TextView
-        android:layout_height="48dp"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:text="考试列表" />
+         android:layout_height="48dp"
+         android:layout_width="match_parent"
+         android:gravity="center"
+         android:textSize="16sp"
+         android:text="考试列表" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"        
-        android:layout_weight="1"            
-        android:overScrollMode="never" />
+         android:layout_height="0dp"
+         android:layout_width="match_parent"
+         android:layout_weight="1"
+         android:id="@+id/recyclerView"
+         android:overScrollMode="never" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/enter_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="输入examid" />
+    <LinearLayout
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:orientation="horizontal"
+         android:paddingHorizontal="10dp">
+
+        <com.google.android.material.button.MaterialButton
+             android:layout_height="wrap_content"
+             android:layout_width="0dp"
+             android:layout_marginEnd="8dp"
+             android:layout_weight="1"
+             android:id="@+id/enter_id"
+             android:text="输入examid" />
+
+        <com.google.android.material.button.MaterialButton
+             android:layout_height="wrap_content"
+             android:layout_width="0dp"
+             android:layout_weight="1"
+             android:id="@+id/getallexam"
+             android:text="一键获取全部考试" />
+
+    </LinearLayout>
 
 </LinearLayout>

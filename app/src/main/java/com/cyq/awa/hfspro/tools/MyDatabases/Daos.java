@@ -1,11 +1,11 @@
 package com.cyq.awa.hfspro.tools.MyDatabases;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import com.cyq.awa.hfspro.tools.MyModel;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Daos {
   public static final String TABLE_USER = "user";
@@ -95,6 +95,24 @@ public class Daos {
       values.put(COLUMN_EXAM_TIME, exam.getTime());
       db.replace(TABLE_EXAM, null, values);
       db.close();
+    }
+
+    public void insertOrUpdateExams(List<MyModel.MyExamListItem> examList) {
+      SQLiteDatabase db = dbHelper.getWritableDatabase();
+      db.beginTransaction();
+      try {
+        for (MyModel.MyExamListItem exam : examList) {
+          ContentValues values = new ContentValues();
+          values.put(COLUMN_EXAM_ID, exam.getExamId());
+          values.put(COLUMN_EXAM_NAME, exam.getName());
+          values.put(COLUMN_EXAM_TIME, exam.getTime());
+          db.replace(TABLE_EXAM, null, values);
+        }
+        db.setTransactionSuccessful();
+      } finally {
+        db.endTransaction();
+        db.close();
+      }
     }
 
     /** 根据 examId 删除考试记录 */

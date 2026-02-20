@@ -3,6 +3,7 @@ package com.cyq.awa.hfspro.tools.network;
 import android.content.Context;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 
+import java.util.List;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -44,6 +45,9 @@ public class RetrofitTools {
     
     @GET("v2/students/last-exam-overview")
     Call<ApiResponse<LastExamData>> getLastExam();
+    
+    @GET("v2/wrong-items/overview")
+    Call<ApiResponse<List<moreExamlist>>> getMoreExamList();
   }
 
   public static class RetrofitClient {

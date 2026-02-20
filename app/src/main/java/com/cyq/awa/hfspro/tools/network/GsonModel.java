@@ -318,6 +318,29 @@ public class GsonModel {
       return token;
     }
   }
+    
+public static class moreExamlist {
+    @SerializedName("examList")
+    private List<moreExamItem> examList;
+    
+    public List<moreExamItem> getExamList() { return examList; }
+}
+
+
+
+// 表示考试维度的错题项
+public static class moreExamItem {
+    @SerializedName("examName")
+    private String examName;
+    @SerializedName("examTime")
+    private long examTime;
+    @SerializedName("examId")
+    private String examId;          // 注意：响应中 examId 为字符串类型
+
+    public String getExamName() { return examName; }
+    public Long getExamTime() { return examTime; }
+    public long getExamId() { return Long.parseLong(examId); }
+}
 
   public static class ApiResponse<T> {
     @SerializedName("code")
