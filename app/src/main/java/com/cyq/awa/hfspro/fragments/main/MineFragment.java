@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.Context;
 import android.content.ClipboardManager;
 import android.content.ClipData;
+import android.net.Uri;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,6 +35,13 @@ public class MineFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     MaterialButton checktoken = view.findViewById(R.id.btn_checktoken);
     MaterialButton logout = view.findViewById(R.id.btn_logout);
+    ImageView i = view.findViewById(R.id.github);
+    i.setOnClickListener(
+        v -> {
+          String url = "https://github.com/CYQawa/HFSPro";
+          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+          startActivity(intent);
+        });
 
     DatabaseManager db = DatabaseManager.getInstance();
 
