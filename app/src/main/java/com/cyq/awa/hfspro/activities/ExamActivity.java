@@ -11,9 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
-import com.cyq.awa.hfspro.tools.MyModel.MyExamList;
+import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -32,14 +33,16 @@ import retrofit2.Response;
 
 public class ExamActivity extends AppCompatActivity {
   private RetrofitTools.ApiService apiService;
-  private MyExamList exam;
+  private MyExamListItem exam;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_exam);
+        
+        DatabaseManager dbm = DatabaseManager.getInstance();
 
-    exam = (MyExamList) getIntent().getSerializableExtra("myexam");
+    exam = (MyExamListItem) getIntent().getSerializableExtra("myexam");
     MaterialToolbar toolbar = findViewById(R.id.toolbar);
     CollapsingToolbarLayout tooltitle = findViewById(R.id.tooltitle);
     CircularProgressIndicator progressIndicator = findViewById(R.id.btn_ProgressIndicator);
@@ -63,6 +66,9 @@ public class ExamActivity extends AppCompatActivity {
             if (response.isSuccessful() && response.body() != null) {
               ExamOverviewData data = body.getData();
               if (body.isSuccess()) {
+                MyExamListItem newMyexamlist =
+                    new MyExamListItem(exam.getExamId(), data.getName(), data.getTime());
+                    dbm.insertOrUpdateExam(newMyexamlist);
                 scoretext.setText("" + data.getScore());
                 manfent.setText("/" + data.getManfen());
                 tooltitle.setTitle(data.getName());

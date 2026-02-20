@@ -41,10 +41,10 @@
 
         <com.google.android.material.textview.MaterialTextView
              android:layout_height="wrap_content"
-             android:fontFamily="sans-serif-thin"
              android:layout_width="0dp"
              android:textAppearance="?attr/textAppearanceBodyMedium"
              android:ellipsize="end"
+             android:fontFamily="sans-serif-thin"
              app:layout_constraintStart_toEndOf="@+id/exam_icon"
              app:layout_constraintEnd_toStartOf="@+id/action_icon"
              android:layout_marginStart="12dp"
@@ -55,15 +55,29 @@
         <com.google.android.material.textview.MaterialTextView
              android:layout_height="wrap_content"
              android:layout_width="0dp"
-             android:fontFamily="sans-serif-thin"
              android:textAppearance="?attr/textAppearanceBodyMedium"
              android:ellipsize="end"
+             android:fontFamily="sans-serif-thin"
              app:layout_constraintStart_toEndOf="@+id/exam_icon"
              app:layout_constraintEnd_toStartOf="@+id/action_icon"
              android:layout_marginStart="12dp"
              android:maxLines="1"
              app:layout_constraintTop_toBottomOf="@+id/exam_time"
              android:id="@+id/exam_id" />
+
+        <com.google.android.material.textview.MaterialTextView
+        android:text="本地记录"
+             android:layout_height="wrap_content"
+             android:layout_width="0dp"
+             android:textAppearance="?attr/textAppearanceBodyMedium"
+             android:ellipsize="end"
+             android:fontFamily="sans-serif-thin"
+             app:layout_constraintStart_toEndOf="@+id/exam_icon"
+             app:layout_constraintEnd_toStartOf="@+id/action_icon"
+             android:layout_marginStart="12dp"
+             android:maxLines="1"
+             app:layout_constraintTop_toBottomOf="@+id/exam_id"
+             android:id="@+id/status" />
 
         <ImageView
              android:layout_height="24dp"

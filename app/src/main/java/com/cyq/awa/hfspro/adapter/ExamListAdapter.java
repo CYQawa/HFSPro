@@ -17,13 +17,13 @@ import android.widget.TextView;
 import android.view.View;
 import com.cyq.awa.hfspro.R;
 import android.view.LayoutInflater;
-import com.cyq.awa.hfspro.tools.MyModel.MyExamList;
+import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 
 public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHolder> {
-  private List<MyExamList> list;
+  private List<MyExamListItem> list;
   private Context context;
 
-  public ExamListAdapter(Context context, List<MyExamList> list) {
+  public ExamListAdapter(Context context, List<MyExamListItem> list) {
     this.context = context;
     this.list = list;
   }
@@ -52,6 +52,10 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
           intent.putExtra("myexam", list.get(position)); 
           context.startActivity(intent);
         });
+        
+        if(list.get(position).getIs_network()){
+            holder.status.setVisibility(View.GONE);
+        }
   }
 
   @Override
@@ -63,12 +67,14 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
     MaterialTextView nametextView;
     MaterialTextView timetextView;
     MaterialTextView idtextView;
+        MaterialTextView status;
 
     ViewHolder(View itemView) {
       super(itemView);
       nametextView = itemView.findViewById(R.id.exam_name);
       timetextView = itemView.findViewById(R.id.exam_time);
       idtextView = itemView.findViewById(R.id.exam_id);
+      status =itemView.findViewById(R.id.status);
     }
   }
 }

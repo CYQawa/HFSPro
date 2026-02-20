@@ -15,6 +15,7 @@ import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.ExamActivity;
 import com.cyq.awa.hfspro.activities.LastExamActivity;
 import com.cyq.awa.hfspro.adapter.ExamListAdapter;
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.*;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
@@ -25,7 +26,9 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +41,7 @@ public class HomeFragment extends Fragment {
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    // 加载布局文件
+
     return inflater.inflate(R.layout.fragment_home, container, false);
   }
 
@@ -71,21 +74,39 @@ public class HomeFragment extends Fragment {
                 public void onResponse(
                     Call<ApiResponse<ExamListData>> call,
                     Response<ApiResponse<ExamListData>> response) {
-                  ApiResponse<ExamListData> examlistResponse = response.body();
                   if (response.isSuccessful() && response.body() != null) {
-                    ExamListData data = response.body().getData();
+                    ApiResponse<ExamListData> examlistResponse = response.body();
                     if (examlistResponse.isSuccess()) {
                       List<ExamListItem> listexamtiem = examlistResponse.getData().getList();
                       RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
                       recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-                      List<MyExamList> dataList = new ArrayList<>();
-
-                      for (int i = 0; i < listexamtiem.size(); i++) {
-                        ExamListItem e = listexamtiem.get(i);
-                        dataList.add(new MyExamList(e));
+                      // 1. 将网络数据转换为 MyExamListItem
+                      List<MyExamListItem> dataList = new ArrayList<>();
+                      for (ExamListItem e : listexamtiem) {
+                        dataList.add(new MyExamListItem(e));
                       }
+
+                      // 2. 获取本地所有考试
+                      List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
+
+                      // 3. 构建网络考试ID集合，用于去重
+                      Set<Long> networkExamIds = new HashSet<>();
+                      for (MyExamListItem item : dataList) {
+                        networkExamIds.add(item.getExamId());
+                      }
+
+                      // 4. 将本地独有的考试添加到列表末尾
+                      for (MyExamListItem localExam : localExams) {
+                        if (!networkExamIds.contains(localExam.getExamId())) {
+                          dataList.add(localExam);
+                        }
+                      }
+
+                      // 5. 设置适配器
                       ExamListAdapter adapter = new ExamListAdapter(requireContext(), dataList);
+                      dataList.sort((o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
+                      adapter.notifyDataSetChanged();
                       recyclerView.setAdapter(adapter);
 
                       dialog.show();
@@ -120,7 +141,7 @@ public class HomeFragment extends Fragment {
 
                 new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("请输入examid")
-                    .setMessage("超过120天的考试也能看哦，只要你记得examid的话~~")
+                    .setMessage("输入examId查看考试，超过120天的也能看。\n请求成功后，会自动记录到本地")
                     .setView(dialogView)
                     .setPositiveButton(
                         "确定",
@@ -129,7 +150,7 @@ public class HomeFragment extends Fragment {
                           if (!inputText.isEmpty()) {
                             try {
                               Long id = Long.parseLong(inputText);
-                              MyExamList item = new MyExamList(id, null, null);
+                              MyExamListItem item = new MyExamListItem(id, null, null);
 
                               Intent intent = new Intent(requireContext(), ExamActivity.class);
                               intent.putExtra("myexam", item);

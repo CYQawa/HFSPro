@@ -62,21 +62,24 @@ public class MyModel {
     }
   }
 
-  public static class MyExamList implements Serializable {
+  public static class MyExamListItem implements Serializable {
     private long examId;
     private String name;
     private Long time;
+    private boolean is_network;
 
-    public MyExamList(ExamListItem examlistitem) {
+    public MyExamListItem(ExamListItem examlistitem) {
       examId = examlistitem.getExamId();
       name = examlistitem.getName();
       time = examlistitem.getTime();
+      is_network = true;
     }
 
-    public MyExamList(long examId, String name, Long time) {
+    public MyExamListItem(long examId, String name, Long time) {
       this.examId = examId;
       this.name = name;
       this.time = time;
+      is_network = false;
     }
 
     public long getExamId() {
@@ -89,6 +92,14 @@ public class MyModel {
 
     public long getTime() {
       return time;
+    }
+
+    public boolean getIs_network() {
+      return this.is_network;
+    }
+
+    public void setIs_network(boolean is_network) {
+      this.is_network = is_network;
     }
   }
 }
