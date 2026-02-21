@@ -7,19 +7,24 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.cyq.awa.hfspro.fragments.answer.AnswerSheetFragment;
 import com.cyq.awa.hfspro.fragments.answer.PaperPicFragment;
 
+import java.util.List;
+
 public class ViewPagerAdapter extends FragmentStateAdapter {
 
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    private List<String> imageUrls; 
+
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity, List<String> imageUrls) {
         super(fragmentActivity);
+        this.imageUrls = imageUrls;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // 根据位置返回对应的 Fragment
         switch (position) {
             case 0:
-                return new PaperPicFragment();
+                // 传递图片 URL 给 PaperPicFragment
+                return PaperPicFragment.newInstance(imageUrls);
             case 1:
                 return new AnswerSheetFragment();
             default:
@@ -29,6 +34,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2; // 页面总数
+        return 2;
     }
 }
