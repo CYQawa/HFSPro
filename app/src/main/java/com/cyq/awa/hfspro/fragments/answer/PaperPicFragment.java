@@ -63,7 +63,7 @@ public class PaperPicFragment extends Fragment {
 
     recyclerView.addItemDecoration(divider); // 添加分割线
 
-    ImageAdapter adapter = new ImageAdapter(imageUrls);
+    ImageAdapter adapter = new ImageAdapter(imageUrls,requireActivity());
     recyclerView.setAdapter(adapter);
   }
 }

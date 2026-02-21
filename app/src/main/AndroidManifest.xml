@@ -34,8 +34,11 @@
         <activity
             android:name=".activities.LastExamActivity"
             android:exported="false" />
-              <activity
+        <activity
             android:name=".activities.AnswerActivity"
+            android:exported="false" />
+            <activity
+            android:name=".activities.ImagePreviewActivity"
             android:exported="false" />
     </application>
 
