@@ -48,6 +48,13 @@ public class RetrofitTools {
     
     @GET("v2/wrong-items/overview")
     Call<ApiResponse<List<moreExamlist>>> getMoreExamList();
+    
+    @GET("v3/exam/{examId}/papers/{paperid}/answer-picture")
+    Call<ApiResponse<AnswerPictureData>> getAnswerPicture(
+            @Path("examId") long examId,
+            @Path("paperid") String paperid,
+            @Query("pid") String pid
+    );
   }
 
   public static class RetrofitClient {

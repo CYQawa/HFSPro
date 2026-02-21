@@ -2,10 +2,14 @@ package com.cyq.awa.hfspro.activities;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
+import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
@@ -14,6 +18,9 @@ import com.cyq.awa.hfspro.adapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Callback;
 
 public class AnswerActivity extends AppCompatActivity {
   private MyPaperOverview paper;
@@ -29,40 +36,134 @@ public class AnswerActivity extends AppCompatActivity {
 
     MaterialToolbar toolbar = findViewById(R.id.toolbar);
     CollapsingToolbarLayout tooltitle = findViewById(R.id.tooltitle);
+    TabLayout tabLayout = findViewById(R.id.tabLayout);
+    ViewPager2 viewPager2 = findViewById(R.id.viewPager);
 
     toolbar.setNavigationOnClickListener(
         v -> {
           finish();
         });
     tooltitle.setTitle(paper.getSubject() + "：原卷/答题卡");
-    
-    
-    TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager2 viewPager2 = findViewById(R.id.viewPager);
 
-        //测试用，伪数据
-        List<String> i = new ArrayList<String>();
-        i.add("https://yj-oss.yunxiao.com/v1/baidu-raw/origin/10062333/69872a9f46e19da95fe1e1b4.png?authorization=bce-auth-v1%2Fa908715249bb41c998c7d924b2476b37%2F2026-02-21T10%3A33%3A06Z%2F604800%2Fhost%2F06bbf9dacaa5302574df7ba932bc79abaf5bcf7a866bbb49a228faf8a792c782");
-        
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this,i);
-        viewPager2.setAdapter(adapter);
+    // 测试用，伪数据
+    List<String> i = new ArrayList<String>();
+    i.add(
+        "https://yj-oss.yunxiao.com/v1/baidu-raw/origin/10062333/69872a9f46e19da95fe1e1b4.png?authorization=bce-auth-v1%2Fa908715249bb41c998c7d924b2476b37%2F2026-02-21T10%3A33%3A06Z%2F604800%2Fhost%2F06bbf9dacaa5302574df7ba932bc79abaf5bcf7a866bbb49a228faf8a792c782");
 
-        // 使用 TabLayoutMediator 连接 TabLayout 和 ViewPager2
-        new TabLayoutMediator(tabLayout, viewPager2,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override
-                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        // 为每个选项卡设置标题（也可以设置图标等）
-                        switch (position) {
-                            case 0:
-                                tab.setText("原卷");
-                                // 如果需要图标：tab.setIcon(R.drawable.ic_home);
-                                break;
-                            case 1:
-                                tab.setText("答题卡");
-                                break;
-                        }
-                    }
-                }).attach(); 
+    //    ViewPagerAdapter adapter = new ViewPagerAdapter(this, i);
+    //    viewPager2.setAdapter(adapter);
+    // 使用 TabLayoutMediator 连接 TabLayout 和 ViewPager2
+    //    new TabLayoutMediator(
+    //            tabLayout,
+    //            viewPager2,
+    //            new TabLayoutMediator.TabConfigurationStrategy() {
+    //              @Override
+    //              public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+    //                // 为每个选项卡设置标题（也可以设置图标等）
+    //                switch (position) {
+    //                  case 0:
+    //                    tab.setText("原卷");
+    //                    break;
+    //                  case 1:
+    //                    tab.setText("答题卡");
+    //                    break;
+    //                }
+    //              }
+    //            })
+    //        .attach();
+showLoading();
+
+    RetrofitTools.ApiService service = RetrofitTools.RetrofitClient.getAuthService();
+    Call<ApiResponse<AnswerPictureData>> call =
+        service.getAnswerPicture(exam.getExamId(), paper.getPaperId(), paper.getPid());
+    call.enqueue(
+        new Callback<ApiResponse<AnswerPictureData>>() {
+          @Override
+          public void onResponse(
+              Call<ApiResponse<AnswerPictureData>> call,
+              Response<ApiResponse<AnswerPictureData>> response) {
+            if (response.isSuccessful()) {
+              ApiResponse<AnswerPictureData> apiResponse = response.body();
+              if (apiResponse != null && apiResponse.isSuccess()) {
+                AnswerPictureData data = apiResponse.getData();
+                // 获取所需字段
+                //                List<String> urls = data.getUrl(); // 答题卡原图
+                //                double totalScore = data.getScore(); // 总分
+                //                List<QuestionItem> questions = data.getQuestions(); // 题目列表
+                //                for (QuestionItem q : questions) {
+                //                  int manfen = q.getManfen();
+                //                  double score = q.getScore();
+                //                  List<AnswerOptionItem> options = q.getAnswerOption();
+                //                  List<String> questionUrls = q.getUrl(); // 题目对应的图片
+                //                }
+                List<String> paperPics = data.getPaperPic();
+                if (paperPics == null) {
+                  paperPics = new ArrayList<>();
+                  showDialog("提示", "没有原卷");
+                }
+                // 创建适配器并设置给 ViewPager2
+                ViewPagerAdapter adapter = new ViewPagerAdapter(AnswerActivity.this, paperPics);
+                viewPager2.setAdapter(adapter);
+
+                // 关联 TabLayout 和 ViewPager2，并根据实际页面数设置标题
+                new TabLayoutMediator(
+                        tabLayout,
+                        viewPager2,
+                        (tab, position) -> {
+                          int itemCount = viewPager2.getAdapter().getItemCount();
+                          if (itemCount == 1) {
+                            tab.setText("答题卡");
+                          } else {
+                            tab.setText(position == 0 ? "原卷" : "答题卡");
+                          }
+                        })
+                    .attach();
+                hideLoading();
+              }
+            } else {
+              showDialog("请求失败", "服务器错误: " + response.code());
+              hideLoading();
+            }
+          }
+
+          @Override
+          public void onFailure(Call<ApiResponse<AnswerPictureData>> call, Throwable t) {
+            showDialog("错误", "处理失败");
+            hideLoading();
+          }
+        });
+  }
+
+  private AlertDialog createLoadingDialog() {
+    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+    builder.setTitle("请稍候");
+    builder.setMessage("正在加载中...");
+    builder.setCancelable(false);
+
+    return builder.create();
+  }
+
+  // 使用示例
+  private AlertDialog loadingDialog;
+
+  public void showLoading() {
+    if (loadingDialog == null) {
+      loadingDialog = createLoadingDialog();
+    }
+    loadingDialog.show();
+  }
+
+  public void hideLoading() {
+    if (loadingDialog != null && loadingDialog.isShowing()) {
+      loadingDialog.dismiss();
+    }
+  }
+
+  private void showDialog(String title, String message) {
+    runOnUiThread(
+        () -> {
+          MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+          builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
+        });
   }
 }

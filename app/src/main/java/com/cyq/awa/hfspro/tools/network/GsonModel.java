@@ -4,6 +4,32 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class GsonModel {
+  public static class ApiResponse<T> {
+    @SerializedName("code")
+    private int code;
+
+    @SerializedName("msg")
+    private String msg;
+
+    @SerializedName("data")
+    private T data;
+
+    public int getCode() {
+      return code;
+    }
+
+    public String getMsg() {
+      return msg;
+    }
+
+    public T getData() {
+      return data;
+    }
+
+    public boolean isSuccess() {
+      return code == 0;
+    }
+  }
 
   public static class LastExamData {
 
@@ -200,6 +226,9 @@ public class GsonModel {
     @SerializedName("paperId")
     private String paperId;
 
+    @SerializedName("pid")
+    private String pid;
+
     @SerializedName("subject")
     private String subject;
 
@@ -207,7 +236,7 @@ public class GsonModel {
     private double score;
 
     @SerializedName("manfen")
-    private int manfen;
+    private double manfen;
 
     @SerializedName("weakAdvantageStatus")
     private int weakAdvantageStatus;
@@ -224,12 +253,20 @@ public class GsonModel {
       return score;
     }
 
-    public int getManfen() {
+    public double getManfen() {
       return manfen;
     }
 
     public int getWeakAdvantageStatus() {
       return weakAdvantageStatus;
+    }
+
+    public String getPid() {
+      return this.pid;
+    }
+
+    public void setPid(String pid) {
+      this.pid = pid;
     }
   }
 
@@ -318,54 +355,231 @@ public class GsonModel {
       return token;
     }
   }
-    
-public static class moreExamlist {
+
+  public static class moreExamlist {
     @SerializedName("examList")
     private List<moreExamItem> examList;
-    
-    public List<moreExamItem> getExamList() { return examList; }
-}
 
+    public List<moreExamItem> getExamList() {
+      return examList;
+    }
+  }
 
-
-// 表示考试维度的错题项
-public static class moreExamItem {
+  // 表示考试维度的错题项
+  public static class moreExamItem {
     @SerializedName("examName")
     private String examName;
+
     @SerializedName("examTime")
     private long examTime;
+
     @SerializedName("examId")
-    private String examId;          // 注意：响应中 examId 为字符串类型
+    private String examId; // 注意：响应中 examId 为字符串类型
 
-    public String getExamName() { return examName; }
-    public Long getExamTime() { return examTime; }
-    public long getExamId() { return Long.parseLong(examId); }
-}
-
-  public static class ApiResponse<T> {
-    @SerializedName("code")
-    private int code;
-
-    @SerializedName("msg")
-    private String msg;
-
-    @SerializedName("data")
-    private T data;
-
-    public int getCode() {
-      return code;
+    public String getExamName() {
+      return examName;
     }
 
-    public String getMsg() {
-      return msg;
+    public Long getExamTime() {
+      return examTime;
     }
 
-    public T getData() {
-      return data;
+    public long getExamId() {
+      return Long.parseLong(examId);
+    }
+  }
+
+  // 答题卡信息响应 data 部分
+  public static class AnswerPictureData {
+    @SerializedName("url")
+    private List<String> url; // 原图URL列表
+
+    @SerializedName("urlResize")
+    private List<String> urlResize; // 缩略图URL列表
+
+    @SerializedName("isExam2")
+    private boolean isExam2; // 是否为双卷
+
+    @SerializedName("questions")
+    private List<QuestionItem> questions; // 题目列表
+
+    @SerializedName("paperPic")
+    private List<String> paperPic; // 试卷原图列表
+
+    @SerializedName("paperPicResize")
+    private List<String> paperPicResize; // 试卷缩略图列表
+
+    @SerializedName("score")
+    private double score; // 总分
+
+    // 其他字段可按需添加，如 nonvipScore, nonvipQuestion, show, config 等
+
+    public List<String> getUrl() {
+      return url;
     }
 
-    public boolean isSuccess() {
-      return code == 0;
+    public List<String> getUrlResize() {
+      return urlResize;
+    }
+
+    public boolean isExam2() {
+      return isExam2;
+    }
+
+    public List<QuestionItem> getQuestions() {
+      return questions;
+    }
+
+    public List<String> getPaperPic() {
+      return paperPic;
+    }
+
+    public List<String> getPaperPicResize() {
+      return paperPicResize;
+    }
+
+    public double getScore() {
+      return score;
+    }
+  }
+
+  // 题目项
+  public static class QuestionItem {
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("manfen")
+    private double manfen; // 满分
+
+    @SerializedName("score")
+    private double score; // 得分
+
+    @SerializedName("type")
+    private int type; // 题目类型
+
+    @SerializedName("myAnswer")
+    private String myAnswer; // 我的答案
+
+    @SerializedName("answerOption")
+    private List<AnswerOptionItem> answerOption; // 选项坐标信息（仅选择题有）
+
+    @SerializedName("answer")
+    private String answer; // 正确答案
+
+    @SerializedName("trasRatio")
+    private int trasRatio; // 折算比例
+
+    @SerializedName("scoreS")
+    private String scoreS; // 得分字符串（可能含小数）
+
+    @SerializedName("remark2")
+    private List<Object> remark2; // 批注信息（按需）
+
+    @SerializedName("url")
+    private List<String> url; // 该题对应的图片URL（主观题可能有）
+
+    // Getters
+    public String getId() {
+      return id;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public double getManfen() {
+      return manfen;
+    }
+
+    public double getScore() {
+      return score;
+    }
+
+    public int getType() {
+      return type;
+    }
+
+    public String getMyAnswer() {
+      return myAnswer;
+    }
+
+    public List<AnswerOptionItem> getAnswerOption() {
+      return answerOption;
+    }
+
+    public String getAnswer() {
+      return answer;
+    }
+
+    public int getTrasRatio() {
+      return trasRatio;
+    }
+
+    public String getScoreS() {
+      return scoreS;
+    }
+
+    public List<Object> getRemark2() {
+      return remark2;
+    }
+
+    public List<String> getUrl() {
+      return url;
+    }
+  }
+
+  // 选项坐标信息
+  public static class AnswerOptionItem {
+    @SerializedName("option")
+    private String option; // 选项字母
+
+    @SerializedName("index")
+    private int index; // 索引
+
+    @SerializedName("x")
+    private String x; // x坐标（字符串，可转为int）
+
+    @SerializedName("y")
+    private String y; // y坐标
+
+    @SerializedName("w")
+    private String w; // 宽度
+
+    @SerializedName("h")
+    private String h; // 高度
+
+    @SerializedName("right")
+    private int right; // 是否正确（1正确，0错误）
+
+    public String getOption() {
+      return option;
+    }
+
+    public int getIndex() {
+      return index;
+    }
+
+    public String getX() {
+      return x;
+    }
+
+    public String getY() {
+      return y;
+    }
+
+    public String getW() {
+      return w;
+    }
+
+    public String getH() {
+      return h;
+    }
+
+    public int getRight() {
+      return right;
     }
   }
 }

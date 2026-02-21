@@ -28,9 +28,10 @@ public class MyModel {
   // 试卷概览信息（对应 papers 数组中的每一项）
   public static class MyPaperOverview implements Serializable {
     private String paperId;
+    private String pid;
     private String subject;
-    private double score; // 该卷得分
-    private int manfen; // 该卷满分
+    private double score; 
+    private double manfen; 
     private int weakAdvantageStatus;
 
     public MyPaperOverview(PaperOverview p) {
@@ -39,6 +40,7 @@ public class MyModel {
       score = p.getScore();
       manfen = p.getManfen();
       weakAdvantageStatus = p.getWeakAdvantageStatus();
+      pid = p.getPid();
     }
 
     public String getPaperId() {
@@ -53,12 +55,20 @@ public class MyModel {
       return score;
     }
 
-    public int getManfen() {
+    public double getManfen() {
       return manfen;
     }
 
     public int getWeakAdvantageStatus() {
       return weakAdvantageStatus;
+    }
+
+    public String getPid() {
+      return this.pid;
+    }
+
+    public void setPid(String pid) {
+      this.pid = pid;
     }
   }
 
