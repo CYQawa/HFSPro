@@ -14,6 +14,16 @@ import java.util.List;
 
 public class PaperGridAdapter extends RecyclerView.Adapter<PaperGridAdapter.ViewHolder> {
   private List<MyPaperOverview> list;
+  private OnItemClickListener listener;
+
+  public interface OnItemClickListener {
+    void onItemClick(int position, MyPaperOverview item);
+  }
+
+  // 提供一个设置监听器的方法
+  public void setOnItemClickListener(OnItemClickListener listener) {
+    this.listener = listener;
+  }
 
   public PaperGridAdapter(List<MyPaperOverview> MyPaperItem) {
     list = MyPaperItem;
@@ -39,6 +49,15 @@ public class PaperGridAdapter extends RecyclerView.Adapter<PaperGridAdapter.View
     }
     holder.score.setText("" + list.get(position).getScore());
     holder.manfen.setText("/" + list.get(position).getManfen());
+    
+    holder.itemView.setOnClickListener(v -> {
+        if (listener != null) {
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                listener.onItemClick(adapterPosition, list.get(adapterPosition));
+            }
+        }
+    });
   }
 
   @Override

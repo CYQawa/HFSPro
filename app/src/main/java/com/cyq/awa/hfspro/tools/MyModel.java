@@ -26,7 +26,7 @@ public class MyModel {
   }
 
   // 试卷概览信息（对应 papers 数组中的每一项）
-  public static class MyPaperOverview {
+  public static class MyPaperOverview implements Serializable {
     private String paperId;
     private String subject;
     private double score; // 该卷得分

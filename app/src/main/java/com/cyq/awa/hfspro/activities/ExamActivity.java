@@ -1,6 +1,7 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,7 +69,7 @@ public class ExamActivity extends AppCompatActivity {
               if (body.isSuccess()) {
                 MyExamListItem newMyexamlist =
                     new MyExamListItem(exam.getExamId(), data.getName(), data.getTime());
-                    dbm.insertOrUpdateExam(newMyexamlist);
+                dbm.insertOrUpdateExam(newMyexamlist);
                 scoretext.setText("" + data.getScore());
                 manfent.setText("/" + data.getManfen());
                 tooltitle.setTitle(data.getName());
@@ -101,6 +102,13 @@ public class ExamActivity extends AppCompatActivity {
                 }
 
                 PaperGridAdapter adapter = new PaperGridAdapter(dataList);
+                adapter.setOnItemClickListener(
+                    (position, item) -> {
+                      Intent intent = new Intent(ExamActivity.this, AnswerActivity.class);
+                      intent.putExtra("paper", item);
+                      intent.putExtra("myexam", exam);
+                      startActivity(intent);
+                    });
                 paperRecyclerView.setAdapter(adapter);
 
                 hideLoading();

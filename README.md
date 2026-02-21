@@ -12,6 +12,7 @@
 
 
 <p align="center">
+<img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT License">
   <img src="https://img.shields.io/badge/Material Design-3-blue?style=flat-square" alt="Material Design 3">
 </p>
 

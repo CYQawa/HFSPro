@@ -112,13 +112,11 @@ public class HomeFragment extends Fragment {
                       recyclerView.setAdapter(adapter);
 
                       dialog.show();
-                      BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
-                      // 设置为展开状态
-                      behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                      // 显示对话框
 
-                      // 可选：设置滑出高度为屏幕高度（全屏效果）
-                      int screenHeight = getResources().getDisplayMetrics().heightPixels;
-                      behavior.setPeekHeight(screenHeight); // 或根据
+                      // 设置全屏
+                      BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                      behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
                       hideLoading();
                     } else {
@@ -210,15 +208,15 @@ public class HomeFragment extends Fragment {
                           // 现在 distinctExams 中包含去重后的考试信息
                           DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
                           hideLoading();
-                          showDialog("加载全部考试成功","加载成功，共"+distinctExams.size()+"场考试");
+                          showDialog("加载全部考试成功", "加载成功，共" + distinctExams.size() + "场考试");
                           dialog.dismiss();
-                        }else{
-                            String errorMsg = response.body().getMsg();
-                      hideLoading();
-                      showDialog(
-                          "请求失败",
-                          String.format(
-                              "请求失败: %s\ncode: %d", errorMsg, response.body().getCode()));
+                        } else {
+                          String errorMsg = response.body().getMsg();
+                          hideLoading();
+                          showDialog(
+                              "请求失败",
+                              String.format(
+                                  "请求失败: %s\ncode: %d", errorMsg, response.body().getCode()));
                         }
                       }
 
