@@ -35,11 +35,10 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         
-        // 初始化原有功能
+        
         RetrofitTools.init(this);
         dbhelper = new DatabaseHelper(this);
         
-        // 初始化崩溃处理器
         initCrashHandler();
     }
 

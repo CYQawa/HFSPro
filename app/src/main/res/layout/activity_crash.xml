@@ -13,7 +13,7 @@
              android:layout_height="200dp"
              android:layout_width="match_parent"
              app:layout_scrollFlags="scroll|exitUntilCollapsed"
-             app:title="HFSPro崩溃了喵~">
+             app:title="HFSPro崩溃了喵~\n请在github上打开一个Issues">
 
             <com.google.android.material.appbar.MaterialToolbar
                  android:layout_height="?attr/actionBarSize"

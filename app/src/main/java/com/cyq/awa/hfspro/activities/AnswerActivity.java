@@ -99,7 +99,7 @@ showLoading();
                   showDialog("提示", "没有原卷");
                 }
                 // 创建适配器并设置给 ViewPager2
-                ViewPagerAdapter adapter = new ViewPagerAdapter(AnswerActivity.this, paperPics);
+                ViewPagerAdapter adapter = new ViewPagerAdapter(AnswerActivity.this, paperPics,data.getUrl());
                 viewPager2.setAdapter(adapter);
 
                 // 关联 TabLayout 和 ViewPager2，并根据实际页面数设置标题

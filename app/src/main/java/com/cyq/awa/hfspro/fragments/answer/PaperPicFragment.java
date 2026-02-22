@@ -23,7 +23,6 @@ public class PaperPicFragment extends Fragment {
   private static final String ARG_IMAGE_URLS = "image_urls";
   private List<String> imageUrls = new ArrayList<>();
 
-  // 静态工厂方法，用于从 Activity 传递数据
   public static PaperPicFragment newInstance(List<String> imageUrls) {
     PaperPicFragment fragment = new PaperPicFragment();
     Bundle args = new Bundle();
