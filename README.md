@@ -45,6 +45,9 @@ HFSPro 是一个为「好分数」平台开发的第三方、现代化、功能�
   <img src="images/examlist.jpg" width="180" alt="考试列表">
   <img src="images/exam.jpg" width="180" alt="考试">
   <img src="images/lastexam.jpg" width="180" alt="最近考试排名">
+  <img src="images/paperPic.jpg" width="180" alt="原卷">
+  <img src="images/1.jpg" width="180" alt="放大展示">
+  
 </p>
 
 ## 📥 下载与安装
