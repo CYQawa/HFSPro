@@ -83,16 +83,7 @@ showLoading();
               ApiResponse<AnswerPictureData> apiResponse = response.body();
               if (apiResponse != null && apiResponse.isSuccess()) {
                 AnswerPictureData data = apiResponse.getData();
-                // 获取所需字段
-                //                List<String> urls = data.getUrl(); // 答题卡原图
-                //                double totalScore = data.getScore(); // 总分
-                //                List<QuestionItem> questions = data.getQuestions(); // 题目列表
-                //                for (QuestionItem q : questions) {
-                //                  int manfen = q.getManfen();
-                //                  double score = q.getScore();
-                //                  List<AnswerOptionItem> options = q.getAnswerOption();
-                //                  List<String> questionUrls = q.getUrl(); // 题目对应的图片
-                //                }
+                
                 List<String> paperPics = data.getPaperPic();
                 if (paperPics == null) {
                   paperPics = new ArrayList<>();

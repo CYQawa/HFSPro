@@ -20,7 +20,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     super(fragmentActivity);
     this.imageUrls = imageUrls;
     this.ans = ans;
-    // 判断是否有原卷图片数据
     this.hasPaperPic = imageUrls != null && !imageUrls.isEmpty();
   }
 
@@ -40,7 +39,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     } else {
       // 无原卷图片时：只有第0页，且为答题卡
       if (position == 0) {
-        return new AnswerSheetFragment();
+        return  AnswerSheetFragment.newInstance(ans);
       } else {
         throw new IllegalStateException("Invalid position: " + position);
       }
