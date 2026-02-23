@@ -25,7 +25,6 @@ import retrofit2.http.Query;
 public class RetrofitTools {
   private static Context appContext;
 
-  // 初始化上下文（需要在 Application 中调用）
   public static void init(Context context) {
     appContext = context.getApplicationContext();
   }
@@ -42,19 +41,19 @@ public class RetrofitTools {
 
     @GET("v4/exam/overview")
     Call<ApiResponse<CompareRankData>> getCompareRank(@Query("examId") long examId);
-    
+
     @GET("v2/students/last-exam-overview")
     Call<ApiResponse<LastExamData>> getLastExam();
-    
+
     @GET("v2/wrong-items/overview")
     Call<ApiResponse<List<moreExamlist>>> getMoreExamList();
-    
+
     @GET("v3/exam/{examId}/papers/{paperid}/answer-picture")
     Call<ApiResponse<AnswerPictureData>> getAnswerPicture(
-            @Path("examId") long examId,
-            @Path("paperid") String paperid,
-            @Query("pid") String pid
-    );
+        @Path("examId") long examId, @Path("paperid") String paperid, @Query("pid") String pid);
+
+    @GET("repos/{owner}/{repo}/releases/latest")
+    Call<GitHubRelease> checkLatestRelease(@Path("owner") String owner, @Path("repo") String repo);
   }
 
   public static class RetrofitClient {
@@ -120,6 +119,19 @@ public class RetrofitTools {
     private static okhttp3.Interceptor getTokenInterceptor() {
       return chain -> {
         okhttp3.Request original = chain.request();
+        String host = original.url().host(); // 获取请求的 Host
+
+        // 如果是 GitHub API 请求，只添加基础 Headers，不加 token
+        if ("api.github.com".equals(host)) {
+          okhttp3.Request request =
+              original
+                  .newBuilder()
+                  .header("Content-Type", "application/json")
+                  .header("Accept", "application/json")
+                  .method(original.method(), original.body())
+                  .build();
+          return chain.proceed(request);
+        }
 
         // 获取请求路径
         String path = original.url().encodedPath();
@@ -186,6 +198,17 @@ public class RetrofitTools {
 
     public static ApiService getAuthService() {
       return getClient().create(ApiService.class);
+    }
+
+    public static ApiService getGitHubService() {
+      // 使用 GitHub API 的基础 URL
+      Retrofit gitHubRetrofit =
+          new Retrofit.Builder()
+              .baseUrl("https://api.github.com/")
+              .client(getSafeOkHttpClient()) // 可复用 client，但不需要 token 拦截器
+              .addConverterFactory(GsonConverterFactory.create())
+              .build();
+      return gitHubRetrofit.create(ApiService.class);
     }
   }
 }

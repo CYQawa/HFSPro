@@ -391,7 +391,7 @@ public class GsonModel {
   }
 
   // 答题卡信息响应 data 部分
-  public static class AnswerPictureData implements Serializable{
+  public static class AnswerPictureData implements Serializable {
     @SerializedName("url")
     private List<String> url; // 原图URL列表
 
@@ -445,7 +445,7 @@ public class GsonModel {
   }
 
   // 题目项
-  public static class QuestionItem implements Serializable{
+  public static class QuestionItem implements Serializable {
     @SerializedName("id")
     private String id;
 
@@ -533,7 +533,7 @@ public class GsonModel {
   }
 
   // 选项坐标信息
-  public static class AnswerOptionItem implements Serializable{
+  public static class AnswerOptionItem implements Serializable {
     @SerializedName("option")
     private String option; // 选项字母
 
@@ -581,6 +581,70 @@ public class GsonModel {
 
     public int getRight() {
       return right;
+    }
+  }
+
+  public static class GitHubRelease {
+    @SerializedName("html_url")
+    private String html;
+
+    @SerializedName("tag_name")
+    private String tagName; // 版本标签，例如 "v1.2.3"
+
+    @SerializedName("name")
+    private String name; // 发布名称
+
+    @SerializedName("body")
+    private String body; // 更新说明
+
+    @SerializedName("prerelease")
+    private boolean prerelease; // 是否为预发布
+
+    @SerializedName("assets")
+    private List<Asset> assets; // 附件（APK 文件）
+
+    public String getTagName() {
+      return tagName;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public boolean isPrerelease() {
+      return prerelease;
+    }
+
+    public List<Asset> getAssets() {
+      return assets;
+    }
+
+    public static class Asset {
+      @SerializedName("name")
+      private String name; // 文件名，例如 "app-release.apk"
+
+      @SerializedName("browser_download_url")
+      private String downloadUrl; // 下载地址
+
+      public String getName() {
+        return name;
+      }
+
+      public String getDownloadUrl() {
+        return downloadUrl;
+      }
+    }
+
+    public String getHtml() {
+      return this.html;
+    }
+
+    public void setHtml(String html) {
+      this.html = html;
     }
   }
 }
