@@ -60,9 +60,10 @@ public class PaperPicFragment extends Fragment {
             recyclerView.getContext(), DividerItemDecoration.VERTICAL // 垂直列表（水平列表用 HORIZONTAL）
             );
 
-    recyclerView.addItemDecoration(divider); // 添加分割线
+    recyclerView.addItemDecoration(divider); 
 
-    ImageAdapter adapter = new ImageAdapter(imageUrls,requireActivity());
-    recyclerView.setAdapter(adapter);
+    // PaperPicFragment.java 中 onViewCreated 部分
+ImageAdapter adapter = new ImageAdapter(imageUrls, requireActivity()); // 调用无标记构造函数
+recyclerView.setAdapter(adapter);
   }
 }

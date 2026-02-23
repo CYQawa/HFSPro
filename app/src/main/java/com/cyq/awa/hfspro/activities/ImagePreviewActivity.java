@@ -1,12 +1,18 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import com.bumptech.glide.Glide;          // 如果使用Glide加载网络图片
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.tools.MyModel.MarkInfo;
+import com.cyq.awa.hfspro.transform.AnswerSheetTransformation;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.snackbar.Snackbar;
+import java.util.List;
+
 public class ImagePreviewActivity extends AppCompatActivity {
 
     @Override
@@ -15,22 +21,36 @@ public class ImagePreviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image_preview);
 
         PhotoView photoView = findViewById(R.id.photo_view);
-        
 
-        // 获取传递的图片资源ID
-        int imageRes = getIntent().getIntExtra("image_res", 0);
-        if (imageRes != 0) {
-            // 本地资源图片
-            photoView.setImageResource(imageRes);
+        // 获取传递的图片 URL
+        String imageUrl = getIntent().getStringExtra("image_url");
+
+        // 获取传递的标记列表（可能为 null）
+        List<MarkInfo> marks = (List<MarkInfo>) getIntent().getSerializableExtra("marks");
+
+        if (imageUrl != null) {
+            // 加载网络图片，如果有标记则应用转换
+            if (marks != null && !marks.isEmpty()) {
+                Glide.with(this)
+                        .load(imageUrl)
+                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                        .transform(new AnswerSheetTransformation(marks))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE) // 预览可不缓存，也可根据需求调整
+                        .into(photoView);
+            } else {
+                Glide.with(this)
+                        .load(imageUrl)
+                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                        .into(photoView);
+            }
         } else {
-            // 如果是网络图片，可以用Glide加载
-            String imageUrl = getIntent().getStringExtra("image_url");
-            Glide.with(this).load(imageUrl).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(photoView);
+            // 本地资源图片（原逻辑）
+            int imageRes = getIntent().getIntExtra("image_res", 0);
+            if (imageRes != 0) {
+                photoView.setImageResource(imageRes);
+            }
         }
-        Snackbar.make(findViewById(R.id.background),"按返回键返回",Snackbar.LENGTH_SHORT).show();
 
-        // PhotoView 自带缩放、平移功能，无需额外代码
-        // 可选：设置最大缩放比例
-        // photoView.setMaximumScale(10);
+        Snackbar.make(findViewById(R.id.background), "按返回键返回", Snackbar.LENGTH_SHORT).show();
     }
 }

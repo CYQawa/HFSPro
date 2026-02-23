@@ -1,6 +1,7 @@
 package com.cyq.awa.hfspro.tools.network;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.List;
 
 public class GsonModel {
@@ -390,7 +391,7 @@ public class GsonModel {
   }
 
   // 答题卡信息响应 data 部分
-  public static class AnswerPictureData {
+  public static class AnswerPictureData implements Serializable{
     @SerializedName("url")
     private List<String> url; // 原图URL列表
 
@@ -444,7 +445,7 @@ public class GsonModel {
   }
 
   // 题目项
-  public static class QuestionItem {
+  public static class QuestionItem implements Serializable{
     @SerializedName("id")
     private String id;
 
@@ -532,7 +533,7 @@ public class GsonModel {
   }
 
   // 选项坐标信息
-  public static class AnswerOptionItem {
+  public static class AnswerOptionItem implements Serializable{
     @SerializedName("option")
     private String option; // 选项字母
 

@@ -30,8 +30,8 @@ public class MyModel {
     private String paperId;
     private String pid;
     private String subject;
-    private double score; 
-    private double manfen; 
+    private double score;
+    private double manfen;
     private int weakAdvantageStatus;
 
     public MyPaperOverview(PaperOverview p) {
@@ -110,6 +110,47 @@ public class MyModel {
 
     public void setIs_network(boolean is_network) {
       this.is_network = is_network;
+    }
+  }
+
+  public static class MarkInfo implements Serializable {
+    private float x, y, w, h;
+    private int right; // 1正确，0错误
+    private String option;
+
+    // 构造函数
+    public MarkInfo(float x, float y, float w, float h, int right, String option) {
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.h = h;
+      this.right = right;
+      this.option = option;
+    }
+
+    // Getter
+    public float getX() {
+      return x;
+    }
+
+    public float getY() {
+      return y;
+    }
+
+    public float getW() {
+      return w;
+    }
+
+    public float getH() {
+      return h;
+    }
+
+    public int getRight() {
+      return right;
+    }
+
+    public String getOption() {
+      return option;
     }
   }
 }

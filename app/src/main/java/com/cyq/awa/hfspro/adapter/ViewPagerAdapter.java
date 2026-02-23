@@ -6,48 +6,46 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.cyq.awa.hfspro.fragments.answer.AnswerSheetFragment;
 import com.cyq.awa.hfspro.fragments.answer.PaperPicFragment;
-
+import com.cyq.awa.hfspro.tools.network.GsonModel.AnswerPictureData;
 import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
+    private List<String> paperPicUrls;
+    private AnswerPictureData answerData;
+    private boolean hasPaperPic;
 
-  private List<String> imageUrls;
-  private List<String> ans;
-  private boolean hasPaperPic;
-
-  public ViewPagerAdapter(
-      @NonNull FragmentActivity fragmentActivity, List<String> imageUrls, List<String> ans) {
-    super(fragmentActivity);
-    this.imageUrls = imageUrls;
-    this.ans = ans;
-    this.hasPaperPic = imageUrls != null && !imageUrls.isEmpty();
-  }
-
-  @NonNull
-  @Override
-  public Fragment createFragment(int position) {
-    if (hasPaperPic) {
-      // 有原卷图片时：第0页为原卷，第1页为答题卡
-      switch (position) {
-        case 0:
-          return PaperPicFragment.newInstance(imageUrls);
-        case 1:
-          return AnswerSheetFragment.newInstance(ans);
-        default:
-          throw new IllegalStateException("Invalid position: " + position);
-      }
-    } else {
-      // 无原卷图片时：只有第0页，且为答题卡
-      if (position == 0) {
-        return  AnswerSheetFragment.newInstance(ans);
-      } else {
-        throw new IllegalStateException("Invalid position: " + position);
-      }
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity,
+                            List<String> paperPicUrls,
+                            AnswerPictureData answerData) {
+        super(fragmentActivity);
+        this.paperPicUrls = paperPicUrls;
+        this.answerData = answerData;
+        this.hasPaperPic = paperPicUrls != null && !paperPicUrls.isEmpty();
     }
-  }
 
-  @Override
-  public int getItemCount() {
-    return hasPaperPic ? 2 : 1; // 动态返回页面数
-  }
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        if (hasPaperPic) {
+            switch (position) {
+                case 0:
+                    return PaperPicFragment.newInstance(paperPicUrls);
+                case 1:
+                    return AnswerSheetFragment.newInstance(answerData);
+                default:
+                    throw new IllegalStateException("Invalid position: " + position);
+            }
+        } else {
+            if (position == 0) {
+                return AnswerSheetFragment.newInstance(answerData);
+            } else {
+                throw new IllegalStateException("Invalid position: " + position);
+            }
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return hasPaperPic ? 2 : 1;
+    }
 }
