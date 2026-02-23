@@ -1,10 +1,8 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.tools.MyModel.MarkInfo;
@@ -35,7 +33,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
                         .load(imageUrl)
                         .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                         .transform(new AnswerSheetTransformation(marks))
-                        .diskCacheStrategy(DiskCacheStrategy.NONE) // 预览可不缓存，也可根据需求调整
                         .into(photoView);
             } else {
                 Glide.with(this)
@@ -44,13 +41,12 @@ public class ImagePreviewActivity extends AppCompatActivity {
                         .into(photoView);
             }
         } else {
-            // 本地资源图片（原逻辑）
+            // 本地资源图片（基本上用不到）
             int imageRes = getIntent().getIntExtra("image_res", 0);
             if (imageRes != 0) {
                 photoView.setImageResource(imageRes);
             }
         }
 
-        Snackbar.make(findViewById(R.id.background), "按返回键返回", Snackbar.LENGTH_SHORT).show();
     }
 }

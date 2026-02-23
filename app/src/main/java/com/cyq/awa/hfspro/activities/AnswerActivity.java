@@ -12,6 +12,7 @@ import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager2.widget.ViewPager2;
 import com.cyq.awa.hfspro.adapter.ViewPagerAdapter;
@@ -45,30 +46,7 @@ public class AnswerActivity extends AppCompatActivity {
         });
     tooltitle.setTitle(paper.getSubject() + "：原卷/答题卡");
 
-    
-
-    //    ViewPagerAdapter adapter = new ViewPagerAdapter(this, i);
-    //    viewPager2.setAdapter(adapter);
-    // 使用 TabLayoutMediator 连接 TabLayout 和 ViewPager2
-    //    new TabLayoutMediator(
-    //            tabLayout,
-    //            viewPager2,
-    //            new TabLayoutMediator.TabConfigurationStrategy() {
-    //              @Override
-    //              public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-    //                // 为每个选项卡设置标题（也可以设置图标等）
-    //                switch (position) {
-    //                  case 0:
-    //                    tab.setText("原卷");
-    //                    break;
-    //                  case 1:
-    //                    tab.setText("答题卡");
-    //                    break;
-    //                }
-    //              }
-    //            })
-    //        .attach();
-showLoading();
+    showLoading();
 
     RetrofitTools.ApiService service = RetrofitTools.RetrofitClient.getAuthService();
     Call<ApiResponse<AnswerPictureData>> call =
@@ -83,7 +61,7 @@ showLoading();
               ApiResponse<AnswerPictureData> apiResponse = response.body();
               if (apiResponse != null && apiResponse.isSuccess()) {
                 AnswerPictureData data = apiResponse.getData();
-                
+
                 List<String> paperPics = data.getPaperPic();
                 if (paperPics == null) {
                   paperPics = new ArrayList<>();
@@ -91,8 +69,9 @@ showLoading();
                 }
                 // 创建适配器并设置给 ViewPager2
                 // 在 AnswerActivity 中获取数据成功后
-ViewPagerAdapter adapter = new ViewPagerAdapter(AnswerActivity.this, paperPics, data);
-viewPager2.setAdapter(adapter);
+                ViewPagerAdapter adapter =
+                    new ViewPagerAdapter(AnswerActivity.this, paperPics, data);
+                viewPager2.setAdapter(adapter);
 
                 // 关联 TabLayout 和 ViewPager2，并根据实际页面数设置标题
                 new TabLayoutMediator(
@@ -108,6 +87,8 @@ viewPager2.setAdapter(adapter);
                         })
                     .attach();
                 hideLoading();
+                
+                Snackbar.make(findViewById(R.id.coordinator), "请耐心等待加载", Snackbar.LENGTH_SHORT).show();
               }
             } else {
               showDialog("请求失败", "服务器错误: " + response.code());

@@ -47,15 +47,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     return new ViewHolder(view);
   }
 
-  // ImageAdapter.java 中 onBindViewHolder 部分修改点击监听
-
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     String url = imageUrls.get(position);
     Glide.with(holder.itemView.getContext())
         .load(url)
         .override(Target.SIZE_ORIGINAL)
-        .diskCacheStrategy(DiskCacheStrategy.NONE)
         .transform(getTransformationForPosition(position))
         .error(R.drawable.ic_error)
         .into(holder.imageView);
@@ -70,6 +67,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
           if (marksPerSheet != null && marksPerSheet.size() > position) {
             marksForThisImage = marksPerSheet.get(position);
           }
+
           // 将标记列表作为 Serializable 传递
           intent.putExtra("marks", (java.io.Serializable) marksForThisImage);
 
