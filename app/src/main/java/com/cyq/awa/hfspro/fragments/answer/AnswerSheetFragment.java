@@ -18,7 +18,10 @@ import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +48,6 @@ public class AnswerSheetFragment extends Fragment {
         }
     }
 
-    /** 从完整 URL 中提取基础图片 URL（去掉查询参数和裁剪参数） */
     private String extractBaseUrl(String fullUrl) {
         int queryIdx = fullUrl.indexOf('?');
         String noQuery = queryIdx > 0 ? fullUrl.substring(0, queryIdx) : fullUrl;
@@ -56,16 +58,14 @@ public class AnswerSheetFragment extends Fragment {
         return noQuery;
     }
 
-    /** 解析 URL 中的裁剪坐标（支持 URL 编码） */
     private float[] parseCoordinates(String fullUrl) {
         try {
             int atIdx = fullUrl.indexOf("%40");
             if (atIdx < 0) return null;
             int queryIdx = fullUrl.indexOf('?');
             String cropPart = (queryIdx > atIdx) ? fullUrl.substring(atIdx, queryIdx) : fullUrl.substring(atIdx);
-            // 解码：%40 -> @, %2C -> ,, %7C -> |
             cropPart = URLDecoder.decode(cropPart, "UTF-8");
-            // 现在 cropPart 形如 "@c_1,x_140,y_1158,w_966,h_179|f_auto"
+            // "@c_1,x_140,y_1158,w_966,h_179|f_auto"
             Pattern pattern = Pattern.compile("x_(\\d+),y_(\\d+),w_(\\d+),h_(\\d+)");
             Matcher matcher = pattern.matcher(cropPart);
             if (matcher.find()) {
@@ -104,6 +104,12 @@ public class AnswerSheetFragment extends Fragment {
         int sheetCount = urls.size();
         for (int i = 0; i < sheetCount; i++) {
             marksPerSheet.add(new ArrayList<>());
+        }
+
+        // 用于记录每个答题卡已添加的主观题区域坐标（去重）
+        List<Set<String>> processedKeysPerSheet = new ArrayList<>(sheetCount);
+        for (int i = 0; i < sheetCount; i++) {
+            processedKeysPerSheet.add(new HashSet<>());
         }
 
         List<QuestionItem> questions = data.getQuestions();
@@ -150,6 +156,15 @@ public class AnswerSheetFragment extends Fragment {
                     float y = coords[1];
                     float w = coords[2];
                     float h = coords[3];
+
+                    // 生成唯一标识（基于坐标）
+                    String key = String.format(Locale.US, "%f_%f_%f_%f", x, y, w, h);
+                    Set<String> processedKeys = processedKeysPerSheet.get(sheetIndex);
+                    if (processedKeys.contains(key)) {
+                        Log.d(TAG, "Duplicate subjective region skipped: " + key);
+                        continue; // 已添加过相同区域，跳过
+                    }
+                    processedKeys.add(key);
 
                     Log.d(TAG, "Parsed coordinates: x=" + x + ", y=" + y + ", w=" + w + ", h=" + h);
 
