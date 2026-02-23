@@ -1,5 +1,3 @@
-**❤️注意 : 还在开发，未开发完成**
-
 <p align="center">
   <img src = "app/src/main/res/drawable/icon.jpg" alt="ic_app_logo" width="128" height="128">
 </p>
@@ -20,6 +18,7 @@
 HFSPro 是一个为「好分数」平台开发的第三方、现代化、功能增强的 Android 客户端。它旨在提供比官方应用更清爽、更高效、更专注的体验。
 
 
+
 > **⚠️ 重要声明**
 > 1. HFSPro 是一个非官方、第三方的客户端。
 > 2. 开发目的： 方便,快捷,优雅的看成绩，不再用囊肿的好分数客户端
@@ -33,6 +32,7 @@ HFSPro 是一个为「好分数」平台开发的第三方、现代化、功能�
 *   **🎨 现代化界面**：采用Material Design 3设计语言
 *   **😏 查看排名**：好分数没删干净的排名接口😋
 *   **✍️ 查看超过120天的考试**：一键获取全部考试
+*   **🖊️ 答题卡绘制**：在答题卡上绘制出信息
 
 ---
 
@@ -47,6 +47,7 @@ HFSPro 是一个为「好分数」平台开发的第三方、现代化、功能�
   <img src="images/lastexam.jpg" width="180" alt="最近考试排名">
   <img src="images/paperPic.jpg" width="180" alt="原卷">
   <img src="images/1.jpg" width="180" alt="放大展示">
+  <img src="images/draw.jpg" width="180" alt="答题卡绘制展示">
   
 </p>
 
