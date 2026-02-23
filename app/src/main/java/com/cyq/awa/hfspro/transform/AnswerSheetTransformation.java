@@ -14,7 +14,8 @@ public class AnswerSheetTransformation extends BitmapTransformation {
     private final Paint correctPaint;
     private final Paint wrongPaint;
     private final Paint subjectiveBoxPaint;
-    private final Paint textPaint;
+    private final Paint textPaint;          // 普通文本画笔（主观题得分）
+    private final Paint largeTextPaint;      // 大号文本画笔（总体情况）
 
     public AnswerSheetTransformation(List<MarkInfo> marks) {
         this.marks = marks;
@@ -31,14 +32,21 @@ public class AnswerSheetTransformation extends BitmapTransformation {
         subjectiveBoxPaint = new Paint();
         subjectiveBoxPaint.setStyle(Paint.Style.STROKE);
         subjectiveBoxPaint.setColor(Color.RED);
-        subjectiveBoxPaint.setStrokeWidth(5f);
+        subjectiveBoxPaint.setStrokeWidth(3f);
       
-
+        // 普通文本画笔
         textPaint = new Paint();
         textPaint.setColor(Color.RED);
-        textPaint.setTextSize(30f);
+        textPaint.setTextSize(50f);
         textPaint.setAntiAlias(true);
-        textPaint.setTextAlign(Paint.Align.LEFT); 
+        textPaint.setTextAlign(Paint.Align.LEFT);
+
+        // 大号文本画笔
+        largeTextPaint = new Paint();
+        largeTextPaint.setColor(Color.RED);
+        largeTextPaint.setTextSize(80f);       // 调大字体
+        largeTextPaint.setAntiAlias(true);
+        largeTextPaint.setTextAlign(Paint.Align.LEFT);
     }
 
     @Override
@@ -55,9 +63,16 @@ public class AnswerSheetTransformation extends BitmapTransformation {
             } else if (type == 1) { // 主观题区域框
                 canvas.drawRect(mark.getX(), mark.getY(),
                         mark.getX() + mark.getW(), mark.getY() + mark.getH(), subjectiveBoxPaint);
-            } else if (type == 2) { // 主观题得分文本
-                // 确保文本不超出图片边界，并设置合适的基线
-                canvas.drawText(mark.getContent(), mark.getX(), mark.getY(), textPaint);
+            } else if (type == 2) { // 主观题得分文本 或 总体情况文本
+                String content = mark.getContent();
+                Paint paint;
+                
+                if (content != null && (content.startsWith("总分:") || content.startsWith("主观:") || content.startsWith("客观:"))) {
+                    paint = largeTextPaint;
+                } else {
+                    paint = textPaint;
+                }
+                canvas.drawText(content, mark.getX(), mark.getY(), paint);
             }
         }
         return result;
