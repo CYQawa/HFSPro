@@ -143,11 +143,6 @@ public class MainActivity extends AppCompatActivity {
     return 0;
   }
 
-  private boolean isNewVersion(String latest, String current) {
-    String cleanLatest = latest.replaceAll("^v", "");
-    String cleanCurrent = current.replaceAll("^v", "");
-    return !cleanLatest.equals(cleanCurrent); // 更严谨的做法是比较数字
-  }
 
   private void showUpdateDialog(Context context, GitHubRelease release) {
     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
