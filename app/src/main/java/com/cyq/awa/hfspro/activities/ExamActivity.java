@@ -5,17 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
-import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
-import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
+import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -40,8 +39,8 @@ public class ExamActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_exam);
-        
-        DatabaseManager dbm = DatabaseManager.getInstance();
+
+    DatabaseManager dbm = DatabaseManager.getInstance();
 
     exam = (MyExamListItem) getIntent().getSerializableExtra("myexam");
     MaterialToolbar toolbar = findViewById(R.id.toolbar);

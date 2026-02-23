@@ -1,6 +1,7 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.google.android.material.button.MaterialButton;
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel;
@@ -30,10 +32,11 @@ import retrofit2.Response;
 
 public class LastExamActivity extends AppCompatActivity {
   private RetrofitTools.ApiService apiService;
-private View contentContainer;      // 正常内容容器（NestedScrollView）
-private View errorContainer;        // 错误容器
-private MaterialTextView errorText; // 错误信息文本
-private MaterialButton retryButton; // 重试按钮
+  private View contentContainer; // 正常内容容器（NestedScrollView）
+  private View errorContainer; // 错误容器
+  private MaterialTextView errorText; // 错误信息文本
+  private MaterialButton retryButton; // 重试按钮
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,8 +58,8 @@ private MaterialButton retryButton; // 重试按钮
     MaterialCardView bottom2_card = findViewById(R.id.bottom2_card);
     RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
 
-contentContainer = findViewById(R.id.content_container);
-errorContainer = findViewById(R.id.error_container);
+    contentContainer = findViewById(R.id.content_container);
+    errorContainer = findViewById(R.id.error_container);
 
     setSupportActionBar(toolbar);
     apiService = RetrofitTools.RetrofitClient.getAuthService();
@@ -89,25 +92,22 @@ errorContainer = findViewById(R.id.error_container);
                   if (extend != null) {
                     int classRank = extend.getClassRank();
                     int classnum = extend.getClassStuNum();
-                    
+
                     int gradeRank = extend.getGradeRank();
                     int gradenum = extend.getGradeStuNum();
                     double classDefeatRatio = extend.getClassDefeatRatio();
-                    
-                    classrank.setText("班级排名："+classRank);
-                   classstunum.setText("班级人数："+classnum);
-                   
-                    graderank.setText("年段排名："+gradeRank);
-                   gradestunum.setText("年段人数："+gradenum);
-                    
+
+                    classrank.setText("班级排名：" + classRank);
+                    classstunum.setText("班级人数：" + classnum);
+
+                    graderank.setText("年段排名：" + gradeRank);
+                    gradestunum.setText("年段人数：" + gradenum);
                   }
-                  
-                  idtext.setText("examId："+examId);
-                  
-                  Call<ApiResponse<ExamOverviewData>> call2 =
-                      apiService.getExamOverview(examId);
-                  
-                  
+
+                  idtext.setText("examId：" + examId);
+
+                  Call<ApiResponse<ExamOverviewData>> call2 = apiService.getExamOverview(examId);
+
                   call2.enqueue(
                       new Callback<ApiResponse<ExamOverviewData>>() {
                         @Override
@@ -120,7 +120,7 @@ errorContainer = findViewById(R.id.error_container);
                             if (body.isSuccess()) {
                               scoretext.setText("" + data.getScore());
                               manfent.setText("/" + data.getManfen());
-                                                    nametext.setText(data.getName());
+                              nametext.setText(data.getName());
 
                               try {
                                 double score = data.getScore();
@@ -151,13 +151,21 @@ errorContainer = findViewById(R.id.error_container);
                               }
 
                               PaperGridAdapter adapter = new PaperGridAdapter(dataList);
+                              adapter.setOnItemClickListener(
+                                  (position, item) -> {
+                                    Intent intent =
+                                        new Intent(LastExamActivity.this, AnswerActivity.class);
+                                    intent.putExtra("paper", item);
+                                    intent.putExtra("myexam", new MyExamListItem(examId,"不知道",91L));
+                                    startActivity(intent);
+                                  });
                               paperRecyclerView.setAdapter(adapter);
 
                               hideLoading();
                             } else {
                               String errorMsg = body.getMsg();
                               hideLoading();
-                              
+
                               showDialog(
                                   "请求失败",
                                   String.format("请求失败: %s\ncode: %d", errorMsg, body.getCode()));
@@ -176,15 +184,13 @@ errorContainer = findViewById(R.id.error_container);
                           showDialog("请求失败", "网络请求失败！");
                         }
                       });
-                      
-                      
                 }
               } else {
                 // 业务错误（code != 0）
                 String errorMsg = apiResponse.getMsg();
                 hideLoading();
                 showError();
-                //showDialog("请求失败", String.format("请求失败: \ncode: %d", apiResponse.getCode()));
+                // showDialog("请求失败", String.format("请求失败: \ncode: %d", apiResponse.getCode()));
               }
             } else {
               // HTTP 错误
@@ -203,9 +209,9 @@ errorContainer = findViewById(R.id.error_container);
         });
 
     setCustomCardCorners(top_card, 16, 16, 0, 0);
-    setCustomCardCorners(middle_card,1,1,1,1);
-    setCustomCardCorners(bottom_card, 1, 1, 1,1);
-        setCustomCardCorners(bottom2_card,1,1,16,16);
+    setCustomCardCorners(middle_card, 1, 1, 1, 1);
+    setCustomCardCorners(bottom_card, 1, 1, 1, 1);
+    setCustomCardCorners(bottom2_card, 1, 1, 16, 16);
 
     toolbar.setNavigationOnClickListener(
         v -> {
@@ -274,13 +280,14 @@ errorContainer = findViewById(R.id.error_container);
           builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
         });
   }
-private void showContent() {
+
+  private void showContent() {
     contentContainer.setVisibility(View.VISIBLE);
     errorContainer.setVisibility(View.GONE);
-}
+  }
 
-private void showError() {
+  private void showError() {
     contentContainer.setVisibility(View.GONE);
     errorContainer.setVisibility(View.VISIBLE);
-}
+  }
 }
