@@ -115,17 +115,26 @@ public class MyModel {
 
   public static class MarkInfo implements Serializable {
     private float x, y, w, h;
-    private int right; // 1正确，0错误
-    private String option;
+    private int right; // 1正确，0错误（仅客观题使用）
+    private String option; 
+    private int type;
+    private String content; 
 
-    // 构造函数
+    // 客观题构造函数
     public MarkInfo(float x, float y, float w, float h, int right, String option) {
+      this(x, y, w, h, right, option, 0, null);
+    }
+    // 通用构造函数
+    public MarkInfo(
+        float x, float y, float w, float h, int right, String option, int type, String content) {
       this.x = x;
       this.y = y;
       this.w = w;
       this.h = h;
       this.right = right;
       this.option = option;
+      this.type = type;
+      this.content = content;
     }
 
     // Getter
@@ -151,6 +160,14 @@ public class MyModel {
 
     public String getOption() {
       return option;
+    }
+
+    public int getType() {
+      return type;
+    }
+
+    public String getContent() {
+      return content;
     }
   }
 }
