@@ -1,7 +1,6 @@
 package com.cyq.awa.hfspro.fragments.answer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,7 +99,7 @@ public class AnswerSheetFragment extends Fragment {
     if (data == null) return;
     List<String> urls = data.getUrl(); // 答题卡原图列表
     if (urls == null || urls.isEmpty()) {
-      Log.w(TAG, "No answer sheet URLs");
+      
       return;
     }
     int sheetCount = urls.size();
@@ -171,13 +170,11 @@ public class AnswerSheetFragment extends Fragment {
           String baseUrl = extractBaseUrl(qUrl);
           int sheetIndex = findSheetIndex(baseUrl, urls);
           if (sheetIndex < 0) {
-            Log.d(TAG, "No matching sheet for baseUrl: " + baseUrl);
             continue;
           }
 
           float[] coords = parseCoordinates(qUrl);
           if (coords == null) {
-            Log.d(TAG, "Failed to parse coordinates from: " + qUrl);
             continue;
           }
           float x = coords[0];
@@ -189,12 +186,11 @@ public class AnswerSheetFragment extends Fragment {
           String key = String.format(Locale.US, "%f_%f_%f_%f", x, y, w, h);
           Set<String> processedKeys = processedKeysPerSheet.get(sheetIndex);
           if (processedKeys.contains(key)) {
-            Log.d(TAG, "Duplicate subjective region skipped: " + key);
             continue; // 已添加过相同区域，跳过
           }
           processedKeys.add(key);
 
-          Log.d(TAG, "Parsed coordinates: x=" + x + ", y=" + y + ", w=" + w + ", h=" + h);
+          
 
           // 添加主观题区域框 (type=1)
           MarkInfo boxMark = new MarkInfo(x, y, w, h, 0, null, 1, null);
@@ -207,18 +203,6 @@ public class AnswerSheetFragment extends Fragment {
           MarkInfo textMark = new MarkInfo(textX, textY, 0, 0, 0, null, 2, scoreText);
           marksPerSheet.get(sheetIndex).add(textMark);
 
-          Log.d(
-              TAG,
-              "Added subjective mark: box at ("
-                  + x
-                  + ","
-                  + y
-                  + ","
-                  + w
-                  + ","
-                  + h
-                  + "), text: "
-                  + scoreText);
         }
       }
     }
