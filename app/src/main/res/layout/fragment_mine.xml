@@ -86,6 +86,13 @@
                 android:layout_marginBottom="16dp"
                 android:id="@+id/btn_checktoken"
                 android:text="查看token" />
+ <com.google.android.material.button.MaterialButton
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:icon="@drawable/ic_log"
+                android:layout_marginBottom="16dp"
+                android:id="@+id/btn_dumpLog"
+                android:text="dump日志" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_height="wrap_content"

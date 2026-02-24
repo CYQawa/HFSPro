@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.ClipboardManager;
 import android.content.ClipData;
 import android.net.Uri;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.os.Bundle;
@@ -16,9 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.tools.LogHelper;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import java.io.File;
 
 public class MineFragment extends Fragment {
 
@@ -35,6 +39,8 @@ public class MineFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     MaterialButton checktoken = view.findViewById(R.id.btn_checktoken);
     MaterialButton logout = view.findViewById(R.id.btn_logout);
+    MaterialButton dumpLog = view.findViewById(R.id.btn_dumpLog);
+
     ImageView i = view.findViewById(R.id.github);
     i.setOnClickListener(
         v -> {
@@ -73,6 +79,21 @@ public class MineFragment extends Fragment {
                     restartActivity(requireContext());
                   })
               .show();
+        });
+
+    dumpLog.setOnClickListener(
+        v -> {
+          //Log.e("dump日志", "测试");
+
+          File logFile = new File(requireContext().getExternalFilesDir(null), "logcat.txt");
+          LogHelper.dumpLogToFile(logFile);
+          
+          File logFile2 = new File(requireContext().getExternalFilesDir(null), "CrashLog.txt");
+          LogHelper.dumpCrashLogToFile(logFile2);
+          
+          Toast.makeText(requireContext(),"已尝试dump至/storage/emulated/0/Android/data/com.cyq.awa.hfspro/files",Toast.LENGTH_LONG).show();
+          
+         // throw new RuntimeException("手动触发的崩溃");
         });
   }
 
