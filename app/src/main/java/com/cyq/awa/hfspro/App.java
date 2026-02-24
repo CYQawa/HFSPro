@@ -78,27 +78,26 @@ public class App extends Application {
       // 收集崩溃信息
       String crashInfo = collectCrashInfo(throwable);
 
-      new Handler(Looper.getMainLooper())
-          .post(
+      
+      Intent intent = new Intent(this, CrashActivity.class);
+      intent.putExtra("crash_info", crashInfo);
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+      startActivity(intent);
+
+      
+      new Thread(
               () -> {
                 try {
-                  Intent intent = new Intent(this, CrashActivity.class);
-                  intent.putExtra("crash_info", crashInfo);
-                  intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                  startActivity(intent);
-
-                  new Handler(Looper.getMainLooper()).postDelayed(() -> {}, 10000);
-
-                } catch (Exception e) {
-                  // 如果启动Activity失败，使用默认处理器
-                  if (defaultHandler != null) {
-                    defaultHandler.uncaughtException(thread, throwable);
-                  }
+                  Thread.sleep(2000); 
+                } catch (InterruptedException ignored) {
                 }
-              });
+                Process.killProcess(Process.myPid());
+                System.exit(1);
+              })
+          .start();
 
     } catch (Exception e) {
-      // 如果崩溃处理过程本身出现异常，使用默认处理器
+      // 如果自定义处理失败，回退到默认处理器
       if (defaultHandler != null) {
         defaultHandler.uncaughtException(thread, throwable);
       }

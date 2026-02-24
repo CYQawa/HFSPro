@@ -53,6 +53,8 @@ public class MineFragment extends Fragment {
 
     checktoken.setOnClickListener(
         v -> {
+            
+            
           MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
           builder
               .setTitle("你的token")
@@ -64,6 +66,7 @@ public class MineFragment extends Fragment {
                     copyToClipboard(requireContext(), db.getToken());
                   })
               .show();
+            //  throw new RuntimeException("手动触发的崩溃");//测试
         });
     logout.setOnClickListener(
         v -> {
