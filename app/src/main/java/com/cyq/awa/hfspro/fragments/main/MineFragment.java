@@ -53,8 +53,6 @@ public class MineFragment extends Fragment {
 
     checktoken.setOnClickListener(
         v -> {
-            
-            
           MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
           builder
               .setTitle("你的token")
@@ -66,7 +64,8 @@ public class MineFragment extends Fragment {
                     copyToClipboard(requireContext(), db.getToken());
                   })
               .show();
-            //  throw new RuntimeException("手动触发的崩溃");//测试
+              
+              
         });
     logout.setOnClickListener(
         v -> {
@@ -86,17 +85,17 @@ public class MineFragment extends Fragment {
 
     dumpLog.setOnClickListener(
         v -> {
-          //Log.e("dump日志", "测试");
-
           File logFile = new File(requireContext().getExternalFilesDir(null), "logcat.txt");
           LogHelper.dumpLogToFile(logFile);
-          
+
           File logFile2 = new File(requireContext().getExternalFilesDir(null), "CrashLog.txt");
           LogHelper.dumpCrashLogToFile(logFile2);
-          
-          Toast.makeText(requireContext(),"已尝试dump至/storage/emulated/0/Android/data/com.cyq.awa.hfspro/files",Toast.LENGTH_LONG).show();
-          
-         // throw new RuntimeException("手动触发的崩溃");
+
+          Toast.makeText(
+                  requireContext(),
+                  "已尝试dump至/storage/emulated/0/Android/data/com.cyq.awa.hfspro/files",
+                  Toast.LENGTH_LONG)
+              .show();
         });
   }
 

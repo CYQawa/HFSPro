@@ -50,12 +50,7 @@ public class CrashActivity extends AppCompatActivity {
     System.exit(0);
   }
 
-  @Override
-  public void onBackPressed() {
-    // 禁用返回键，防止误操作
-    // super.onBackPressed(); // 注释掉这行以禁用返回键
-  }
-
+  
   public static void copyToClipboard(Context context, String text) {
     ClipboardManager clipboard =
         (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

@@ -1,66 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
->
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent">
 
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:gravity="center_horizontal"
+         android:orientation="vertical"
+         android:layout_gravity="center">
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_height="150dp"
-            android:layout_width="150dp"
-            android:layout_marginBottom="24dp"
-            android:clickable="true"
-            app:strokeColor="#E0E0E0"
-            app:cardElevation="0dp"
-            app:strokeWidth="2dp"
-            app:cardCornerRadius="75dp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
+             android:layout_height="150dp"
+             android:layout_width="150dp"
+             android:layout_marginBottom="24dp"
+             android:clickable="true"
+             app:strokeColor="#E0E0E0"
+             app:cardElevation="0dp"
+             app:strokeWidth="2dp"
+             app:cardCornerRadius="75dp"
+             android:focusable="true"
+             android:foreground="?attr/selectableItemBackground">
 
             <ImageView
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/icon" />
+                 android:layout_height="match_parent"
+                 android:layout_width="match_parent"
+                 android:scaleType="centerCrop"
+                 android:src="@drawable/icon" />
 
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:textSize="24sp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/md_theme_primary"
-            android:text="HFSPro"
-            android:textStyle="bold"
-            android:paddingTop="8dp" />
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:gravity="center"
+             android:textSize="24sp"
+             android:paddingBottom="8dp"
+             android:textColor="@color/md_theme_primary"
+             android:text="HFSPro"
+             android:textStyle="bold"
+             android:paddingTop="8dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:textSize="10sp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/md_theme_outline"
-            android:text="欢迎使用HFSPro，更好的好分数"
-            android:paddingTop="8dp" />
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:gravity="center"
+             android:textSize="10sp"
+             android:paddingBottom="8dp"
+             android:textColor="@color/md_theme_outline"
+             android:text="欢迎使用HFSPro，更好的好分数"
+             android:paddingTop="8dp" />
 
         <ImageView
-            android:layout_height="30dp"
-            android:layout_width="30dp"
-            android:scaleType="centerCrop"
-            android:id="@+id/github"
-            android:src="@drawable/ic_github"
-            android:tint="#111111" />
+             android:layout_height="30dp"
+             android:layout_width="30dp"
+             android:scaleType="centerCrop"
+             android:src="@drawable/ic_github"
+             android:tint="#111111"
+             android:id="@+id/github" />
 
     </LinearLayout>
 
