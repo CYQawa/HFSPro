@@ -1,6 +1,7 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.widget.Toast;
 import android.net.Uri;
@@ -28,6 +29,9 @@ import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+  private static final String PREFS_NAME = "update_prefs";
+  private static final String KEY_IGNORED_VERSION = "ignored_version";
+  private SharedPreferences prefs;
   private FragmentContainerView fragmentContainerView;
   private HomeFragment homefragment;
   private MineFragment mineFragment;
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
           return true;
         });
     checkUpdate(this);
+    prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
   }
 
   private void showFragment(Fragment aimfragment) {
@@ -100,18 +105,21 @@ public class MainActivity extends AppCompatActivity {
               public void onResponse(Call<GitHubRelease> call, Response<GitHubRelease> response) {
                 if (response.isSuccessful() && response.body() != null) {
                   GitHubRelease release = response.body();
-                  String latest = release.getTagName(); // 例如 "v1.2.3"
-                  String current = getCurrentVersionName(); // 需要实现
+                  String latest = release.getTagName();
+                  String current = getCurrentVersionName();
+                  String ignored = prefs.getString(KEY_IGNORED_VERSION, "");
 
-                  if (compareVersions(latest, current) > 0) {
-                    showUpdateDialog(context, release);
+                  // 如果最新版本大于当前版本，且（没有忽略版本 或 最新版本大于忽略版本）
+                  if (compareVersions(latest, current) > 0
+                      && (ignored.isEmpty() || compareVersions(latest, ignored) > 0)) {
+                    showUpdateDialog(MainActivity.this, release);
                   }
                 }
               }
 
               @Override
               public void onFailure(Call<GitHubRelease> call, Throwable t) {
-                // 处理失败，可静默忽略
+                // 静默失败
               }
             });
   }
@@ -143,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
     return 0;
   }
 
-
   private void showUpdateDialog(Context context, GitHubRelease release) {
     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
     builder
@@ -152,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         .setPositiveButton(
             "前往下载更新",
             (dialog, which) -> {
+              // 原有下载逻辑
               String apkUrl = null;
               for (GitHubRelease.Asset asset : release.getAssets()) {
                 if (asset.getName().endsWith(".apk")) {
@@ -160,14 +168,20 @@ public class MainActivity extends AppCompatActivity {
                 }
               }
               if (apkUrl != null) {
-                String url = release.getHtml();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkUrl));
                 startActivity(intent);
               } else {
                 Toast.makeText(context, "未找到 APK 下载链接", Toast.LENGTH_SHORT).show();
               }
             })
         .setNegativeButton("稍后", null)
+        .setNeutralButton(
+            "忽略本次更新",
+            (dialog, which) -> {
+              // 保存忽略的版本号
+              prefs.edit().putString(KEY_IGNORED_VERSION, release.getTagName()).apply();
+              Toast.makeText(context, "已忽略版本 " + release.getTagName(), Toast.LENGTH_SHORT).show();
+            })
         .show();
   }
 }
