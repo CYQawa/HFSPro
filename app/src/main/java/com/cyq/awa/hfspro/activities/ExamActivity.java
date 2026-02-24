@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AAPie;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
@@ -27,6 +30,11 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartModel;
+import com.github.AAChartModel.AAChartCore.AAChartCreator.AASeriesElement;
+import com.github.AAChartModel.AAChartCore.AAChartEnum.AAChartType;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,6 +42,8 @@ import retrofit2.Response;
 public class ExamActivity extends AppCompatActivity {
   private RetrofitTools.ApiService apiService;
   private MyExamListItem exam;
+  private AAChartView aaChartView;
+  private AAChartView aaChartView2;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +61,8 @@ public class ExamActivity extends AppCompatActivity {
     MaterialCardView top_card = findViewById(R.id.top_card);
     MaterialCardView bottom_card = findViewById(R.id.bottom_card);
     RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
+    aaChartView = findViewById(R.id.AAChartView);
+    aaChartView2 = findViewById(R.id.AAChartView2);
 
     setSupportActionBar(toolbar);
     apiService = RetrofitTools.RetrofitClient.getAuthService();
@@ -110,6 +122,97 @@ public class ExamActivity extends AppCompatActivity {
                     });
                 paperRecyclerView.setAdapter(adapter);
 
+                // 构建饼图数据（各学科得分）
+                List<Map<String, Object>> pieData = new ArrayList<>();
+                if (paperGson != null && !paperGson.isEmpty()) {
+                  for (PaperOverview paper : paperGson) {
+                    Map<String, Object> dataPoint = new HashMap<>();
+                    dataPoint.put("name", paper.getSubject());
+                    dataPoint.put("y", paper.getScore()); // 使用得分作为数值
+                    pieData.add(dataPoint);
+                  }
+                } else {
+                  // 无试卷数据时，可显示一个提示或隐藏饼图
+                  aaChartView.setVisibility(android.view.View.GONE);
+                  // 也可以显示一个 TextView 提示，此处简化处理
+                }
+
+                int dataCount = pieData.size(); // 数据点数量
+                int baseHeightPerItem = 50; // 每个数据点期望的高度（单位 dp），可根据实际效果调整
+                int minHeight = 200; // 最小高度
+                int calculatedHeight = Math.max(minHeight, dataCount * baseHeightPerItem);
+
+                // 将 dp 转换为像素
+                float density = getResources().getDisplayMetrics().density;
+                int heightPx = (int) (calculatedHeight * density);
+
+                // 设置 AAChartView 的高度
+                ViewGroup.LayoutParams params = aaChartView.getLayoutParams();
+                params.height = heightPx;
+                aaChartView.setLayoutParams(params);
+                // 创建饼图模型
+                AAChartModel aaChartModel =
+                    new AAChartModel()
+                        .chartType(AAChartType.Pie)
+                        .title("各学科得分分布")
+                        .subtitle(data.getName()) // 副标题显示考试名称
+                        .dataLabelsEnabled(true)
+                        .yAxisTitle("得分")
+                        .backgroundColor("#F8F9FF")
+                        .series(
+                            new AASeriesElement[] {
+                              new AASeriesElement().name("得分").data(pieData.toArray())
+                            });
+
+                // 绘制图表
+                aaChartView.aa_drawChartWithChartModel(aaChartModel);
+                // ========== 添加雷达图 ==========
+
+                // 准备雷达图数据：提取学科名称和得分
+                // ========== 添加雷达图 ==========
+
+                // 准备雷达图数据：提取学科名称和得分百分比
+                String[] categories = new String[paperGson.size()];
+                Object[] percentData = new Object[paperGson.size()];
+                for (int i = 0; i < paperGson.size(); i++) {
+                  PaperOverview paper = paperGson.get(i);
+                  categories[i] = paper.getSubject();
+                  double score = paper.getScore();
+                  double fullScore = paper.getManfen(); // 假设方法名为 getManfen()，请根据实际类调整
+                  double percent = (fullScore > 0) ? (score / fullScore) * 100 : 0;
+                  percentData[i] = percent;
+                }
+
+                // 创建雷达图模型
+                AAChartModel radarChartModel =
+                    new AAChartModel()
+                        .chartType(AAChartType.Line) // 雷达图通常用折线图或面积图
+                        .polar(true) // 开启极坐标，变为雷达图
+                        .title("各学科得分百分比")
+                        .subtitle(data.getName())
+                        .categories(categories) // 设置维度标签
+                        .yAxisTitle("百分比(%)")
+                        .dataLabelsEnabled(true)
+                        .backgroundColor("#F8F9FF")
+                        .series(
+                            new AASeriesElement[] {
+                              new AASeriesElement().name("百分比").data(percentData)
+                            });
+
+                // 绘制雷达图
+                aaChartView2.aa_drawChartWithChartModel(radarChartModel);
+
+                // 根据学科数量动态调整图表高度（保持不变）
+                int dataCount2 = categories.length;
+                int baseHeightPerItem2 = 50;
+                int minHeight2 = 200;
+                int calculatedHeight2 = Math.max(minHeight2, dataCount2 * baseHeightPerItem2);
+                float density2 = getResources().getDisplayMetrics().density;
+                int heightPx2 = (int) (calculatedHeight2 * density2);
+                ViewGroup.LayoutParams params2 = aaChartView2.getLayoutParams();
+                params2.height = heightPx2;
+                aaChartView2.setLayoutParams(params2);
+
                 hideLoading();
               } else {
                 String errorMsg = body.getMsg();
@@ -138,6 +241,8 @@ public class ExamActivity extends AppCompatActivity {
           finish();
         });
     progressIndicator.setIndeterminate(false);
+
+    // 原硬编码饼图代码已移除，改为在API回调中动态绘制
   }
 
   public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {

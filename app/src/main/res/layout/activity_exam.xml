@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto"
-     android:layout_height="match_parent"
-     android:layout_width="match_parent"
-     android:id="@+id/coordinator">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/coordinator">
 
     <com.google.android.material.appbar.AppBarLayout
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-             android:layout_height="150dp"
-             android:layout_width="match_parent"
-             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-             app:title="HFSPro"
-             android:id="@+id/tooltitle">
+            android:layout_height="150dp"
+            android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="HFSPro"
+            android:id="@+id/tooltitle">
 
             <com.google.android.material.appbar.MaterialToolbar
-                 android:layout_height="?attr/actionBarSize"
-                 android:layout_width="match_parent"
-                 app:menu="@menu/exam_menu"
-                 app:layout_collapseMode="pin"
-                 app:titleCentered="true"
-                 app:titleTextColor="@color/md_theme_primary"
-                 app:navigationIcon="?attr/homeAsUpIndicator"
-                 android:id="@+id/toolbar">
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                app:menu="@menu/exam_menu"
+                app:layout_collapseMode="pin"
+                app:titleCentered="true"
+                app:titleTextColor="@color/md_theme_primary"
+                app:navigationIcon="?attr/homeAsUpIndicator"
+                android:id="@+id/toolbar">
 
             </com.google.android.material.appbar.MaterialToolbar>
 
@@ -34,80 +34,90 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-         android:layout_height="match_parent"
-         android:layout_width="match_parent"
-         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-         android:id="@+id/nested_scroll_view">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:id="@+id/nested_scroll_view">
 
         <LinearLayout
-             android:layout_height="wrap_content"
-             android:layout_width="fill_parent"
-             android:padding="16dp"
-             android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:padding="16dp"
+            android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
-                 android:layout_height="wrap_content"
-                 android:layout_width="fill_parent"
-                 android:id="@+id/top_card">
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/top_card">
 
                 <LinearLayout
-                     android:layout_height="match_parent"
-                     android:layout_width="match_parent"
-                     android:padding="16dp"
-                     android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:padding="16dp"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.progressindicator.CircularProgressIndicator
-                         android:layout_height="50dp"
-                         android:layout_width="50dp"
-                         android:layout_marginRight="5dp"
-                         android:id="@+id/btn_ProgressIndicator" />
+                        android:layout_height="50dp"
+                        android:layout_width="50dp"
+                        android:layout_marginRight="5dp"
+                        android:id="@+id/btn_ProgressIndicator" />
 
                     <com.google.android.material.textview.MaterialTextView
-                         android:layout_height="match_parent"
-                         android:layout_width="wrap_content"
-                         android:layout_marginBottom="0dp"
-                         android:gravity="center"
-                         android:textSize="32sp"
-                         android:textColor="@color/md_theme_primary"
-                         android:id="@+id/scoretext"
-                         android:textStyle="bold"
-                         android:layout_gravity="center_vertical" />
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center"
+                        android:textSize="32sp"
+                        android:textColor="@color/md_theme_primary"
+                        android:id="@+id/scoretext"
+                        android:textStyle="bold"
+                        android:layout_gravity="center_vertical" />
 
                     <com.google.android.material.textview.MaterialTextView
-                         android:layout_height="match_parent"
-                         android:layout_width="wrap_content"
-                         android:layout_marginBottom="0dp"
-                         android:gravity="center"
-                         android:fontFamily="sans-serif-thin"
-                         android:textSize="32sp"
-                         android:id="@+id/manfen"
-                         android:layout_gravity="center_vertical" />
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center"
+                        android:fontFamily="sans-serif-thin"
+                        android:textSize="32sp"
+                        android:id="@+id/manfen"
+                        android:layout_gravity="center_vertical" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                 android:layout_height="wrap_content"
-                 android:layout_width="fill_parent"
-                 android:layout_marginTop="10dp"
-                 android:id="@+id/bottom_card">
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginTop="10dp"
+                android:id="@+id/bottom_card">
 
                 <LinearLayout
-                     android:layout_height="match_parent"
-                     android:layout_width="match_parent"
-                     android:padding="10dp"
-                     android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
-                         android:layout_height="match_parent"
-                         android:layout_width="match_parent"
-                         android:id="@+id/paperRecyclerView" />
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:id="@+id/paperRecyclerView" />
+
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
+            <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+                android:id="@+id/AAChartView"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+                android:id="@+id/AAChartView2"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

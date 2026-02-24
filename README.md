@@ -48,6 +48,7 @@ HFSPro 是一个为「好分数」平台开发的第三方、现代化、功能�
   <img src="images/paperPic.jpg" width="180" alt="原卷">
   <img src="images/1.jpg" width="180" alt="放大展示">
   <img src="images/draw.jpg" width="180" alt="答题卡绘制展示">
+  <img src="images/AAChartView.jpg" width="180" alt="表图展示">
   
 </p>
 
