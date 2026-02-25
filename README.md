@@ -14,10 +14,11 @@
   <img src="https://img.shields.io/badge/Material Design-3-blue?style=flat-square" alt="Material Design 3">
 </p>
 
+---
 
 HFSPro 是一个为「好分数」平台开发的第三方、现代化、功能增强的 Android 客户端。它旨在提供比官方应用更清爽、更高效、更专注的体验。
 
-
+###喵？
 
 > **⚠️ 重要声明**
 > 1. HFSPro 是一个非官方、第三方的客户端。
