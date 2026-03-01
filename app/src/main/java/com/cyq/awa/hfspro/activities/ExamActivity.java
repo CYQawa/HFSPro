@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
@@ -19,7 +21,8 @@ import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
-import com.github.AAChartModel.AAChartCore.AAOptionsModel.AAPie;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AAOptions;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AAYAxis;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
@@ -123,18 +126,22 @@ public class ExamActivity extends AppCompatActivity {
                 paperRecyclerView.setAdapter(adapter);
 
                 // 构建饼图数据（各学科得分）
+                // 获取主题色数组
+                int[] colorResIds = getThemeColorResIds();
                 List<Map<String, Object>> pieData = new ArrayList<>();
                 if (paperGson != null && !paperGson.isEmpty()) {
-                  for (PaperOverview paper : paperGson) {
+                  for (int i = 0; i < paperGson.size(); i++) {
+                    PaperOverview paper = paperGson.get(i);
                     Map<String, Object> dataPoint = new HashMap<>();
                     dataPoint.put("name", paper.getSubject());
-                    dataPoint.put("y", paper.getScore()); // 使用得分作为数值
+                    dataPoint.put("y", paper.getScore());
+                    // 分配颜色，循环使用颜色数组
+                    int colorResId = colorResIds[i % colorResIds.length];
+                    dataPoint.put("color", getColorString(colorResId));
                     pieData.add(dataPoint);
                   }
                 } else {
-                  // 无试卷数据时，可显示一个提示或隐藏饼图
-                  aaChartView.setVisibility(android.view.View.GONE);
-                  // 也可以显示一个 TextView 提示，此处简化处理
+                  aaChartView.setVisibility(View.GONE);
                 }
 
                 int dataCount = pieData.size(); // 数据点数量
@@ -166,12 +173,7 @@ public class ExamActivity extends AppCompatActivity {
 
                 // 绘制图表
                 aaChartView.aa_drawChartWithChartModel(aaChartModel);
-                // ========== 添加雷达图 ==========
 
-                // 准备雷达图数据：提取学科名称和得分
-                // ========== 添加雷达图 ==========
-
-                // 准备雷达图数据：提取学科名称和得分百分比
                 String[] categories = new String[paperGson.size()];
                 Object[] percentData = new Object[paperGson.size()];
                 for (int i = 0; i < paperGson.size(); i++) {
@@ -184,23 +186,36 @@ public class ExamActivity extends AppCompatActivity {
                 }
 
                 // 创建雷达图模型
+                // 创建雷达图模型（基础配置）
                 AAChartModel radarChartModel =
                     new AAChartModel()
-                        .chartType(AAChartType.Line) // 雷达图通常用折线图或面积图
-                        .polar(true) // 开启极坐标，变为雷达图
+                        .chartType(AAChartType.Area)
+                        .polar(true)
                         .title("各学科得分百分比")
                         .subtitle(data.getName())
-                        .categories(categories) // 设置维度标签
+                        .categories(categories)
                         .yAxisTitle("百分比(%)")
                         .dataLabelsEnabled(true)
                         .backgroundColor("#F8F9FF")
                         .series(
                             new AASeriesElement[] {
-                              new AASeriesElement().name("百分比").data(percentData)
+                              new AASeriesElement()
+                                  .name("百分比")
+                                  .data(percentData)
+                                  .color(getColorString(R.color.md_theme_primary))
+                                  .fillOpacity(0.3)
                             });
 
-                // 绘制雷达图
-                aaChartView2.aa_drawChartWithChartModel(radarChartModel);
+                // 转换为 AAOptions 并设置自定义 Y 轴
+                AAOptions aaOptions = radarChartModel.aa_toAAOptions();
+                AAYAxis yAxis = new AAYAxis();
+                yAxis.min(0);
+                yAxis.max(100);
+                yAxis.tickInterval(10); // 每隔 10 显示一条网格线（0,10,20,...,100）
+                aaOptions.yAxis(yAxis);
+
+                // 绘制雷达图（使用 options）
+                aaChartView2.aa_drawChartWithChartOptions(aaOptions);
 
                 // 根据学科数量动态调整图表高度（保持不变）
                 int dataCount2 = categories.length;
@@ -368,5 +383,25 @@ public class ExamActivity extends AppCompatActivity {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private String getColorString(int colorResId) {
+    int color = ContextCompat.getColor(this, colorResId);
+    return String.format("#%06X", (0xFFFFFF & color));
+  }
+
+  private int[] getThemeColorResIds() {
+    return new int[] {
+      R.color.md_theme_primary,
+      R.color.md_theme_onPrimary,
+      R.color.md_theme_primaryContainer,
+      R.color.md_theme_onPrimaryContainer,
+      R.color.md_theme_inversePrimary,
+      R.color.md_theme_primaryFixed_mediumContrast,
+      R.color.md_theme_onPrimaryFixed,
+      R.color.md_theme_primaryFixedDim,
+      R.color.md_theme_inversePrimary_highContrast
+      // 饼图主题颜色
+    };
   }
 }

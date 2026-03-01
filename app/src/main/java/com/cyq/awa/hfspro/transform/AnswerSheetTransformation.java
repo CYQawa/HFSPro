@@ -34,7 +34,7 @@ public class AnswerSheetTransformation extends BitmapTransformation {
         subjectiveBoxPaint.setColor(Color.RED);
         subjectiveBoxPaint.setStrokeWidth(1f);
       
-        // 普通文本画笔
+        // 普通文本画笔 
         textPaint = new Paint();
         textPaint.setColor(Color.RED);
         textPaint.setTextSize(50f);
