@@ -19,7 +19,7 @@ public class LogHelper {
     OutputStreamWriter writer = null;
 
     try {
-      // 构建 logcat 命令：dump 当前缓冲区，带时间，只输出指定 PID 的日志
+      // 构建 logcat 命令：dump 当前缓冲区，带时间
       ProcessBuilder builder = new ProcessBuilder("logcat", "-d", "-v", "time");
       process = builder.start();
 

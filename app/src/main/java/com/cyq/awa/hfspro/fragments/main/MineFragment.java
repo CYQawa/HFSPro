@@ -64,8 +64,6 @@ public class MineFragment extends Fragment {
                     copyToClipboard(requireContext(), db.getToken());
                   })
               .show();
-              
-              
         });
     logout.setOnClickListener(
         v -> {
@@ -85,17 +83,16 @@ public class MineFragment extends Fragment {
 
     dumpLog.setOnClickListener(
         v -> {
-          File logFile = new File(requireContext().getExternalFilesDir(null), "logcat.txt");
+          File cacheDir = requireContext().getExternalCacheDir();
+          
+          String cachePath = cacheDir.getAbsolutePath();
+          File logFile = new File(cacheDir, "logcat.txt");
           LogHelper.dumpLogToFile(logFile);
 
-          File logFile2 = new File(requireContext().getExternalFilesDir(null), "CrashLog.txt");
+          File logFile2 = new File(cacheDir, "CrashLog.txt");
           LogHelper.dumpCrashLogToFile(logFile2);
 
-          Toast.makeText(
-                  requireContext(),
-                  "已尝试dump至/storage/emulated/0/Android/data/com.cyq.awa.hfspro/files",
-                  Toast.LENGTH_LONG)
-              .show();
+          Toast.makeText(requireContext(), "已尝试dump至"+cachePath, Toast.LENGTH_LONG).show();
         });
   }
 

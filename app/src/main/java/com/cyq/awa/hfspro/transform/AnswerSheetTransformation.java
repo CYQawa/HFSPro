@@ -32,7 +32,7 @@ public class AnswerSheetTransformation extends BitmapTransformation {
         subjectiveBoxPaint = new Paint();
         subjectiveBoxPaint.setStyle(Paint.Style.STROKE);
         subjectiveBoxPaint.setColor(Color.RED);
-        subjectiveBoxPaint.setStrokeWidth(3f);
+        subjectiveBoxPaint.setStrokeWidth(1f);
       
         // 普通文本画笔
         textPaint = new Paint();
@@ -44,7 +44,7 @@ public class AnswerSheetTransformation extends BitmapTransformation {
         // 大号文本画笔
         largeTextPaint = new Paint();
         largeTextPaint.setColor(Color.RED);
-        largeTextPaint.setTextSize(80f);       // 调大字体
+        largeTextPaint.setTextSize(80f);
         largeTextPaint.setAntiAlias(true);
         largeTextPaint.setTextAlign(Paint.Align.LEFT);
     }

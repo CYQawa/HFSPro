@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,7 +101,6 @@ public class AnswerSheetFragment extends Fragment {
     if (data == null) return;
     List<String> urls = data.getUrl(); // 答题卡原图列表
     if (urls == null || urls.isEmpty()) {
-      
       return;
     }
     int sheetCount = urls.size();
@@ -107,16 +108,16 @@ public class AnswerSheetFragment extends Fragment {
       marksPerSheet.add(new ArrayList<>());
     }
 
-    // 用于记录每个答题卡已添加的主观题区域坐标（去重）
-    List<Set<String>> processedKeysPerSheet = new ArrayList<>(sheetCount);
+    // 用于收集每个答题卡上每个坐标区域对应的主观题列表
+    List<Map<String, List<QuestionItem>>> regionQuestionsPerSheet = new ArrayList<>(sheetCount);
     for (int i = 0; i < sheetCount; i++) {
-      processedKeysPerSheet.add(new HashSet<>());
+      regionQuestionsPerSheet.add(new HashMap<>());
     }
 
     List<QuestionItem> questions = data.getQuestions();
     if (questions == null) return;
 
-    // 计算总体得分 
+    // 这里计算总体得分
     double totalScore = data.getScore();
     double subjectiveScore = 0;
     double objectiveScore = 0;
@@ -127,7 +128,7 @@ public class AnswerSheetFragment extends Fragment {
         objectiveScore += q.getScore();
       }
     }
-    // 为第一张答题卡添加总体情况文本
+    // 这里为第一张答题卡添加总体情况文本
     if (!marksPerSheet.isEmpty()) {
       List<MarkInfo> firstSheetMarks = marksPerSheet.get(0);
       float x = 20;
@@ -140,11 +141,11 @@ public class AnswerSheetFragment extends Fragment {
       firstSheetMarks.add(new MarkInfo(x, y + lineHeight, 0, 0, 0, null, 2, subjText));
       firstSheetMarks.add(new MarkInfo(x, y + 2 * lineHeight, 0, 0, 0, null, 2, objText));
     }
-    
 
+    // 收集客观题信息
     for (QuestionItem q : questions) {
       int type = q.getType();
-      if (type == 2) { // 客观题（选择题）
+      if (type == 2) { // 客观题—— 直接添加标记
         List<AnswerOptionItem> options = q.getAnswerOption();
         if (options != null) {
           for (AnswerOptionItem opt : options) {
@@ -162,49 +163,103 @@ public class AnswerSheetFragment extends Fragment {
             }
           }
         }
-      } else if (type == 1) { // 主观题
+      } else if (type == 1) { // 主观题 
         List<String> qUrls = q.getUrl();
         if (qUrls == null || qUrls.isEmpty()) continue;
 
         for (String qUrl : qUrls) {
           String baseUrl = extractBaseUrl(qUrl);
           int sheetIndex = findSheetIndex(baseUrl, urls);
-          if (sheetIndex < 0) {
-            continue;
-          }
+          if (sheetIndex < 0) continue;
 
           float[] coords = parseCoordinates(qUrl);
-          if (coords == null) {
-            continue;
-          }
+          if (coords == null) continue;
           float x = coords[0];
           float y = coords[1];
           float w = coords[2];
           float h = coords[3];
 
-          // 生成唯一标识（基于坐标）
-          String key = String.format(Locale.US, "%f_%f_%f_%f", x, y, w, h);
-          Set<String> processedKeys = processedKeysPerSheet.get(sheetIndex);
-          if (processedKeys.contains(key)) {
-            continue; // 已添加过相同区域，跳过
+          // 生成该区域的唯一标识（基于坐标，保留两位小数防止精度问题）
+          String key = String.format(Locale.US, "%.2f_%.2f_%.2f_%.2f", x, y, w, h);
+          Map<String, List<QuestionItem>> sheetMap = regionQuestionsPerSheet.get(sheetIndex);
+          List<QuestionItem> list = sheetMap.get(key);
+          if (list == null) {
+            list = new ArrayList<>();
+            sheetMap.put(key, list);
           }
-          processedKeys.add(key);
-
-          
-
-          // 添加主观题区域框 (type=1)
-          MarkInfo boxMark = new MarkInfo(x, y, w, h, 0, null, 1, null);
-          marksPerSheet.get(sheetIndex).add(boxMark);
-
-          // 添加主观题得分文本 (type=2)
-          String scoreText = q.getScore() + "/" + q.getManfen();
-          float textX = x + 10;
-          float textY = y + 35;
-          MarkInfo textMark = new MarkInfo(textX, textY, 0, 0, 0, null, 2, scoreText);
-          marksPerSheet.get(sheetIndex).add(textMark);
-
+          list.add(q); // 将当前题目加入列表（同一个区域可能有多题）
         }
       }
+    }
+
+    // 为每个区域添加框和合并后的得分文本
+    for (int sheetIdx = 0; sheetIdx < sheetCount; sheetIdx++) {
+      Map<String, List<QuestionItem>> sheetMap = regionQuestionsPerSheet.get(sheetIdx);
+      for (Map.Entry<String, List<QuestionItem>> entry : sheetMap.entrySet()) {
+        List<QuestionItem> qList = entry.getValue();
+        if (qList.isEmpty()) continue;
+
+        // 取第一个题的坐标作为该区域的位置（所有题坐标相同）
+        QuestionItem firstQ = qList.get(0);
+        float x = 0, y = 0, w = 0, h = 0;
+        // 需要重新解析坐标，因为 entry 的 key 只是字符串，最好从第一个题的 url 重新解析
+        List<String> firstUrls = firstQ.getUrl();
+        if (firstUrls != null && !firstUrls.isEmpty()) {
+          float[] coords = parseCoordinates(firstUrls.get(0));
+          if (coords != null) {
+            x = coords[0];
+            y = coords[1];
+            w = coords[2];
+            h = coords[3];
+          }
+        }
+        // 如果解析失败，跳过该区域
+        if (w == 0 || h == 0) continue;
+
+        // 添加主观题区域框 (type=1)
+        MarkInfo boxMark = new MarkInfo(x, y, w, h, 0, null, 1, null);
+        marksPerSheet.get(sheetIdx).add(boxMark);
+
+        // 构建合并得分文本
+        double totalScoreRegion = 0;
+        double totalManfenRegion = 0;
+        StringBuilder scoresBuilder = new StringBuilder();
+        for (int i = 0; i < qList.size(); i++) {
+          QuestionItem qi = qList.get(i);
+          totalScoreRegion += qi.getScore();
+          totalManfenRegion += qi.getManfen();
+          if (i > 0) scoresBuilder.append(",");
+          scoresBuilder.append(formatScore(qi.getScore()));
+        }
+        String scoreText;
+        if (qList.size() == 1) {
+          // 单个小题：直接显示得分/满分
+          scoreText = formatScore(totalScoreRegion) + "分/" + formatScore(totalManfenRegion)+"分";
+        } else {
+          // 多个小题：显示总分/总满分 (小题分:分1,分2,...)
+          scoreText =
+              String.format(
+                  "%s分/%s分 (小题分:%s)",
+                  formatScore(totalScoreRegion),
+                  formatScore(totalManfenRegion),
+                  scoresBuilder.toString());
+        }
+
+        // 添加主观题得分文本 (type=2)
+        float textX = x + 10;
+        float textY = y + 35;
+        MarkInfo textMark = new MarkInfo(textX, textY, 0, 0, 0, null, 2, scoreText);
+        marksPerSheet.get(sheetIdx).add(textMark);
+      }
+    }
+  }
+
+  //去除末尾多余的 .0
+  private String formatScore(double score) {
+    if (score == (long) score) {
+      return String.valueOf((long) score);
+    } else {
+      return String.valueOf(score);
     }
   }
 
