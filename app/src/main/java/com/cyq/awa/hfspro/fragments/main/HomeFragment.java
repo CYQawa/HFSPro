@@ -18,6 +18,7 @@ import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.ExamActivity;
 import com.cyq.awa.hfspro.activities.LastExamActivity;
 import com.cyq.awa.hfspro.adapter.ExamListAdapter;
+import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.*;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
@@ -59,7 +60,7 @@ public class HomeFragment extends Fragment {
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     exam.setOnClickListener(
         v -> {
-          showLoading();
+          DialogHelp.show(requireActivity());
           List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
           if (localExams.isEmpty()) {
             loadAllExamsSilent(this::showExamListDialog);
@@ -100,11 +101,11 @@ public class HomeFragment extends Fragment {
               }
               // 现在 distinctExams 中包含去重后的考试信息
               DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
-              hideLoading();
+              DialogHelp.dismiss();
               showDialog("加载全部考试成功", "加载成功，共" + distinctExams.size() + "场考试");
             } else {
               String errorMsg = response.body().getMsg();
-              hideLoading();
+              DialogHelp.dismiss();
               showDialog(
                   "请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, response.body().getCode()));
             }
@@ -112,7 +113,7 @@ public class HomeFragment extends Fragment {
 
           @Override
           public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
-            hideLoading();
+            DialogHelp.dismiss();
             showDialog("请求失败", "网络请求失败！");
           }
         });
@@ -204,9 +205,9 @@ public class HomeFragment extends Fragment {
 
                 dialog.show();
                 BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
-                hideLoading();
+                DialogHelp.dismiss();
               } else {
-                hideLoading();
+                DialogHelp.dismiss();
                 showDialog(
                     "请求失败",
                     String.format(
@@ -214,14 +215,14 @@ public class HomeFragment extends Fragment {
                         examlistResponse.getMsg(), examlistResponse.getCode()));
               }
             } else {
-              hideLoading();
+              DialogHelp.dismiss();
               showDialog("请求失败", "服务器错误: " + response.code());
             }
           }
 
           @Override
           public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
-            hideLoading();
+            DialogHelp.dismiss();
             showDialog("请求失败", "网络请求失败！");
           }
         });
@@ -290,31 +291,7 @@ public class HomeFragment extends Fragment {
         });
   }
 
-  private AlertDialog createLoadingDialog() {
-
-    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-    builder.setTitle("请稍候");
-    builder.setMessage("正在加载中...");
-    builder.setCancelable(false); // 禁止点击外部取消
-
-    return builder.create();
-  }
-
-  // 使用示例
-  private AlertDialog loadingDialog;
-
-  public void showLoading() {
-    if (loadingDialog == null) {
-      loadingDialog = createLoadingDialog();
-    }
-    loadingDialog.show();
-  }
-
-  public void hideLoading() {
-    if (loadingDialog != null && loadingDialog.isShowing()) {
-      loadingDialog.dismiss();
-    }
-  }
+  
 
   private void showDialog(String title, String message) {
     requireActivity()

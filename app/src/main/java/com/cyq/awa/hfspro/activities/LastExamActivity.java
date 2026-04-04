@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.google.android.material.button.MaterialButton;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,7 +66,7 @@ public class LastExamActivity extends AppCompatActivity {
     apiService = RetrofitTools.RetrofitClient.getAuthService();
 
     Call<GsonModel.ApiResponse<GsonModel.LastExamData>> call = apiService.getLastExam();
-    showLoading();
+    DialogHelp.show(this);
     // 异步请求
     call.enqueue(
         new Callback<GsonModel.ApiResponse<GsonModel.LastExamData>>() {
@@ -161,10 +162,10 @@ public class LastExamActivity extends AppCompatActivity {
                                   });
                               paperRecyclerView.setAdapter(adapter);
 
-                              hideLoading();
+                              DialogHelp.dismiss();
                             } else {
                               String errorMsg = body.getMsg();
-                              hideLoading();
+                              DialogHelp.dismiss();
 
                               showDialog(
                                   "请求失败",
@@ -173,14 +174,14 @@ public class LastExamActivity extends AppCompatActivity {
                           } else {
                             // HTTP错误（如404, 500等）
                             showDialog("请求失败", "服务器错误: " + response.code());
-                            hideLoading();
+                            DialogHelp.dismiss();
                           }
                         }
 
                         @Override
                         public void onFailure(
                             Call<ApiResponse<ExamOverviewData>> call2, Throwable t) {
-                          hideLoading();
+                          DialogHelp.dismiss();
                           showDialog("请求失败", "网络请求失败！");
                         }
                       });
@@ -188,14 +189,14 @@ public class LastExamActivity extends AppCompatActivity {
               } else {
                 // 业务错误（code != 0）
                 String errorMsg = apiResponse.getMsg();
-                hideLoading();
+                DialogHelp.dismiss();
                 showError();
                 // showDialog("请求失败", String.format("请求失败: \ncode: %d", apiResponse.getCode()));
               }
             } else {
               // HTTP 错误
               showDialog("请求失败", "服务器错误: " + response.code());
-              hideLoading();
+              DialogHelp.dismiss();
             }
           }
 
@@ -203,7 +204,7 @@ public class LastExamActivity extends AppCompatActivity {
           public void onFailure(
               Call<GsonModel.ApiResponse<GsonModel.LastExamData>> call, Throwable t) {
             // 网络失败（无网络、超时、解析异常等）
-            hideLoading();
+            DialogHelp.dismiss();
             showDialog("请求失败", "网络请求失败！");
           }
         });
@@ -258,20 +259,7 @@ public class LastExamActivity extends AppCompatActivity {
   }
 
   // 使用示例
-  private AlertDialog loadingDialog;
-
-  public void showLoading() {
-    if (loadingDialog == null) {
-      loadingDialog = createLoadingDialog();
-    }
-    loadingDialog.show();
-  }
-
-  public void hideLoading() {
-    if (loadingDialog != null && loadingDialog.isShowing()) {
-      loadingDialog.dismiss();
-    }
-  }
+  
 
   private void showDialog(String title, String message) {
     runOnUiThread(

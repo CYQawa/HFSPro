@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
+import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
@@ -85,7 +86,7 @@ public class ExamActivity extends AppCompatActivity {
 
         apiService = RetrofitTools.RetrofitClient.getAuthService();
         Call<ApiResponse<ExamOverviewData>> call = apiService.getExamOverview(exam.getExamId());
-        showLoading();
+        DialogHelp.show(this);
         call.enqueue(
                 new Callback<ApiResponse<ExamOverviewData>>() {
                     @Override
@@ -276,10 +277,10 @@ public class ExamActivity extends AppCompatActivity {
                                 params2.height = heightPx2;
                                 aaChartView2.setLayoutParams(params2);
 
-                                hideLoading();
+                                DialogHelp.dismiss();
                             } else {
                                 String errorMsg = body.getMsg();
-                                hideLoading();
+                                DialogHelp.dismiss();
                                 showDialog(
                                         "请求失败",
                                         String.format(
@@ -288,13 +289,13 @@ public class ExamActivity extends AppCompatActivity {
                         } else {
                             // HTTP错误（如404, 500等）
                             showDialog("请求失败", "服务器错误: " + response.code());
-                            hideLoading();
+                            DialogHelp.dismiss();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ApiResponse<ExamOverviewData>> call, Throwable t) {
-                        hideLoading();
+                        DialogHelp.dismiss();
                         showDialog("请求失败", "网络请求失败！");
                     }
                 });
@@ -334,32 +335,7 @@ public class ExamActivity extends AppCompatActivity {
         return dp * context.getResources().getDisplayMetrics().density;
     }
 
-    private AlertDialog createLoadingDialog() {
-
-        // 创建对话框
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setTitle("请稍候");
-        builder.setMessage("正在加载中...");
-        builder.setCancelable(false); // 禁止点击外部取消
-
-        return builder.create();
-    }
-
-    // 使用示例
-    private AlertDialog loadingDialog;
-
-    public void showLoading() {
-        if (loadingDialog == null) {
-            loadingDialog = createLoadingDialog();
-        }
-        loadingDialog.show();
-    }
-
-    public void hideLoading() {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
-        }
-    }
+    
 
     private void showDialog(String title, String message) {
         runOnUiThread(

@@ -3,6 +3,7 @@ package com.cyq.awa.hfspro.activities;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,7 +47,7 @@ public class AnswerActivity extends AppCompatActivity {
         });
     tooltitle.setTitle(paper.getSubject() + "：原卷/答题卡");
 
-    showLoading();
+    DialogHelp.show(this);
 
     RetrofitTools.ApiService service = RetrofitTools.RetrofitClient.getAuthService();
     Call<ApiResponse<AnswerPictureData>> call =
@@ -86,20 +87,20 @@ public class AnswerActivity extends AppCompatActivity {
                           }
                         })
                     .attach();
-                hideLoading();
+                DialogHelp.dismiss();
                 
                 Snackbar.make(findViewById(R.id.coordinator), "请耐心等待加载", Snackbar.LENGTH_SHORT).show();
               }
             } else {
               showDialog("请求失败", "服务器错误: " + response.code());
-              hideLoading();
+              DialogHelp.dismiss();
             }
           }
 
           @Override
           public void onFailure(Call<ApiResponse<AnswerPictureData>> call, Throwable t) {
             showDialog("错误", "处理失败");
-            hideLoading();
+            DialogHelp.dismiss();
           }
         });
   }
@@ -113,22 +114,7 @@ public class AnswerActivity extends AppCompatActivity {
     return builder.create();
   }
 
-  // 使用示例
-  private AlertDialog loadingDialog;
-
-  public void showLoading() {
-    if (loadingDialog == null) {
-      loadingDialog = createLoadingDialog();
-    }
-    loadingDialog.show();
-  }
-
-  public void hideLoading() {
-    if (loadingDialog != null && loadingDialog.isShowing()) {
-      loadingDialog.dismiss();
-    }
-  }
-
+  
   private void showDialog(String title, String message) {
     runOnUiThread(
         () -> {
