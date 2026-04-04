@@ -40,7 +40,7 @@ public class PaperGridAdapter extends RecyclerView.Adapter<PaperGridAdapter.View
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     int status = list.get(position).getWeakAdvantageStatus();
-    
+    holder.name.setText(list.get(position).getSubject());
     holder.score.setText("" + list.get(position).getScore());
     holder.manfen.setText("/" + list.get(position).getManfen());
     
