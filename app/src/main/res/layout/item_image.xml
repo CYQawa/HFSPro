@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
+    android:layout_width="match_parent"
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:id="@+id/image_view" />
 
-</LinearLayout>
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/loading_indicator"
+        android:layout_gravity="center"/>
+
+</FrameLayout>

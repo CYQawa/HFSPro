@@ -20,50 +20,51 @@ import java.util.List;
 
 public class PaperPicFragment extends Fragment {
 
-  private static final String ARG_IMAGE_URLS = "image_urls";
-  private List<String> imageUrls = new ArrayList<>();
+    private static final String ARG_IMAGE_URLS = "image_urls";
+    private List<String> imageUrls = new ArrayList<>();
 
-  public static PaperPicFragment newInstance(List<String> imageUrls) {
-    PaperPicFragment fragment = new PaperPicFragment();
-    Bundle args = new Bundle();
-    args.putStringArrayList(ARG_IMAGE_URLS, new ArrayList<>(imageUrls));
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    if (getArguments() != null) {
-      imageUrls = getArguments().getStringArrayList(ARG_IMAGE_URLS);
+    public static PaperPicFragment newInstance(List<String> imageUrls) {
+        PaperPicFragment fragment = new PaperPicFragment();
+        Bundle args = new Bundle();
+        args.putStringArrayList(ARG_IMAGE_URLS, new ArrayList<>(imageUrls));
+        fragment.setArguments(args);
+        return fragment;
     }
-  }
 
-  @Nullable
-  @Override
-  public View onCreateView(
-      @NonNull LayoutInflater inflater,
-      @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_paperpic, container, false);
-  }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            imageUrls = getArguments().getStringArrayList(ARG_IMAGE_URLS);
+        }
+    }
 
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-    recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity())); // 线性布局
+    @Nullable
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_paperpic, container, false);
+    }
 
-    // 创建分割线对象（默认样式）
-    DividerItemDecoration divider =
-        new DividerItemDecoration(
-            recyclerView.getContext(), DividerItemDecoration.VERTICAL // 垂直列表（水平列表用 HORIZONTAL）
-            );
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity())); // 线性布局
 
-    recyclerView.addItemDecoration(divider); 
+        // 创建分割线对象（默认样式）
+        DividerItemDecoration divider =
+                new DividerItemDecoration(
+                        recyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL // 垂直列表（水平列表用 HORIZONTAL）
+                        );
 
-    // PaperPicFragment.java 中 onViewCreated 部分
-ImageAdapter adapter = new ImageAdapter(imageUrls, requireActivity()); // 调用无标记构造函数
-recyclerView.setAdapter(adapter);
-  }
+        recyclerView.addItemDecoration(divider);
+
+        // PaperPicFragment.java 中 onViewCreated 部分
+        ImageAdapter adapter = new ImageAdapter(imageUrls, requireActivity()); // 调用无标记构造函数
+        recyclerView.setAdapter(adapter);
+    }
 }
