@@ -1,32 +1,29 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.widget.Toast;
-import android.net.Uri;
-import android.os.Environment;
-import android.app.DownloadManager;
-import com.cyq.awa.hfspro.tools.network.RetrofitTools;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import retrofit2.Callback;
-import android.content.pm.PackageInfo;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.cyq.awa.hfspro.R;
-import com.cyq.awa.hfspro.tools.network.GsonModel.GitHubRelease;
 import com.cyq.awa.hfspro.fragments.main.HomeFragment;
 import com.cyq.awa.hfspro.fragments.main.MineFragment;
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
+import com.cyq.awa.hfspro.tools.network.GsonModel.GitHubRelease;
+import com.cyq.awa.hfspro.tools.network.RetrofitTools;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
   private static final String PREFS_NAME = "update_prefs";
@@ -37,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
   private MineFragment mineFragment;
   private FragmentManager fragmentManager;
   private Fragment nowFragment;
-
+ 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

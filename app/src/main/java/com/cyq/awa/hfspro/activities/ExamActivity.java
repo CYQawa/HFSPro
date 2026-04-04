@@ -82,7 +82,7 @@ public class ExamActivity extends AppCompatActivity {
               ExamOverviewData data = body.getData();
               if (body.isSuccess()) {
                 MyExamListItem newMyexamlist =
-                    new MyExamListItem(exam.getExamId(), data.getName(), data.getTime());
+                    new MyExamListItem(exam.getExamId(), data.getName(), data.getTimeInMillis());
                 dbm.insertOrUpdateExam(newMyexamlist);
                 scoretext.setText("" + data.getScore());
                 manfent.setText("/" + data.getManfen());
@@ -214,10 +214,10 @@ public class ExamActivity extends AppCompatActivity {
                 yAxis.tickInterval(10); // 每隔 10 显示一条网格线（0,10,20,...,100）
                 aaOptions.yAxis(yAxis);
 
-                // 绘制雷达图（使用 options）
+                // 绘制雷达图
                 aaChartView2.aa_drawChartWithChartOptions(aaOptions);
 
-                // 根据学科数量动态调整图表高度（保持不变）
+                // 动态调整图表高度
                 int dataCount2 = categories.length;
                 int baseHeightPerItem2 = 50;
                 int minHeight2 = 200;
@@ -257,7 +257,6 @@ public class ExamActivity extends AppCompatActivity {
         });
     progressIndicator.setIndeterminate(false);
 
-    // 原硬编码饼图代码已移除，改为在API回调中动态绘制
   }
 
   public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {
@@ -286,7 +285,7 @@ public class ExamActivity extends AppCompatActivity {
   }
 
   private AlertDialog createLoadingDialog() {
-    // 创建ProgressBar
+    
 
     // 创建对话框
     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
@@ -321,69 +320,7 @@ public class ExamActivity extends AppCompatActivity {
         });
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // 加载菜单资源文件
-    getMenuInflater().inflate(R.menu.exam_menu, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    int id = item.getItemId();
-
-    if (id == R.id.rank) {
-      Call<ApiResponse<CompareRankData>> call = apiService.getCompareRank(exam.getExamId());
-      showLoading();
-      call.enqueue(
-          new Callback<ApiResponse<CompareRankData>>() {
-            @Override
-            public void onResponse(
-                Call<ApiResponse<CompareRankData>> call,
-                Response<ApiResponse<CompareRankData>> response) {
-              ApiResponse<CompareRankData> body = response.body();
-              if (response.isSuccessful() && response.body() != null) {
-                CompareRankData data = body.getData();
-                if (body.isSuccess()) {
-
-                  if (data.getCompare() != null) {
-                    if (data.getCompare().getCurGradeRank() != null) {
-                      hideLoading();
-                      showDialog(
-                          "获取成功！！", "总分年段排名：" + data.getCompare().getCurGradeRank() + " 名！！！");
-                    } else {
-                      hideLoading();
-                      showDialog("获取失败~", "没有curGradeRank字段哦~");
-                    }
-                  } else {
-                    hideLoading();
-                    showDialog("获取失败~", "没有compare字段哦~");
-                  }
-
-                  hideLoading();
-                } else {
-                  String errorMsg = body.getMsg();
-                  hideLoading();
-                  showDialog("请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, body.getCode()));
-                }
-              } else {
-                // HTTP错误（如404, 500等）
-                showDialog("请求失败", "服务器错误: " + response.code());
-                hideLoading();
-              }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<CompareRankData>> call, Throwable t) {
-              hideLoading();
-              showDialog("请求失败", "网络请求失败！");
-            }
-          });
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
+  
 
   private String getColorString(int colorResId) {
     int color = ContextCompat.getColor(this, colorResId);

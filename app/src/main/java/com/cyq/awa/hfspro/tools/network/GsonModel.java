@@ -1,650 +1,657 @@
 package com.cyq.awa.hfspro.tools.network;
 
+import android.icu.text.SimpleDateFormat;
+
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 public class GsonModel {
-  public static class ApiResponse<T> {
-    @SerializedName("code")
-    private int code;
+    public static class ApiResponse<T> {
+        @SerializedName("code")
+        private int code;
 
-    @SerializedName("msg")
-    private String msg;
+        @SerializedName("msg")
+        private String msg;
 
-    @SerializedName("data")
-    private T data;
+        @SerializedName("data")
+        private T data;
 
-    public int getCode() {
-      return code;
-    }
+        public int getCode() {
+            return code;
+        }
 
-    public String getMsg() {
-      return msg;
-    }
+        public String getMsg() {
+            return msg;
+        }
 
-    public T getData() {
-      return data;
-    }
+        public T getData() {
+            return data;
+        }
 
-    public boolean isSuccess() {
-      return code == 0;
+        public boolean isSuccess() {
+            return code == 0;
+        }
     }
-  }
 
-  public static class LastExamData {
+    public static class LastExamData {
 
-    @SerializedName("examId")
-    private int examId;
+        @SerializedName("examId")
+        private int examId;
 
-    @SerializedName("subjectNumber")
-    private int subjectNumber;
+        @SerializedName("subjectNumber")
+        private int subjectNumber;
 
-    @SerializedName("isManfen")
-    private boolean isManfen;
+        @SerializedName("isManfen")
+        private boolean isManfen;
 
-    @SerializedName("classDefeatLevel")
-    private int classDefeatLevel;
+        @SerializedName("classDefeatLevel")
+        private int classDefeatLevel;
 
-    @SerializedName("gradeDefeatLevel")
-    private int gradeDefeatLevel;
+        @SerializedName("gradeDefeatLevel")
+        private int gradeDefeatLevel;
 
-    @SerializedName("extend")
-    private Extend extend;
+        @SerializedName("extend")
+        private Extend extend;
 
-    @SerializedName("worstSubjectText")
-    private String worstSubjectText;
+        @SerializedName("worstSubjectText")
+        private String worstSubjectText;
 
-    @SerializedName("simpleQuestionLostScores")
-    private int simpleQuestionLostScores;
+        @SerializedName("simpleQuestionLostScores")
+        private int simpleQuestionLostScores;
 
-    @SerializedName("middleQuestionLostScores")
-    private int middleQuestionLostScores;
+        @SerializedName("middleQuestionLostScores")
+        private int middleQuestionLostScores;
 
-    @SerializedName("hardQuestionLostScores")
-    private int hardQuestionLostScores;
+        @SerializedName("hardQuestionLostScores")
+        private int hardQuestionLostScores;
 
-    @SerializedName("scoreRaise")
-    private int scoreRaise;
+        @SerializedName("scoreRaise")
+        private int scoreRaise;
 
-    @SerializedName("rankRaise")
-    private int rankRaise;
+        @SerializedName("rankRaise")
+        private int rankRaise;
 
-    public int getExamId() {
-      return examId;
-    }
+        public int getExamId() {
+            return examId;
+        }
 
-    public int getSubjectNumber() {
-      return subjectNumber;
-    }
+        public int getSubjectNumber() {
+            return subjectNumber;
+        }
 
-    public boolean getIsManfen() {
-      return isManfen;
-    }
+        public boolean getIsManfen() {
+            return isManfen;
+        }
 
-    public int getClassDefeatLevel() {
-      return classDefeatLevel;
-    }
+        public int getClassDefeatLevel() {
+            return classDefeatLevel;
+        }
 
-    public int getGradeDefeatLevel() {
-      return gradeDefeatLevel;
-    }
+        public int getGradeDefeatLevel() {
+            return gradeDefeatLevel;
+        }
 
-    public Extend getExtend() {
-      return extend;
-    }
+        public Extend getExtend() {
+            return extend;
+        }
 
-    public String getWorstSubjectText() {
-      return worstSubjectText;
-    }
+        public String getWorstSubjectText() {
+            return worstSubjectText;
+        }
 
-    public int getSimpleQuestionLostScores() {
-      return simpleQuestionLostScores;
-    }
+        public int getSimpleQuestionLostScores() {
+            return simpleQuestionLostScores;
+        }
 
-    public int getMiddleQuestionLostScores() {
-      return middleQuestionLostScores;
-    }
+        public int getMiddleQuestionLostScores() {
+            return middleQuestionLostScores;
+        }
 
-    public int getHardQuestionLostScores() {
-      return hardQuestionLostScores;
-    }
+        public int getHardQuestionLostScores() {
+            return hardQuestionLostScores;
+        }
 
-    public int getScoreRaise() {
-      return scoreRaise;
-    }
+        public int getScoreRaise() {
+            return scoreRaise;
+        }
 
-    public int getRankRaise() {
-      return rankRaise;
-    }
+        public int getRankRaise() {
+            return rankRaise;
+        }
 
-    public static class Extend {
+        public static class Extend {
 
-      @SerializedName("classRank")
-      private int classRank;
+            @SerializedName("classRank")
+            private int classRank;
 
-      @SerializedName("classStuNum")
-      private int classStuNum;
+            @SerializedName("classStuNum")
+            private int classStuNum;
 
-      @SerializedName("classDefeatRatio")
-      private double classDefeatRatio;
+            @SerializedName("classDefeatRatio")
+            private double classDefeatRatio;
 
-      @SerializedName("gradeRank")
-      private int gradeRank;
+            @SerializedName("gradeRank")
+            private int gradeRank;
 
-      @SerializedName("gradeStuNum")
-      private int gradeStuNum;
+            @SerializedName("gradeStuNum")
+            private int gradeStuNum;
 
-      @SerializedName("gradeDefeatRatio")
-      private double gradeDefeatRatio;
+            @SerializedName("gradeDefeatRatio")
+            private double gradeDefeatRatio;
 
-      public int getClassRank() {
-        return classRank;
-      }
+            public int getClassRank() {
+                return classRank;
+            }
 
-      public int getClassStuNum() {
-        return classStuNum;
-      }
+            public int getClassStuNum() {
+                return classStuNum;
+            }
 
-      public double getClassDefeatRatio() {
-        return classDefeatRatio;
-      }
+            public double getClassDefeatRatio() {
+                return classDefeatRatio;
+            }
 
-      public int getGradeRank() {
-        return gradeRank;
-      }
+            public int getGradeRank() {
+                return gradeRank;
+            }
 
-      public int getGradeStuNum() {
-        return gradeStuNum;
-      }
+            public int getGradeStuNum() {
+                return gradeStuNum;
+            }
 
-      public double getGradeDefeatRatio() {
-        return gradeDefeatRatio;
-      }
+            public double getGradeDefeatRatio() {
+                return gradeDefeatRatio;
+            }
+        }
     }
-  }
 
-  public static class CompareRankData {
-    @SerializedName("compare")
-    private Compare compare;
+    public static class Compare {
+        @SerializedName("curGradeRank")
+        private Integer curGradeRank;
 
-    public Compare getCompare() {
-      return compare;
+        public Integer getCurGradeRank() {
+            return curGradeRank;
+        }
     }
-  }
 
-  public static class Compare {
-    @SerializedName("curGradeRank")
-    private Integer curGradeRank;
+    public static class ExamOverviewData {
+        @SerializedName("name")
+        private String name;
 
-    public Integer getCurGradeRank() {
-      return curGradeRank;
-    }
-  }
+        @SerializedName("score")
+        private double score;
 
-  public static class ExamOverviewData {
-    @SerializedName("name")
-    private String name;
+        @SerializedName("time")
+        private String time; // 原为 Long，改为 String 以匹配日期字符串
 
-    @SerializedName("score")
-    private double score;
+        @SerializedName("manfen")
+        private int manfen;
 
-    @SerializedName("time")
-    private Long time;
+        @SerializedName("papers")
+        private List<PaperOverview> papers;
 
-    @SerializedName("manfen")
-    private int manfen;
+        @SerializedName("compare")
+        private Compare compare; // curGradeRank
 
-    @SerializedName("papers")
-    private List<PaperOverview> papers;
+        public String getName() {
+            return name;
+        }
 
-    public String getName() {
-      return name;
-    }
+        public double getScore() {
+            return score;
+        }
 
-    public double getScore() {
-      return score;
-    }
+        public String getTime() {
+            return time;
+        }
 
-    public int getManfen() {
-      return manfen;
-    }
+        public long getTimeInMillis() {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                return sdf.parse(time).getTime();
+            } catch (ParseException e) {
+                return 0;
+            }
+        }
 
-    public List<PaperOverview> getPapers() {
-      return papers;
-    }
+        public int getManfen() {
+            return manfen;
+        }
 
-    public Long getTime() {
-      return this.time;
-    }
+        public List<PaperOverview> getPapers() {
+            return papers;
+        }
 
-    public void setTime(Long time) {
-      this.time = time;
+        public Integer getCurGradeRank() {
+            return compare != null ? compare.getCurGradeRank() : null;
+        }
     }
-  }
 
-  public static class PaperOverview {
-    @SerializedName("paperId")
-    private String paperId;
+    public static class PaperOverview {
+        @SerializedName("paperId")
+        private String paperId;
 
-    @SerializedName("pid")
-    private String pid;
+        @SerializedName("pid")
+        private String pid;
 
-    @SerializedName("subject")
-    private String subject;
+        @SerializedName("subject")
+        private String subject;
 
-    @SerializedName("score")
-    private double score;
+        @SerializedName("score")
+        private double score;
 
-    @SerializedName("manfen")
-    private double manfen;
+        @SerializedName("manfen")
+        private double manfen;
 
-    @SerializedName("weakAdvantageStatus")
-    private int weakAdvantageStatus;
+        @SerializedName("weakAdvantageStatus")
+        private int weakAdvantageStatus;
 
-    public String getPaperId() {
-      return paperId;
-    }
+        public String getPaperId() {
+            return paperId;
+        }
 
-    public String getSubject() {
-      return subject;
-    }
+        public String getSubject() {
+            return subject;
+        }
 
-    public double getScore() {
-      return score;
-    }
+        public double getScore() {
+            return score;
+        }
 
-    public double getManfen() {
-      return manfen;
-    }
+        public double getManfen() {
+            return manfen;
+        }
 
-    public int getWeakAdvantageStatus() {
-      return weakAdvantageStatus;
-    }
+        public int getWeakAdvantageStatus() {
+            return weakAdvantageStatus;
+        }
 
-    public String getPid() {
-      return this.pid;
-    }
+        public String getPid() {
+            return this.pid;
+        }
 
-    public void setPid(String pid) {
-      this.pid = pid;
+        public void setPid(String pid) {
+            this.pid = pid;
+        }
     }
-  }
 
-  public static class ExamListData {
-    @SerializedName("list")
-    private List<ExamListItem> list;
+    public static class ExamListData {
+        @SerializedName("list")
+        private List<ExamListItem> list;
 
-    public List<ExamListItem> getList() {
-      return list;
+        public List<ExamListItem> getList() {
+            return list;
+        }
     }
-  }
 
-  public static class ExamListItem {
-    @SerializedName("examId")
-    private long examId;
+    public static class ExamListItem {
+        @SerializedName("examId")
+        private long examId;
 
-    @SerializedName("name")
-    private String name;
+        @SerializedName("name")
+        private String name;
 
-    @SerializedName("time")
-    private long time;
+        @SerializedName("time")
+        private long time;
 
-    public long getExamId() {
-      return examId;
-    }
+        public long getExamId() {
+            return examId;
+        }
 
-    public String getName() {
-      return name;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public long getTime() {
-      return time;
+        public long getTime() {
+            return time;
+        }
     }
-  }
 
-  public static class LoginRequest {
-    @SerializedName("loginName")
-    private String loginName;
+    public static class LoginRequest {
+        @SerializedName("loginName")
+        private String loginName;
 
-    @SerializedName("password")
-    private String password;
+        @SerializedName("password")
+        private String password;
 
-    @SerializedName("roleType")
-    private int roleType;
+        @SerializedName("roleType")
+        private int roleType;
 
-    @SerializedName("loginType")
-    private int loginType = 1;
+        @SerializedName("loginType")
+        private int loginType = 1;
 
-    @SerializedName("rememberMe")
-    private int rememberMe = 1;
+        @SerializedName("rememberMe")
+        private int rememberMe = 1;
 
-    // 保留构造函数用于创建请求对象
-    public LoginRequest(String loginName, String password, int roleType) {
-      this.loginName = loginName;
-      this.password = password;
-      this.roleType = roleType;
-    }
+        // 保留构造函数用于创建请求对象
+        public LoginRequest(String loginName, String password, int roleType) {
+            this.loginName = loginName;
+            this.password = password;
+            this.roleType = roleType;
+        }
 
-    // 如果需要读取请求字段，可添加 getter（但通常请求对象只用于序列化）
-    public String getLoginName() {
-      return loginName;
-    }
+        
+        public String getLoginName() {
+            return loginName;
+        }
 
-    public String getPassword() {
-      return password;
-    }
+        public String getPassword() {
+            return password;
+        }
 
-    public int getRoleType() {
-      return roleType;
-    }
+        public int getRoleType() {
+            return roleType;
+        }
 
-    public int getLoginType() {
-      return loginType;
-    }
+        public int getLoginType() {
+            return loginType;
+        }
 
-    public int getRememberMe() {
-      return rememberMe;
+        public int getRememberMe() {
+            return rememberMe;
+        }
     }
-  }
 
-  public static class LoginData {
-    @SerializedName("token")
-    private String token;
+    public static class LoginData {
+        @SerializedName("token")
+        private String token;
 
-    public String getToken() {
-      return token;
+        public String getToken() {
+            return token;
+        }
     }
-  }
 
-  public static class moreExamlist {
-    @SerializedName("examList")
-    private List<moreExamItem> examList;
+    public static class moreExamlist {
+        @SerializedName("examList")
+        private List<moreExamItem> examList;
 
-    public List<moreExamItem> getExamList() {
-      return examList;
+        public List<moreExamItem> getExamList() {
+            return examList;
+        }
     }
-  }
 
-  // 表示考试维度的错题项
-  public static class moreExamItem {
-    @SerializedName("examName")
-    private String examName;
+    // 表示考试维度的错题项
+    public static class moreExamItem {
+        @SerializedName("examName")
+        private String examName;
 
-    @SerializedName("examTime")
-    private long examTime;
+        @SerializedName("examTime")
+        private long examTime;
 
-    @SerializedName("examId")
-    private String examId; // 注意：响应中 examId 为字符串类型
+        @SerializedName("examId")
+        private String examId; // 注意：响应中 examId 为字符串类型
 
-    public String getExamName() {
-      return examName;
-    }
+        public String getExamName() {
+            return examName;
+        }
 
-    public Long getExamTime() {
-      return examTime;
-    }
+        public Long getExamTime() {
+            return examTime;
+        }
 
-    public long getExamId() {
-      return Long.parseLong(examId);
+        public long getExamId() {
+            return Long.parseLong(examId);
+        }
     }
-  }
 
-  // 答题卡信息响应 data 部分
-  public static class AnswerPictureData implements Serializable {
-    @SerializedName("url")
-    private List<String> url; // 原图URL列表
+    // 答题卡信息响应 data 部分
+    public static class AnswerPictureData implements Serializable {
+        @SerializedName("url")
+        private List<String> url; // 原图URL列表
 
-    @SerializedName("urlResize")
-    private List<String> urlResize; // 缩略图URL列表
+        @SerializedName("urlResize")
+        private List<String> urlResize; // 缩略图URL列表
 
-    @SerializedName("isExam2")
-    private boolean isExam2; // 是否为双卷
+        @SerializedName("isExam2")
+        private boolean isExam2; // 是否为双卷
 
-    @SerializedName("questions")
-    private List<QuestionItem> questions; // 题目列表
+        @SerializedName("questions")
+        private List<QuestionItem> questions; // 题目列表
 
-    @SerializedName("paperPic")
-    private List<String> paperPic; // 试卷原图列表
+        @SerializedName("paperPic")
+        private List<String> paperPic; // 试卷原图列表
 
-    @SerializedName("paperPicResize")
-    private List<String> paperPicResize; // 试卷缩略图列表
+        @SerializedName("paperPicResize")
+        private List<String> paperPicResize; // 试卷缩略图列表
 
-    @SerializedName("score")
-    private double score; // 总分
+        @SerializedName("score")
+        private double score; // 总分
 
-    // 其他字段可按需添加，如 nonvipScore, nonvipQuestion, show, config 等
+        // 其他字段可按需添加，如 nonvipScore, nonvipQuestion, show, config 等
 
-    public List<String> getUrl() {
-      return url;
-    }
+        public List<String> getUrl() {
+            return url;
+        }
 
-    public List<String> getUrlResize() {
-      return urlResize;
-    }
+        public List<String> getUrlResize() {
+            return urlResize;
+        }
 
-    public boolean isExam2() {
-      return isExam2;
-    }
+        public boolean isExam2() {
+            return isExam2;
+        }
 
-    public List<QuestionItem> getQuestions() {
-      return questions;
-    }
+        public List<QuestionItem> getQuestions() {
+            return questions;
+        }
 
-    public List<String> getPaperPic() {
-      return paperPic;
-    }
+        public List<String> getPaperPic() {
+            return paperPic;
+        }
 
-    public List<String> getPaperPicResize() {
-      return paperPicResize;
-    }
+        public List<String> getPaperPicResize() {
+            return paperPicResize;
+        }
 
-    public double getScore() {
-      return score;
+        public double getScore() {
+            return score;
+        }
     }
-  }
 
-  // 题目项
-  public static class QuestionItem implements Serializable {
-    @SerializedName("id")
-    private String id;
+    // 题目项
+    public static class QuestionItem implements Serializable {
+        @SerializedName("id")
+        private String id;
 
-    @SerializedName("name")
-    private String name;
+        @SerializedName("name")
+        private String name;
 
-    @SerializedName("manfen")
-    private double manfen; // 满分
+        @SerializedName("manfen")
+        private double manfen; // 满分
 
-    @SerializedName("score")
-    private double score; // 得分
+        @SerializedName("score")
+        private double score; // 得分
 
-    @SerializedName("type")
-    private int type; // 题目类型
+        @SerializedName("type")
+        private int type; // 题目类型
 
-    @SerializedName("myAnswer")
-    private String myAnswer; // 我的答案
+        @SerializedName("myAnswer")
+        private String myAnswer; // 我的答案
 
-    @SerializedName("answerOption")
-    private List<AnswerOptionItem> answerOption; // 选项坐标信息（仅选择题有）
+        @SerializedName("answerOption")
+        private List<AnswerOptionItem> answerOption; // 选项坐标信息（仅选择题有）
 
-    @SerializedName("answer")
-    private String answer; // 正确答案
+        @SerializedName("answer")
+        private String answer; // 正确答案
 
-    @SerializedName("trasRatio")
-    private int trasRatio; // 折算比例
+        @SerializedName("trasRatio")
+        private int trasRatio; // 折算比例
 
-    @SerializedName("scoreS")
-    private String scoreS; // 得分字符串（可能含小数）
+        @SerializedName("scoreS")
+        private String scoreS; // 得分字符串（可能含小数）
 
-    @SerializedName("remark2")
-    private List<Object> remark2; // 批注信息（按需）
+        @SerializedName("remark2")
+        private List<Object> remark2; // 批注信息（按需）
 
-    @SerializedName("url")
-    private List<String> url; // 该题对应的图片URL（主观题可能有）
+        @SerializedName("url")
+        private List<String> url; // 该题对应的图片URL（主观题可能有）
 
-    // Getters
-    public String getId() {
-      return id;
-    }
+        // Getters
+        public String getId() {
+            return id;
+        }
 
-    public String getName() {
-      return name;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public double getManfen() {
-      return manfen;
-    }
+        public double getManfen() {
+            return manfen;
+        }
 
-    public double getScore() {
-      return score;
-    }
+        public double getScore() {
+            return score;
+        }
 
-    public int getType() {
-      return type;
-    }
+        public int getType() {
+            return type;
+        }
 
-    public String getMyAnswer() {
-      return myAnswer;
-    }
+        public String getMyAnswer() {
+            return myAnswer;
+        }
 
-    public List<AnswerOptionItem> getAnswerOption() {
-      return answerOption;
-    }
+        public List<AnswerOptionItem> getAnswerOption() {
+            return answerOption;
+        }
 
-    public String getAnswer() {
-      return answer;
-    }
+        public String getAnswer() {
+            return answer;
+        }
 
-    public int getTrasRatio() {
-      return trasRatio;
-    }
+        public int getTrasRatio() {
+            return trasRatio;
+        }
 
-    public String getScoreS() {
-      return scoreS;
-    }
+        public String getScoreS() {
+            return scoreS;
+        }
 
-    public List<Object> getRemark2() {
-      return remark2;
-    }
+        public List<Object> getRemark2() {
+            return remark2;
+        }
 
-    public List<String> getUrl() {
-      return url;
+        public List<String> getUrl() {
+            return url;
+        }
     }
-  }
 
-  // 选项坐标信息
-  public static class AnswerOptionItem implements Serializable {
-    @SerializedName("option")
-    private String option; // 选项字母
+    // 选项坐标信息
+    public static class AnswerOptionItem implements Serializable {
+        @SerializedName("option")
+        private String option; // 选项字母
 
-    @SerializedName("index")
-    private int index; // 索引
+        @SerializedName("index")
+        private int index; // 索引
 
-    @SerializedName("x")
-    private String x; // x坐标（字符串，可转为int）
+        @SerializedName("x")
+        private String x; // x坐标（字符串，可转为int）
 
-    @SerializedName("y")
-    private String y; // y坐标
+        @SerializedName("y")
+        private String y; // y坐标
 
-    @SerializedName("w")
-    private String w; // 宽度
+        @SerializedName("w")
+        private String w; // 宽度
 
-    @SerializedName("h")
-    private String h; // 高度
+        @SerializedName("h")
+        private String h; // 高度
 
-    @SerializedName("right")
-    private int right; // 是否正确（1正确，0错误）
+        @SerializedName("right")
+        private int right; // 是否正确（1正确，0错误）
 
-    public String getOption() {
-      return option;
-    }
+        public String getOption() {
+            return option;
+        }
 
-    public int getIndex() {
-      return index;
-    }
+        public int getIndex() {
+            return index;
+        }
 
-    public String getX() {
-      return x;
-    }
+        public String getX() {
+            return x;
+        }
 
-    public String getY() {
-      return y;
-    }
+        public String getY() {
+            return y;
+        }
 
-    public String getW() {
-      return w;
-    }
+        public String getW() {
+            return w;
+        }
 
-    public String getH() {
-      return h;
-    }
+        public String getH() {
+            return h;
+        }
 
-    public int getRight() {
-      return right;
+        public int getRight() {
+            return right;
+        }
     }
-  }
 
-  public static class GitHubRelease {
-    @SerializedName("html_url")
-    private String html;
+    public static class GitHubRelease {
+        @SerializedName("html_url")
+        private String html;
 
-    @SerializedName("tag_name")
-    private String tagName; // 版本标签，例如 "v1.2.3"
+        @SerializedName("tag_name")
+        private String tagName; // 版本标签，例如 "v1.2.3"
 
-    @SerializedName("name")
-    private String name; // 发布名称
+        @SerializedName("name")
+        private String name; // 发布名称
 
-    @SerializedName("body")
-    private String body; // 更新说明
+        @SerializedName("body")
+        private String body; // 更新说明
 
-    @SerializedName("prerelease")
-    private boolean prerelease; // 是否为预发布
+        @SerializedName("prerelease")
+        private boolean prerelease; // 是否为预发布
 
-    @SerializedName("assets")
-    private List<Asset> assets; // 附件（APK 文件）
+        @SerializedName("assets")
+        private List<Asset> assets; // 附件（APK 文件）
 
-    public String getTagName() {
-      return tagName;
-    }
+        public String getTagName() {
+            return tagName;
+        }
 
-    public String getName() {
-      return name;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public String getBody() {
-      return body;
-    }
+        public String getBody() {
+            return body;
+        }
 
-    public boolean isPrerelease() {
-      return prerelease;
-    }
+        public boolean isPrerelease() {
+            return prerelease;
+        }
 
-    public List<Asset> getAssets() {
-      return assets;
-    }
+        public List<Asset> getAssets() {
+            return assets;
+        }
 
-    public static class Asset {
-      @SerializedName("name")
-      private String name; // 文件名，例如 "app-release.apk"
+        public static class Asset {
+            @SerializedName("name")
+            private String name; // 文件名，例如 "app-release.apk"
 
-      @SerializedName("browser_download_url")
-      private String downloadUrl; // 下载地址
+            @SerializedName("browser_download_url")
+            private String downloadUrl; // 下载地址
 
-      public String getName() {
-        return name;
-      }
+            public String getName() {
+                return name;
+            }
 
-      public String getDownloadUrl() {
-        return downloadUrl;
-      }
-    }
+            public String getDownloadUrl() {
+                return downloadUrl;
+            }
+        }
 
-    public String getHtml() {
-      return this.html;
-    }
+        public String getHtml() {
+            return this.html;
+        }
 
-    public void setHtml(String html) {
-      this.html = html;
+        public void setHtml(String html) {
+            this.html = html;
+        }
     }
-  }
 }

@@ -36,11 +36,9 @@ public class RetrofitTools {
     @GET("v3/exam/list?start=0&limit=10")
     Call<ApiResponse<ExamListData>> getExamList();
 
-    @GET("v3/exam/{examId}/overview")
-    Call<ApiResponse<ExamOverviewData>> getExamOverview(@Path("examId") long examId);
-
+    
     @GET("v4/exam/overview")
-    Call<ApiResponse<CompareRankData>> getCompareRank(@Query("examId") long examId);
+    Call<ApiResponse<ExamOverviewData>> getExamOverview(@Query("examId") long examId);
 
     @GET("v2/students/last-exam-overview")
     Call<ApiResponse<LastExamData>> getLastExam();

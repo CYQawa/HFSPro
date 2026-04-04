@@ -20,7 +20,6 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
-                app:menu="@menu/exam_menu"
                 app:layout_collapseMode="pin"
                 app:titleCentered="true"
                 app:titleTextColor="@color/md_theme_primary"
@@ -44,6 +43,11 @@
             android:layout_width="fill_parent"
             android:padding="16dp"
             android:orientation="vertical">
+ <com.google.android.material.card.MaterialCardView
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/top_car">
+</com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_height="wrap_content"
