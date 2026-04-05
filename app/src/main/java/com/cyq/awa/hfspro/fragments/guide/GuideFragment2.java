@@ -14,20 +14,21 @@ import androidx.fragment.app.Fragment;
 import com.cyq.awa.hfspro.R;
 
 public class GuideFragment2 extends Fragment {
-  public GuideFragment2() {}
+    public GuideFragment2() {}
 
-  @Override
-  public View onCreateView(
-      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    // 加载布局文件
-    return inflater.inflate(R.layout.guide_2, container, false);
-  }
+    @Override
+    public View onCreateView(
+            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.guide_2, container, false);
+    }
 
-  @Override
-  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    WebView wb = view.findViewById(R.id.webview);
-    wb.loadUrl("file:///android_asset/UserAgreement.html");
-    wb.setBackgroundResource(R.color.bl);
-  }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        WebView wb = view.findViewById(R.id.webview);
+        wb.loadUrl("file:///android_asset/UserAgreement.html");
+        
+        
+        wb.setBackgroundColor(0x00000000);
+    }
 }

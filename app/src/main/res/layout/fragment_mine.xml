@@ -71,7 +71,7 @@
                             android:scaleType="centerCrop"
                             android:id="@+id/github"
                             android:src="@drawable/ic_github"
-                            android:tint="#111111" />
+                            android:tint="@color/Imagebutton" />
 
                     </LinearLayout>
 

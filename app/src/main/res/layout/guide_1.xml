@@ -58,7 +58,7 @@
              android:layout_width="30dp"
              android:scaleType="centerCrop"
              android:src="@drawable/ic_github"
-             android:tint="#111111"
+             android:tint="@color/Imagebutton"
              android:id="@+id/github" />
 
     </LinearLayout>
