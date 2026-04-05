@@ -88,7 +88,7 @@ public class MineFragment extends Fragment {
                     String cachePath = cacheDir.getAbsolutePath();
                     MaterialAlertDialogBuilder builder =
                             new MaterialAlertDialogBuilder(requireContext());
-                    builder.setTitle("确定退出输出日志？")
+                    builder.setTitle("确定输出日志？")
                             .setMessage("点击确定输出日志到" + cachePath)
                             .setPositiveButton(
                                     "确定",
