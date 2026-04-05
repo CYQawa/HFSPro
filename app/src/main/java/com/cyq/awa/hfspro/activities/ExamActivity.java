@@ -86,7 +86,7 @@ public class ExamActivity extends AppCompatActivity {
 
         apiService = RetrofitTools.RetrofitClient.getAuthService();
         Call<ApiResponse<ExamOverviewData>> call = apiService.getExamOverview(exam.getExamId());
-        DialogHelp.show(this);
+        DialogHelp.show();
         call.enqueue(
                 new Callback<ApiResponse<ExamOverviewData>>() {
                     @Override

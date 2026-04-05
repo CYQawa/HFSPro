@@ -47,7 +47,7 @@ public class AnswerActivity extends AppCompatActivity {
         });
     tooltitle.setTitle(paper.getSubject() + "：原卷/答题卡");
 
-    DialogHelp.show(this);
+    DialogHelp.show();
 
     RetrofitTools.ApiService service = RetrofitTools.RetrofitClient.getAuthService();
     Call<ApiResponse<AnswerPictureData>> call =

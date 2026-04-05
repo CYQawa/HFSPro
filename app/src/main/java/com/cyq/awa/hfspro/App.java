@@ -13,6 +13,7 @@ import android.os.Process;
 import android.widget.Toast;
 
 import com.cyq.awa.hfspro.activities.CrashActivity;
+import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseHelper;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 
@@ -34,6 +35,8 @@ public class App extends Application {
   public void onCreate() {
     super.onCreate();
     instance = this;
+        
+    DialogHelp.init(this);
 
     RetrofitTools.init(this);
     dbhelper = new DatabaseHelper(this);

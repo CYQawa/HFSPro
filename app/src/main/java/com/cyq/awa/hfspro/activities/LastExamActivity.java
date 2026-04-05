@@ -66,7 +66,7 @@ public class LastExamActivity extends AppCompatActivity {
     apiService = RetrofitTools.RetrofitClient.getAuthService();
 
     Call<GsonModel.ApiResponse<GsonModel.LastExamData>> call = apiService.getLastExam();
-    DialogHelp.show(this);
+    DialogHelp.show();
     // 异步请求
     call.enqueue(
         new Callback<GsonModel.ApiResponse<GsonModel.LastExamData>>() {

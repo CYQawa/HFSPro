@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     exam.setOnClickListener(
         v -> {
-          DialogHelp.show(requireActivity());
+          DialogHelp.show();
           List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
           if (localExams.isEmpty()) {
             loadAllExamsSilent(this::showExamListDialog);
