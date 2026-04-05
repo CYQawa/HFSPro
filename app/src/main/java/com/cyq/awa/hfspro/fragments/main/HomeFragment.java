@@ -41,22 +41,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
-    private RetrofitTools.ApiService apiService;
+  private RetrofitTools.ApiService apiService;
 
-    public HomeFragment() {}
+  public HomeFragment() {}
 
-    @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  @Override
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
+    return inflater.inflate(R.layout.fragment_home, container, false);
+  }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        MaterialCardView exam = view.findViewById(R.id.exam);
-        MaterialCardView lastexam = view.findViewById(R.id.lastExam);
+  @Override
+  public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    MaterialCardView exam = view.findViewById(R.id.exam);
+    MaterialCardView lastexam = view.findViewById(R.id.lastExam);
 
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     exam.setOnClickListener(
@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
           if (localExams.isEmpty()) {
             loadAllExamsSilent(this::showExamListDialog);
           } else {
-            showExamListDialog(localExams);
+            showExamListDialog();
           }
         });
     lastexam.setOnClickListener(
@@ -76,183 +76,165 @@ public class HomeFragment extends Fragment {
           Intent intent = new Intent(requireContext(), LastExamActivity.class);
           requireContext().startActivity(intent);
         });
+  }
+
+  private void loadAllExams() {
+    Call<ApiResponse<List<moreExamlist>>> call2 =
+        RetrofitTools.RetrofitClient.getAuthService().getMoreExamList();
+    call2.enqueue(
+        new Callback<ApiResponse<List<moreExamlist>>>() {
+          @Override
+          public void onResponse(
+              Call<ApiResponse<List<moreExamlist>>> call,
+              Response<ApiResponse<List<moreExamlist>>> response) {
+            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+              List<moreExamlist> data = response.body().getData();
+              Set<Long> seenExamIds = new HashSet<>();
+              List<MyExamListItem> distinctExams = new ArrayList<>();
+
+              for (moreExamlist subject : data) {
+                for (moreExamItem exam : subject.getExamList()) {
+                  if (!seenExamIds.contains(exam.getExamId())) {
+                    seenExamIds.add(exam.getExamId());
+                    distinctExams.add(
+                        new MyExamListItem(
+                            exam.getExamId(), exam.getExamName(), exam.getExamTime()));
+                  }
+                }
+              }
+
+              DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
+
+              DialogHelp.dismiss();
+              showDialog("加载全部考试成功", "加载成功，共" + distinctExams.size() + "场考试");
+            } else {
+              String errorMsg = response.body().getMsg();
+              DialogHelp.dismiss();
+              showDialog(
+                  "请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, response.body().getCode()));
+            }
+          }
+
+          @Override
+          public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
+            DialogHelp.dismiss();
+            showDialog("请求失败", "网络请求失败！");
+          }
+        });
+  }
+
+  private void loadAllExamsSilent(Runnable onComplete) {
+    Call<ApiResponse<List<moreExamlist>>> call = apiService.getMoreExamList();
+    call.enqueue(
+        new Callback<ApiResponse<List<moreExamlist>>>() {
+          @Override
+          public void onResponse(
+              Call<ApiResponse<List<moreExamlist>>> call,
+              Response<ApiResponse<List<moreExamlist>>> response) {
+            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+              List<moreExamlist> data = response.body().getData();
+              Set<Long> seenExamIds = new HashSet<>();
+              List<MyExamListItem> distinctExams = new ArrayList<>();
+              for (moreExamlist subject : data) {
+                for (moreExamItem exam : subject.getExamList()) {
+                  if (!seenExamIds.contains(exam.getExamId())) {
+                    seenExamIds.add(exam.getExamId());
+                    distinctExams.add(
+                        new MyExamListItem(
+                            exam.getExamId(), exam.getExamName(), exam.getExamTime()));
+                  }
+                }
+              }
+              DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
+              Toast.makeText(requireContext(), "已获取全部考试", Toast.LENGTH_SHORT).show();
+            }
+            if (onComplete != null) {
+              onComplete.run();
+            }
+          }
+
+          @Override
+          public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
+            if (onComplete != null) {
+              onComplete.run();
+            }
+          }
+        });
+  }
+
+  private void showExamListDialog() {
+    BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
+    View sheetView =
+        LayoutInflater.from(requireContext()).inflate(R.layout.exam_list_bottom_sheet_dialog, null);
+    dialog.setContentView(sheetView);
+
+    List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
+
+    View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+    if (bottomSheet != null) {
+      bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
     }
 
-    private void loadAllExams() {
-        Call<ApiResponse<List<moreExamlist>>> call2 =
-                RetrofitTools.RetrofitClient.getAuthService().getMoreExamList();
-        call2.enqueue(
-                new Callback<ApiResponse<List<moreExamlist>>>() {
-                    @Override
-                    public void onResponse(
-                            Call<ApiResponse<List<moreExamlist>>> call,
-                            Response<ApiResponse<List<moreExamlist>>> response) {
-                        if (response.isSuccessful()
-                                && response.body() != null
-                                && response.body().isSuccess()) {
-                            List<moreExamlist> data = response.body().getData();
-                            Set<Long> seenExamIds = new HashSet<>();
-                            List<MyExamListItem> distinctExams = new ArrayList<>();
+    Call<ApiResponse<ExamListData>> call = apiService.getExamList();
+    call.enqueue(
+        new Callback<ApiResponse<ExamListData>>() {
+          @Override
+          public void onResponse(
+              Call<ApiResponse<ExamListData>> call, Response<ApiResponse<ExamListData>> response) {
+            if (response.isSuccessful() && response.body() != null) {
+              ApiResponse<ExamListData> examlistResponse = response.body();
+              if (examlistResponse.isSuccess()) {
+                List<ExamListItem> listexamtiem = examlistResponse.getData().getList();
+                RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-                            for (moreExamlist subject : data) {
-                                for (moreExamItem exam : subject.getExamList()) {
-                                    if (!seenExamIds.contains(exam.getExamId())) {
-                                        seenExamIds.add(exam.getExamId());
-                                        distinctExams.add(
-                                                new MyExamListItem(
-                                                        exam.getExamId(),
-                                                        exam.getExamName(),
-                                                        exam.getExamTime()));
-                                    }
-                                }
-                            }
+                List<MyExamListItem> dataList = new ArrayList<>();
+                for (ExamListItem e : listexamtiem) {
+                  dataList.add(new MyExamListItem(e));
+                }
 
-                            DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
+                Set<Long> networkExamIds = new HashSet<>();
+                for (MyExamListItem item : dataList) {
+                  networkExamIds.add(item.getExamId());
+                }
 
-                            DialogHelp.dismiss();
-                            showDialog("加载全部考试成功", "加载成功，共" + distinctExams.size() + "场考试");
-                        } else {
-                            String errorMsg = response.body().getMsg();
-                            DialogHelp.dismiss();
-                            showDialog(
-                                    "请求失败",
-                                    String.format(
-                                            "请求失败: %s\ncode: %d",
-                                            errorMsg, response.body().getCode()));
-                        }
-                    }
+                for (MyExamListItem localExam : localExams) {
+                  if (!networkExamIds.contains(localExam.getExamId())) {
+                    dataList.add(localExam);
+                  }
+                }
 
-                    @Override
-                    public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
-                        DialogHelp.dismiss();
-                        showDialog("请求失败", "网络请求失败！");
-                    }
-                });
-    }
+                ExamListAdapter adapter = new ExamListAdapter(requireContext(), dataList);
+                dataList.sort((o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
+                recyclerView.setAdapter(adapter);
 
-    private void loadAllExamsSilent(Runnable onComplete) {
-        Call<ApiResponse<List<moreExamlist>>> call = apiService.getMoreExamList();
-        call.enqueue(
-                new Callback<ApiResponse<List<moreExamlist>>>() {
-                    @Override
-                    public void onResponse(
-                            Call<ApiResponse<List<moreExamlist>>> call,
-                            Response<ApiResponse<List<moreExamlist>>> response) {
-                        if (response.isSuccessful()
-                                && response.body() != null
-                                && response.body().isSuccess()) {
-                            List<moreExamlist> data = response.body().getData();
-                            Set<Long> seenExamIds = new HashSet<>();
-                            List<MyExamListItem> distinctExams = new ArrayList<>();
-                            for (moreExamlist subject : data) {
-                                for (moreExamItem exam : subject.getExamList()) {
-                                    if (!seenExamIds.contains(exam.getExamId())) {
-                                        seenExamIds.add(exam.getExamId());
-                                        distinctExams.add(
-                                                new MyExamListItem(
-                                                        exam.getExamId(),
-                                                        exam.getExamName(),
-                                                        exam.getExamTime()));
-                                    }
-                                }
-                            }
-                            DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
-                            Toast.makeText(requireContext(), "已获取全部考试", Toast.LENGTH_SHORT).show();
-                        }
-                        if (onComplete != null) {
-                            onComplete.run();
-                        }
-                    }
+                dialog.show();
+                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
+                DialogHelp.dismiss();
+              } else {
+                DialogHelp.dismiss();
+                showDialog(
+                    "请求失败",
+                    String.format(
+                        "请求失败: %s\ncode: %d",
+                        examlistResponse.getMsg(), examlistResponse.getCode()));
+              }
+            } else {
+              DialogHelp.dismiss();
+              showDialog("请求失败", "服务器错误: " + response.code());
+            }
+          }
 
-                    @Override
-                    public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
-                        if (onComplete != null) {
-                            onComplete.run();
-                        }
-                    }
-                });
-    }
-
-    private void showExamListDialog(List<MyExamListItem> localExams) {
-        BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
-        View sheetView =
-                LayoutInflater.from(requireContext())
-                        .inflate(R.layout.exam_list_bottom_sheet_dialog, null);
-        dialog.setContentView(sheetView);
-
-        View bottomSheet =
-                dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-        if (bottomSheet != null) {
-            bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
-        }
-
-        Call<ApiResponse<ExamListData>> call = apiService.getExamList();
-        call.enqueue(
-                new Callback<ApiResponse<ExamListData>>() {
-                    @Override
-                    public void onResponse(
-                            Call<ApiResponse<ExamListData>> call,
-                            Response<ApiResponse<ExamListData>> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            ApiResponse<ExamListData> examlistResponse = response.body();
-                            if (examlistResponse.isSuccess()) {
-                                List<ExamListItem> listexamtiem =
-                                        examlistResponse.getData().getList();
-                                RecyclerView recyclerView =
-                                        sheetView.findViewById(R.id.recyclerView);
-                                recyclerView.setLayoutManager(
-                                        new LinearLayoutManager(requireContext()));
-
-                                List<MyExamListItem> dataList = new ArrayList<>();
-                                for (ExamListItem e : listexamtiem) {
-                                    dataList.add(new MyExamListItem(e));
-                                }
-
-                                Set<Long> networkExamIds = new HashSet<>();
-                                for (MyExamListItem item : dataList) {
-                                    networkExamIds.add(item.getExamId());
-                                }
-
-                                for (MyExamListItem localExam : localExams) {
-                                    if (!networkExamIds.contains(localExam.getExamId())) {
-                                        dataList.add(localExam);
-                                    }
-                                }
-
-                                ExamListAdapter adapter =
-                                        new ExamListAdapter(requireContext(), dataList);
-                                dataList.sort((o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
-                                recyclerView.setAdapter(adapter);
-
-                                dialog.show();
-                                BottomSheetBehavior.from(bottomSheet)
-                                        .setState(BottomSheetBehavior.STATE_EXPANDED);
-                                DialogHelp.dismiss();
-                            } else {
-                                DialogHelp.dismiss();
-                                showDialog(
-                                        "请求失败",
-                                        String.format(
-                                                "请求失败: %s\ncode: %d",
-                                                examlistResponse.getMsg(),
-                                                examlistResponse.getCode()));
-                            }
-                        } else {
-                            DialogHelp.dismiss();
-                            showDialog("请求失败", "服务器错误: " + response.code());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
-                        DialogHelp.dismiss();
-                        showDialog("请求失败", "网络请求失败！");
-                    }
-                });
-        ExtendedFloatingActionButton edit = sheetView.findViewById(R.id.edit_fab);
-        ExtendedFloatingActionButton load = sheetView.findViewById(R.id.load_fab);
-        hide(load, 1);
-        hide(edit, 1);
+          @Override
+          public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
+            DialogHelp.dismiss();
+            showDialog("请求失败", "网络请求失败！");
+          }
+        });
+    ExtendedFloatingActionButton edit = sheetView.findViewById(R.id.edit_fab);
+    ExtendedFloatingActionButton load = sheetView.findViewById(R.id.load_fab);
+    hide(load, 1);
+    hide(edit, 1);
 
     edit.setOnClickListener(
         vv -> {
@@ -287,80 +269,75 @@ public class HomeFragment extends Fragment {
               .show();
         });
 
-        load.setOnClickListener(
-                vvv -> {
-                    loadAllExams(); // 保留原带对话框的加载方法
-                    dialog.dismiss();
-                });
-        final int[] type = {1}; // 使用数组包装，数组引用是final，但内容可修改
-        FloatingActionButton fab = sheetView.findViewById(R.id.floating_button);
+    load.setOnClickListener(
+        vvv -> {
+          loadAllExams(); // 保留原带对话框的加载方法
+          dialog.dismiss();
+        });
+    final int[] type = {1}; // 使用数组包装，数组引用是final，但内容可修改
+    FloatingActionButton fab = sheetView.findViewById(R.id.floating_button);
 
-        fab.setOnClickListener(
-                v -> {
-                    if (type[0] == 1) {
-                        // 展开操作
-                        type[0] = 2;
-                        fab.setImageResource(R.drawable.ic_down);
-                        show(load, 400);
-                        show(edit, 300);
-                    } else {
-                        // 收缩操作
-                        type[0] = 1;
-                        hide(load, 300);
-                        hide(edit, 400);
-                        fab.setImageResource(R.drawable.ic_up);
-                    }
-                });
-    }
+    fab.setOnClickListener(
+        v -> {
+          if (type[0] == 1) {
+            // 展开操作
+            type[0] = 2;
+            fab.setImageResource(R.drawable.ic_down);
+            show(load, 400);
+            show(edit, 300);
+          } else {
+            // 收缩操作
+            type[0] = 1;
+            hide(load, 300);
+            hide(edit, 400);
+            fab.setImageResource(R.drawable.ic_up);
+          }
+        });
+  }
 
-    private void showDialog(String title, String message) {
-        requireActivity()
-                .runOnUiThread(
-                        () -> {
-                            MaterialAlertDialogBuilder builder =
-                                    new MaterialAlertDialogBuilder(requireContext());
-                            builder.setTitle(title)
-                                    .setMessage(message)
-                                    .setPositiveButton("确定", null)
-                                    .show();
-                        });
-    }
+  private void showDialog(String title, String message) {
+    requireActivity()
+        .runOnUiThread(
+            () -> {
+              MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+              builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
+            });
+  }
 
-    public void hide(final View view, int duration) {
-        // 创建从 1.0 缩放到 0.0 的动画，轴点为中心 (0.5, 0.5)
-        ScaleAnimation animation =
-                new ScaleAnimation(
-                        1.0f,
-                        0.0f, // fromX, toX
-                        1.0f,
-                        0.0f, // fromY, toY
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f, // pivotX 类型及值
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f); // pivotY 类型及值
-        animation.setDuration(duration);
+  public void hide(final View view, int duration) {
+    // 创建从 1.0 缩放到 0.0 的动画，轴点为中心 (0.5, 0.5)
+    ScaleAnimation animation =
+        new ScaleAnimation(
+            1.0f,
+            0.0f, // fromX, toX
+            1.0f,
+            0.0f, // fromY, toY
+            Animation.RELATIVE_TO_SELF,
+            0.5f, // pivotX 类型及值
+            Animation.RELATIVE_TO_SELF,
+            0.5f); // pivotY 类型及值
+    animation.setDuration(duration);
 
-        // 开始动画
-        view.startAnimation(animation);
-        view.setVisibility(View.INVISIBLE);
-    }
+    // 开始动画
+    view.startAnimation(animation);
+    view.setVisibility(View.INVISIBLE);
+  }
 
-    
-    public void show(View view, int duration) {
-        
-        view.setVisibility(View.VISIBLE);
-        
-        ScaleAnimation animation =
-                new ScaleAnimation(
-                        0.0f,
-                        1.0f,
-                        0.0f,
-                        1.0f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f);
-        animation.setDuration(duration);
-        view.startAnimation(animation);
-    }
+  public void show(View view, int duration) {
+
+    view.setVisibility(View.VISIBLE);
+
+    ScaleAnimation animation =
+        new ScaleAnimation(
+            0.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f);
+    animation.setDuration(duration);
+    view.startAnimation(animation);
+  }
 }
