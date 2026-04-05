@@ -81,19 +81,33 @@ public class MineFragment extends Fragment {
               .show();
         });
 
-    dumpLog.setOnClickListener(
-        v -> {
-          File cacheDir = requireContext().getExternalCacheDir();
-          
-          String cachePath = cacheDir.getAbsolutePath();
-          File logFile = new File(cacheDir, "logcat.txt");
-          LogHelper.dumpLogToFile(logFile);
+        dumpLog.setOnClickListener(
+                v -> {
+                    File cacheDir = requireContext().getExternalCacheDir();
 
-          File logFile2 = new File(cacheDir, "CrashLog.txt");
-          LogHelper.dumpCrashLogToFile(logFile2);
+                    String cachePath = cacheDir.getAbsolutePath();
+                    MaterialAlertDialogBuilder builder =
+                            new MaterialAlertDialogBuilder(requireContext());
+                    builder.setTitle("确定退出输出日志？")
+                            .setMessage("点击确定输出日志到" + cachePath)
+                            .setPositiveButton(
+                                    "确定",
+                                    (dialog, which) -> {
+                                        File logFile = new File(cacheDir, "logcat.txt");
+                                        LogHelper.dumpLogToFile(logFile);
 
-          Toast.makeText(requireContext(), "已尝试dump至"+cachePath, Toast.LENGTH_LONG).show();
-        });
+                                        File logFile2 = new File(cacheDir, "CrashLog.txt");
+                                        LogHelper.dumpCrashLogToFile(logFile2);
+
+                                        Toast.makeText(
+                                                        requireContext(),
+                                                        "已尝试dump至" + cachePath,
+                                                        Toast.LENGTH_LONG)
+                                                .show();
+                                    })
+                            .setNegativeButton("取消", null)
+                            .show();
+                });
   }
 
   public static void copyToClipboard(Context context, String text) {

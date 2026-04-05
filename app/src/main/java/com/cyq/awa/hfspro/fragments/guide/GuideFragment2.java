@@ -28,7 +28,6 @@ public class GuideFragment2 extends Fragment {
         WebView wb = view.findViewById(R.id.webview);
         wb.loadUrl("file:///android_asset/UserAgreement.html");
         
-        
         wb.setBackgroundColor(0x00000000);
     }
 }
