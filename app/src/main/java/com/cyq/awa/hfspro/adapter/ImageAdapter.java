@@ -1,6 +1,7 @@
 package com.cyq.awa.hfspro.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.activities.ImagePreviewActivity;
 import com.cyq.awa.hfspro.tools.MyModel.MarkInfo;
 import com.cyq.awa.hfspro.transform.AnswerSheetTransformation;
 
@@ -28,7 +30,7 @@ import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     private Context context;
     private List<String> imageUrls;
-    @Nullable private List<List<MarkInfo>> marksPerSheet; // 可空，原卷时传 null
+    @Nullable private List<List<MarkInfo>> marksPerSheet;
 
     // 原卷使用此构造函数（无标记）
     public ImageAdapter(List<String> imageUrls, Context context) {
@@ -56,11 +58,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String url = imageUrls.get(position);
 
+        // 重置状态
         holder.imageView.setImageDrawable(null);
         holder.loadingIndicator.setVisibility(View.VISIBLE);
 
-        Glide.with(holder.itemView.getContext()).clear(holder.imageView);
-        // 添加加载指示
+        Glide.with(holder.itemView.getContext()).clear(holder.imageView); // 清除之前的加载
+
         Glide.with(holder.itemView.getContext())
                 .load(url)
                 .override(Target.SIZE_ORIGINAL)
@@ -89,6 +92,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                             }
                         })
                 .into(holder.imageView);
+
+        holder.imageView.setOnClickListener(
+                v -> {
+                    Intent intent = new Intent(context, ImagePreviewActivity.class);
+                    intent.putExtra("image_url", url);
+
+                    List<MarkInfo> marksForThisImage = null;
+                    if (marksPerSheet != null && marksPerSheet.size() > position) {
+                        marksForThisImage = marksPerSheet.get(position);
+                    }
+                    intent.putExtra("marks", (java.io.Serializable) marksForThisImage);
+                    context.startActivity(intent);
+                });
     }
 
     // 根据位置返回对应的 Transformation，如果无标记则返回空 Transformation
