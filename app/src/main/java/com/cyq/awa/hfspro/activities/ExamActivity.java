@@ -46,45 +46,45 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ExamActivity extends AppCompatActivity {
-    private RetrofitTools.ApiService apiService;
-    private MyExamListItem exam;
-    private AAChartView aaChartView;
-    private AAChartView aaChartView2;
+  private RetrofitTools.ApiService apiService;
+  private MyExamListItem exam;
+  private AAChartView aaChartView;
+  private AAChartView aaChartView2;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exam);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_exam);
 
-        DatabaseManager dbm = DatabaseManager.getInstance();
+    DatabaseManager dbm = DatabaseManager.getInstance();
 
-        exam = (MyExamListItem) getIntent().getSerializableExtra("myexam");
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        CollapsingToolbarLayout tooltitle = findViewById(R.id.tooltitle);
-        CircularProgressIndicator progressIndicator = findViewById(R.id.btn_ProgressIndicator);
-        MaterialTextView scoretext = findViewById(R.id.scoretext);
-        MaterialTextView manfent = findViewById(R.id.manfen);
-        MaterialCardView top_card = findViewById(R.id.top_card);
-        MaterialCardView bottom_card = findViewById(R.id.bottom_card);
-        RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
-        aaChartView = findViewById(R.id.AAChartView);
-        aaChartView2 = findViewById(R.id.AAChartView2);
-        MaterialCardView rankCard = findViewById(R.id.rank);
-        LinearLayout contentLayout = findViewById(R.id.content_layout);
-        ImageView rankclose = findViewById(R.id.rankclose);
+    exam = (MyExamListItem) getIntent().getSerializableExtra("myexam");
+    MaterialToolbar toolbar = findViewById(R.id.toolbar);
+    CollapsingToolbarLayout tooltitle = findViewById(R.id.tooltitle);
+    CircularProgressIndicator progressIndicator = findViewById(R.id.btn_ProgressIndicator);
+    MaterialTextView scoretext = findViewById(R.id.scoretext);
+    MaterialTextView manfent = findViewById(R.id.manfen);
+    MaterialCardView top_card = findViewById(R.id.top_card);
+    MaterialCardView bottom_card = findViewById(R.id.bottom_card);
+    RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
+    aaChartView = findViewById(R.id.AAChartView);
+    aaChartView2 = findViewById(R.id.AAChartView2);
+    MaterialCardView rankCard = findViewById(R.id.rank);
+    LinearLayout contentLayout = findViewById(R.id.content_layout);
+    ImageView rankclose = findViewById(R.id.rankclose);
 
-        LayoutTransition transition = new LayoutTransition();
-        transition.setDuration(500);
+    LayoutTransition transition = new LayoutTransition();
+    transition.setDuration(500);
 
-        contentLayout.setLayoutTransition(transition);
+    contentLayout.setLayoutTransition(transition);
 
-        setSupportActionBar(toolbar);
+    setSupportActionBar(toolbar);
 
-        rankclose.setOnClickListener(v -> rankCard.setVisibility(View.GONE));
+    rankclose.setOnClickListener(v -> rankCard.setVisibility(View.GONE));
 
-        apiService = RetrofitTools.RetrofitClient.getAuthService();
-        Call<ApiResponse<ExamOverviewData>> call = apiService.getExamOverview(exam.getExamId());
-        DialogHelp.show();
+    apiService = RetrofitTools.RetrofitClient.getAuthService();
+    Call<ApiResponse<ExamOverviewData>> call = apiService.getExamOverview(exam.getExamId());
+    DialogHelp.show();
     call.enqueue(
         new Callback<ApiResponse<ExamOverviewData>>() {
           @Override
@@ -243,20 +243,20 @@ public class ExamActivity extends AppCompatActivity {
                                   .fillOpacity(0.3)
                             });
 
-                
                 AAOptions aaOptions = radarChartModel.aa_toAAOptions();
                 AAYAxis yAxis = new AAYAxis();
                 yAxis.min(0);
                 yAxis.max(100);
                 yAxis.tickInterval(10);
 
-                
                 aaOptions.yAxis(yAxis);
 
-//                // 可选：控制多边形环（X轴网格线）的显示，若希望只保留放射线，可关闭多边形环
-                AAXAxis xAxis = new AAXAxis();
-                //xAxis.gridLineWidth(0.5f); // 设为0则隐藏多边形环
-                // 或保留但调细：xAxis.gridLineWidth(0.5f);
+                AAXAxis xAxis = aaOptions.xAxis;
+                if (xAxis == null) {
+                  xAxis = new AAXAxis();
+                }
+
+                xAxis.gridLineWidth(1f);
                 aaOptions.xAxis(xAxis);
 
                 // 最后绘制
@@ -292,71 +292,66 @@ public class ExamActivity extends AppCompatActivity {
           }
         });
 
-        setCustomCardCorners(top_card, 16, 16, 0, 0);
-        setCustomCardCorners(bottom_card, 0, 0, 16, 16);
+    setCustomCardCorners(top_card, 16, 16, 0, 0);
+    setCustomCardCorners(bottom_card, 0, 0, 16, 16);
 
-        toolbar.setNavigationOnClickListener(
-                v -> {
-                    finish();
-                });
-        progressIndicator.setIndeterminate(false);
-    }
+    toolbar.setNavigationOnClickListener(
+        v -> {
+          finish();
+        });
+    progressIndicator.setIndeterminate(false);
+  }
 
-    public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {
-        // 将 dp 转换为像素（根据需求设置不同圆角值）
-        float topLeftPx = dpToPx(cardView.getContext(), tl);
-        float topRightPx = dpToPx(cardView.getContext(), tr);
-        float bottomRightPx = dpToPx(cardView.getContext(), br);
-        float bottomLeftPx = dpToPx(cardView.getContext(), bl);
+  public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {
+    // 将 dp 转换为像素（根据需求设置不同圆角值）
+    float topLeftPx = dpToPx(cardView.getContext(), tl);
+    float topRightPx = dpToPx(cardView.getContext(), tr);
+    float bottomRightPx = dpToPx(cardView.getContext(), br);
+    float bottomLeftPx = dpToPx(cardView.getContext(), bl);
 
-        // 创建 ShapeAppearanceModel，分别设置四个角
-        ShapeAppearanceModel shapeAppearanceModel =
-                new ShapeAppearanceModel.Builder()
-                        .setTopLeftCorner(CornerFamily.ROUNDED, topLeftPx)
-                        .setTopRightCorner(CornerFamily.ROUNDED, topRightPx)
-                        .setBottomRightCorner(CornerFamily.ROUNDED, bottomRightPx)
-                        .setBottomLeftCorner(CornerFamily.ROUNDED, bottomLeftPx)
-                        .build();
+    // 创建 ShapeAppearanceModel，分别设置四个角
+    ShapeAppearanceModel shapeAppearanceModel =
+        new ShapeAppearanceModel.Builder()
+            .setTopLeftCorner(CornerFamily.ROUNDED, topLeftPx)
+            .setTopRightCorner(CornerFamily.ROUNDED, topRightPx)
+            .setBottomRightCorner(CornerFamily.ROUNDED, bottomRightPx)
+            .setBottomLeftCorner(CornerFamily.ROUNDED, bottomLeftPx)
+            .build();
 
-        // 将 ShapeAppearanceModel 应用到 MaterialCardView
-        cardView.setShapeAppearanceModel(shapeAppearanceModel);
-    }
+    // 将 ShapeAppearanceModel 应用到 MaterialCardView
+    cardView.setShapeAppearanceModel(shapeAppearanceModel);
+  }
 
-    // dp 转像素工具方法
-    private float dpToPx(Context context, float dp) {
-        return dp * context.getResources().getDisplayMetrics().density;
-    }
+  // dp 转像素工具方法
+  private float dpToPx(Context context, float dp) {
+    return dp * context.getResources().getDisplayMetrics().density;
+  }
 
-    
+  private void showDialog(String title, String message) {
+    runOnUiThread(
+        () -> {
+          MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+          builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
+        });
+  }
 
-    private void showDialog(String title, String message) {
-        runOnUiThread(
-                () -> {
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-                    builder.setTitle(title)
-                            .setMessage(message)
-                            .setPositiveButton("确定", null)
-                            .show();
-                });
-    }
+  private String getColorString(int colorResId) {
+    int color = ContextCompat.getColor(this, colorResId);
+    return String.format("#%06X", (0xFFFFFF & color));
+  }
 
-    private String getColorString(int colorResId) {
-        int color = ContextCompat.getColor(this, colorResId);
-        return String.format("#%06X", (0xFFFFFF & color));
-    }
-
-    private int[] getThemeColorResIds() {
-        return new int[] {
-            R.color.md_theme_primary,
-            R.color.md_theme_onPrimary,
-            R.color.md_theme_primaryContainer,
-            R.color.md_theme_onPrimaryContainer,
-            R.color.md_theme_inversePrimary,
-            R.color.md_theme_primaryFixed_mediumContrast,
-            R.color.md_theme_onPrimaryFixed,
-            R.color.md_theme_primaryFixedDim,
-            R.color.md_theme_inversePrimary_highContrast
-            // 饼图主题颜色
-        };
-    }
+  private int[] getThemeColorResIds() {
+    return new int[] {
+      R.color.md_theme_primary,
+      R.color.md_theme_onPrimary,
+      R.color.md_theme_primaryContainer,
+      R.color.md_theme_onPrimaryContainer,
+      R.color.md_theme_inversePrimary,
+      R.color.md_theme_primaryFixed_mediumContrast,
+      R.color.md_theme_onPrimaryFixed,
+      R.color.md_theme_primaryFixedDim,
+      R.color.md_theme_inversePrimary_highContrast
+      // 饼图主题颜色
+    };
+  }
 }
