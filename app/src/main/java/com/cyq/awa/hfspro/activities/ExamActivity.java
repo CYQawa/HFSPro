@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AAPlotOptions;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AASeries;
+import com.github.AAChartModel.AAChartCore.AAOptionsModel.AADataLabels;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -244,22 +247,34 @@ public class ExamActivity extends AppCompatActivity {
                             });
 
                 AAOptions aaOptions = radarChartModel.aa_toAAOptions();
+
+                // 1. 设置 Y 轴
                 AAYAxis yAxis = new AAYAxis();
                 yAxis.min(0);
                 yAxis.max(100);
                 yAxis.tickInterval(10);
-
                 aaOptions.yAxis(yAxis);
 
+                // 2. 设置 X 轴放射线宽度
                 AAXAxis xAxis = aaOptions.xAxis;
                 if (xAxis == null) {
                   xAxis = new AAXAxis();
                 }
-
                 xAxis.gridLineWidth(1f);
                 aaOptions.xAxis(xAxis);
 
-                // 最后绘制
+                // 3. 设置数据标签格式，添加百分号
+                AAPlotOptions plotOptions = new AAPlotOptions();
+                AASeries seriesOptions = new AASeries();
+                AADataLabels dataLabels = new AADataLabels();
+                dataLabels.format("{y}%"); // 显示数值加百分号
+                dataLabels.enabled(true); // 确保数据标签开启
+                dataLabels.allowOverlap(true);
+                seriesOptions.dataLabels(dataLabels);
+                plotOptions.series(seriesOptions);
+                aaOptions.plotOptions(plotOptions);
+
+                // 4. 绘制雷达图
                 aaChartView2.aa_drawChartWithChartOptions(aaOptions);
                 // 动态调整图表高度
                 int dataCount2 = categories.length;
