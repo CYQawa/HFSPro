@@ -1,6 +1,9 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import com.cyq.awa.hfspro.tools.DialogHelp;
@@ -27,6 +30,7 @@ import retrofit2.Callback;
 public class AnswerActivity extends AppCompatActivity {
   private MyPaperOverview paper;
   private MyExamListItem exam;
+  private AnswerPictureData answerData;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class AnswerActivity extends AppCompatActivity {
     exam = (MyExamListItem) getIntent().getSerializableExtra("myexam");
 
     MaterialToolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
     CollapsingToolbarLayout tooltitle = findViewById(R.id.tooltitle);
     TabLayout tabLayout = findViewById(R.id.tabLayout);
     ViewPager2 viewPager2 = findViewById(R.id.viewPager);
@@ -61,6 +66,7 @@ public class AnswerActivity extends AppCompatActivity {
             if (response.isSuccessful()) {
               ApiResponse<AnswerPictureData> apiResponse = response.body();
               if (apiResponse != null && apiResponse.isSuccess()) {
+                answerData = apiResponse.getData();
                 AnswerPictureData data = apiResponse.getData();
 
                 List<String> paperPics = data.getPaperPic();
@@ -88,8 +94,9 @@ public class AnswerActivity extends AppCompatActivity {
                         })
                     .attach();
                 DialogHelp.dismiss();
-                
-                Snackbar.make(findViewById(R.id.coordinator), "请耐心等待加载", Snackbar.LENGTH_SHORT).show();
+
+                Snackbar.make(findViewById(R.id.coordinator), "请耐心等待加载", Snackbar.LENGTH_SHORT)
+                    .show();
               }
             } else {
               showDialog("请求失败", "服务器错误: " + response.code());
@@ -114,12 +121,94 @@ public class AnswerActivity extends AppCompatActivity {
     return builder.create();
   }
 
-  
   private void showDialog(String title, String message) {
     runOnUiThread(
         () -> {
           MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
           builder.setTitle(title).setMessage(message).setPositiveButton("确定", null).show();
         });
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    if (item.getItemId() == R.id.download) {
+      handleDownload();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleDownload() {
+    if (answerData == null) {
+      Snackbar.make(findViewById(R.id.coordinator), "数据还未加载", Snackbar.LENGTH_SHORT).show();
+      return;
+    }
+
+    // 根据当前选中的 Tab 确定是原卷还是答题卡
+    ViewPager2 viewPager = findViewById(R.id.viewPager);
+    int currentTab = viewPager.getCurrentItem();
+    int itemCount = viewPager.getAdapter() != null ? viewPager.getAdapter().getItemCount() : 0;
+
+    List<String> picList = null;
+    String title = "";
+
+    if (itemCount == 1) {
+      // 只有答题卡
+      picList = answerData.getUrl(); // 根据你的实际字段名调整
+      title = "选择答题卡下载";
+    } else if (itemCount == 2) {
+      if (currentTab == 0) {
+        picList = answerData.getPaperPic();
+        title = "选择原卷下载";
+      } else {
+        picList = answerData.getUrl();
+        title = "选择答题卡下载";
+      }
+    }
+
+    if (picList == null || picList.isEmpty()) {
+      Snackbar.make(findViewById(R.id.coordinator), "没有可下载的图片", Snackbar.LENGTH_SHORT).show();
+      return;
+    }
+
+    
+      // 多选对话框
+      String[] itemNames = new String[picList.size()];
+      for (int i = 0; i < picList.size(); i++) {
+        itemNames[i] = "图 " + (i + 1);
+      }
+
+      // 记录选中状态
+      boolean[] checkedItems = new boolean[picList.size()];
+
+      new MaterialAlertDialogBuilder(this)
+          .setTitle(title)
+          .setMultiChoiceItems(
+              itemNames,
+              checkedItems,
+              (dialog, which, isChecked) -> {
+                // 这里保存选中状态，checkedItems[which] 会自动更新吗？
+                // MaterialAlertDialogBuilder 的 setMultiChoiceItems 会自动维护 checkedItems 数组
+              })
+          .setPositiveButton(
+              "下载所选",
+              (dialog, which) -> {
+                // 遍历所有选项，下载选中的图片
+                for (int i = 0; i < checkedItems.length; i++) {
+                  if (checkedItems[i]) {
+                   // downloadImage(picList.get(i));
+                   
+                  }
+                }
+              })
+          .setNegativeButton("取消", null)
+          .show();
+    
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_download, menu);
+    return true;
   }
 }

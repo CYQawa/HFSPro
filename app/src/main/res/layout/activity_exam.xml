@@ -20,6 +20,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                  android:layout_height="?attr/actionBarSize"
                  android:layout_width="match_parent"
+                 
                  app:layout_collapseMode="pin"
                  app:titleCentered="true"
                  app:titleTextColor="@color/md_theme_primary"
