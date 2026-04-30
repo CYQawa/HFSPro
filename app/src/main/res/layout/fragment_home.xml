@@ -15,34 +15,50 @@
              android:layout_height="wrap_content"
              android:layout_width="match_parent"
              android:padding="16dp"
-             android:orientation="horizontal">
+             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
                  android:layout_height="wrap_content"
-                 android:layout_width="0dp"
-                 android:layout_marginEnd="8dp"
-                 android:layout_weight="1"
+                 android:layout_width="match_parent"
+                 app:cardBackgroundColor="?attr/colorPrimary"
                  android:id="@+id/exam">
 
                 <LinearLayout
-                     android:layout_height="match_parent"
+                     android:layout_height="wrap_content"
                      android:layout_width="match_parent"
                      android:gravity="center"
-                     android:padding="16dp"
-                     android:orientation="vertical">
+                     android:padding="20dp"
+                     android:orientation="horizontal">
 
                     <ImageView
-                         android:layout_height="30dp"
-                         android:layout_width="30dp"
+                         android:layout_height="25dp"
+                         android:layout_width="25dp"
                          android:src="@drawable/ic_exam"
-                         android:tint="@color/md_theme_primary" />
+                         android:scaleType="fitCenter"
+                         android:layout_marginRight="16dp"
+                         android:tint="?attr/colorOnPrimary" />
 
-                    <TextView
+                    <LinearLayout
                          android:layout_height="wrap_content"
-                         android:layout_width="wrap_content"
-                         android:layout_marginTop="5dp"
-                         android:textStyle="bold"
-                         android:text="考试" />
+                         android:layout_width="match_parent"
+                         android:gravity="left|center"
+                         android:orientation="vertical">
+
+                        <TextView
+                             android:layout_height="wrap_content"
+                             android:layout_width="match_parent"
+                             android:textColor="?attr/colorOnPrimary"
+                             android:textStyle="bold"
+                             android:text="考试" />
+
+                        <TextView
+                             android:layout_height="wrap_content"
+                             android:layout_width="match_parent"
+                             android:textColor="?attr/colorOnPrimary"
+                             android:fontFamily="sans-serif-thin"
+                             android:text="点我查看考试喵 >" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -50,30 +66,43 @@
 
             <com.google.android.material.card.MaterialCardView
                  android:layout_height="wrap_content"
-                 android:layout_width="0dp"
-                 android:layout_marginStart="8dp"
-                 android:layout_weight="1"
+                 android:layout_width="match_parent"
+                 android:layout_marginTop="8dp"
                  android:id="@+id/lastExam">
 
                 <LinearLayout
                      android:layout_height="match_parent"
                      android:layout_width="match_parent"
-                     android:gravity="center"
-                     android:padding="16dp"
-                     android:orientation="vertical">
+                     android:gravity="center_vertical"
+                     android:padding="20dp"
+                     android:orientation="horizontal">
 
                     <ImageView
                          android:layout_height="30dp"
                          android:layout_width="30dp"
                          android:src="@drawable/ic_lasttime"
+                         android:layout_marginRight="16dp"
                          android:tint="@color/md_theme_primary" />
 
-                    <TextView
+                    <LinearLayout
                          android:layout_height="wrap_content"
-                         android:layout_width="wrap_content"
-                         android:layout_marginTop="5dp"
-                         android:textStyle="bold"
-                         android:text="最近考试排名(5天内)" />
+                         android:layout_width="match_parent"
+                         android:gravity="left|center_vertical"
+                         android:orientation="vertical">
+
+                        <TextView
+                             android:layout_height="wrap_content"
+                             android:layout_width="wrap_content"
+                             android:textStyle="bold"
+                             android:text="最近考试排名" />
+
+                        <TextView
+                             android:layout_height="wrap_content"
+                             android:layout_width="wrap_content"
+                             android:fontFamily="sans-serif-thin"
+                             android:text="支持查看最近5天考试的详细排名 >" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

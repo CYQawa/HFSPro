@@ -39,17 +39,17 @@
          android:id="@+id/nested_scroll_view">
 
         <LinearLayout
-        android:id="@+id/content_layout"   
              android:layout_height="wrap_content"
              android:layout_width="fill_parent"
              android:padding="16dp"
-             android:orientation="vertical">
+             android:orientation="vertical"
+             android:id="@+id/content_layout">
 
             <com.google.android.material.card.MaterialCardView
                  android:layout_height="wrap_content"
                  android:layout_width="fill_parent"
                  android:visibility="gone"
-                 app:cardBackgroundColor="@color/md_theme_onPrimaryContainer"
+                 app:cardBackgroundColor="?attr/colorPrimary"
                  android:id="@+id/rank">
 
                 <LinearLayout
@@ -62,17 +62,17 @@
                     <TextView
                          android:layout_height="wrap_content"
                          android:layout_width="0dp"
-                         android:id="@+id/ranktx"
-                         android:textColor="@color/white"
+                         android:textColor="?attr/colorOnPrimary"
                          android:layout_weight="1"
+                         android:id="@+id/ranktx"
                          android:text="示例文字" />
 
                     <ImageView
-                    android:id="@+id/rankclose"
                          android:layout_height="25dp"
                          android:layout_width="25dp"
                          android:src="@drawable/ic_close"
-                         android:tint="@color/white" />
+                         android:tint="?attr/colorOnPrimary"
+                         android:id="@+id/rankclose" />
 
                 </LinearLayout>
 
@@ -85,7 +85,6 @@
                  android:id="@+id/top_card">
 
                 <LinearLayout
-                   
                      android:layout_height="match_parent"
                      android:layout_width="match_parent"
                      android:padding="16dp"
