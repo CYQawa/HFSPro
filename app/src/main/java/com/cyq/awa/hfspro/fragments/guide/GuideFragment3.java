@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,7 +53,11 @@ public class GuideFragment3 extends Fragment {
     MaterialTextView yytext = view.findViewById(R.id.yytext);
     MaterialButton loginButton = view.findViewById(R.id.loginButton);
 
-    setAutoComplete();
+    setAutoComplete();  
+
+if (savedInstanceState == null) {
+    loginTypeText.setText("家长端", false);
+}
 
     // 手动输入Token
     yytext.setOnClickListener(v -> showTokenInputDialog());
@@ -97,12 +102,29 @@ public class GuideFragment3 extends Fragment {
     logintypes.add("家长端");
     logintypes.add("学生端");
 
-    ArrayAdapter<String> adapter =
-        new ArrayAdapter<>(
-            requireContext(), android.R.layout.simple_dropdown_item_1line, logintypes);
+    ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+            requireContext(), android.R.layout.simple_dropdown_item_1line, logintypes) {
+        @NonNull
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults results = new FilterResults();
+                    results.values = logintypes;  
+                    results.count = logintypes.size();
+                    return results;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    notifyDataSetChanged(); 
+                }
+            };
+        }
+    };
     loginTypeText.setAdapter(adapter);
-    loginTypeText.setText("家长端", false);
-  }
+}
 
   private void performLogin(String account, String password) {
     ApiService apiService = RetrofitClient.getAuthService();
