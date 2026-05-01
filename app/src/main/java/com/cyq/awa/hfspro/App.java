@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.cyq.awa.hfspro.activities.CrashActivity;
 import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseHelper;
+import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 
 import java.io.File;
@@ -40,6 +41,9 @@ public class App extends Application {
 
     RetrofitTools.init(this);
     dbhelper = new DatabaseHelper(this);
+        new Thread(() -> {
+            DatabaseManager.getInstance(); 
+        }).start();
 
     initCrashHandler();
   }

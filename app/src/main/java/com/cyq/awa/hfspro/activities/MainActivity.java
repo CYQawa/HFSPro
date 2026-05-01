@@ -7,6 +7,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -34,46 +36,57 @@ public class MainActivity extends AppCompatActivity {
     private MineFragment mineFragment;
     private FragmentManager fragmentManager;
     private Fragment nowFragment;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        DatabaseManager dbm = DatabaseManager.getInstance();
-        if (!dbm.hasToken()) {
-            startActivity(new Intent(MainActivity.this, GuideActivity.class));
-            finish();
-            return;
-        }
+        new Thread(() -> {
+            
+            DatabaseManager dbm = DatabaseManager.getInstance();
+            boolean hasToken = dbm.hasToken();
 
+            
+            mainHandler.post(() -> {
+                if (isDestroyed() || isFinishing()) return; // Activity 已销毁则不操作
+
+                if (!hasToken) {
+                    // 无 token：直接跳转引导页
+                    startActivity(new Intent(MainActivity.this, GuideActivity.class));
+                    finish();
+                } else {
+                    // 有 token：加载真正的主界面
+                    setContentView(R.layout.activity_main);
+                    initMainUI(savedInstanceState);  
+                }
+            });
+        }).start();
+    }
+
+    // 将原来 onCreate 中 setContentView 之后的逻辑全部放在这里
+    private void initMainUI(Bundle savedInstanceState) {
         fragmentContainerView = findViewById(R.id.fragment_container);
         BottomNavigationView bottomNavigationView = findViewById(R.id.main_nav_view);
 
-        // 1. 先获取 FragmentManager
         fragmentManager = getSupportFragmentManager();
 
-        // 2. 根据 savedInstanceState 决定是创建新 Fragment 还是找回已有 Fragment
         if (savedInstanceState == null) {
-            // 首次创建：新建 Fragment 实例，并添加 tag
             homefragment = new HomeFragment();
             mineFragment = new MineFragment();
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.fragment_container, homefragment, "home") // 添加 tag
-                    .add(R.id.fragment_container, mineFragment, "mine") // 添加 tag
+                    .add(R.id.fragment_container, homefragment, "home")
+                    .add(R.id.fragment_container, mineFragment, "mine")
                     .hide(mineFragment)
                     .commit();
-            nowFragment = homefragment; // 当前显示的 Fragment
+            nowFragment = homefragment;
         } else {
-            // Activity 重建（如深色模式切换）：通过 tag 找回之前的 Fragment
             homefragment = (HomeFragment) fragmentManager.findFragmentByTag("home");
             mineFragment = (MineFragment) fragmentManager.findFragmentByTag("mine");
-            // 找回当前正在显示的 Fragment（可选，用于同步 nowFragment 状态）
             nowFragment = fragmentManager.findFragmentById(R.id.fragment_container);
         }
 
-        // 3. 设置底部导航栏监听（不需要再重复 showFragment，因为恢复时 Fragment 的显示/隐藏状态由系统自动恢复）
         bottomNavigationView.setOnItemSelectedListener(
                 item -> {
                     int id = item.getItemId();
