@@ -55,26 +55,20 @@
                      android:orientation="vertical">
 
                     <com.google.android.material.textview.MaterialTextView
-                         android:layout_height="match_parent"
+                         android:layout_height="wrap_content"
                          android:layout_width="wrap_content"
-                         android:layout_marginBottom="0dp"
-                         android:gravity="center"
                          android:textSize="12sp"
                          android:textColor="@color/md_theme_primary"
                          android:id="@+id/nametext"
-                         android:textStyle="bold"
-                         android:layout_gravity="center_vertical" />
+                         android:textStyle="bold" />
 
                     <com.google.android.material.textview.MaterialTextView
-                         android:layout_height="match_parent"
+                         android:layout_height="wrap_content"
                          android:layout_width="wrap_content"
-                         android:layout_marginBottom="0dp"
-                         android:gravity="center"
                          android:textSize="12sp"
                          android:textColor="@color/md_theme_primary"
                          android:id="@+id/idtext"
-                         android:textStyle="bold"
-                         android:layout_gravity="center_vertical" />
+                         android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -101,23 +95,19 @@
                     <com.google.android.material.textview.MaterialTextView
                          android:layout_height="match_parent"
                          android:layout_width="wrap_content"
-                         android:layout_marginBottom="0dp"
                          android:gravity="center"
                          android:textSize="32sp"
                          android:textColor="@color/md_theme_primary"
                          android:id="@+id/scoretext"
-                         android:textStyle="bold"
-                         android:layout_gravity="center_vertical" />
+                         android:textStyle="bold" />
 
                     <com.google.android.material.textview.MaterialTextView
                          android:layout_height="match_parent"
                          android:layout_width="wrap_content"
-                         android:layout_marginBottom="0dp"
                          android:gravity="center"
-                         android:fontFamily="sans-serif-thin"
                          android:textSize="32sp"
-                         android:id="@+id/manfen"
-                         android:layout_gravity="center_vertical" />
+                         android:fontFamily="sans-serif-thin"
+                         android:id="@+id/manfen" />
 
                 </LinearLayout>
 
@@ -177,74 +167,33 @@
                             <com.google.android.material.textview.MaterialTextView
                                  android:layout_height="wrap_content"
                                  android:layout_width="wrap_content"
-                                 android:layout_marginBottom="0dp"
-                                 android:gravity="center"
                                  android:textSize="15sp"
                                  android:textColor="@color/md_theme_primary"
-                                 android:text="班级排名"
-                                 android:id="@+id/classrank"
-                                 android:textStyle="bold" />
+                                 android:textStyle="bold"
+                                 android:id="@+id/classrank" />
 
                             <com.google.android.material.textview.MaterialTextView
                                  android:layout_height="wrap_content"
                                  android:layout_width="wrap_content"
-                                 android:layout_marginBottom="0dp"
-                                 android:gravity="center"
-                                 android:fontFamily="sans-serif-thin"
                                  android:textSize="12sp"
                                  android:textColor="@color/md_theme_primary"
-                                 android:text="班级人数"
                                  android:id="@+id/classstunum" />
 
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <com.google.android.material.divider.MaterialDivider
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"
-                         android:layout_marginVertical="10dp"
-                         android:background="?attr/colorOutline" />
-
-                    <LinearLayout
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"
-                         android:gravity="center"
-                         android:orientation="horizontal">
-
-                        <ImageView
-                             android:layout_height="30dp"
-                             android:layout_width="30dp"
-                             android:src="@drawable/ic_rank"
-                             android:tint="@color/md_theme_primary" />
-
-                        <LinearLayout
-                             android:layout_height="wrap_content"
-                             android:layout_width="match_parent"
-                             android:orientation="vertical"
-                             android:layout_marginLeft="10dp">
-
                             <com.google.android.material.textview.MaterialTextView
                                  android:layout_height="wrap_content"
                                  android:layout_width="wrap_content"
-                                 android:layout_marginBottom="0dp"
-                                 android:gravity="center"
-                                 android:textSize="15sp"
-                                 android:textColor="@color/md_theme_primary"
-                                 android:text="年段排名"
-                                 android:id="@+id/graderank"
-                                 android:textStyle="bold" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                 android:layout_height="wrap_content"
-                                 android:layout_width="wrap_content"
-                                 android:layout_marginBottom="0dp"
-                                 android:gravity="center"
-                                 android:fontFamily="sans-serif-thin"
                                  android:textSize="12sp"
                                  android:textColor="@color/md_theme_primary"
-                                 android:text="年段人数"
-                                 android:id="@+id/gradestunum" />
+                                 android:layout_marginTop="4dp"
+                                 android:id="@+id/class_defeat_text" />
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                 android:layout_height="6dp"
+                                 android:layout_width="match_parent"
+                                 app:trackColor="@android:color/darker_gray"
+                                 android:layout_marginTop="4dp"
+                                 android:id="@+id/class_defeat_progress"
+                                 app:indicatorColor="@color/md_theme_primary" />
 
                         </LinearLayout>
 
@@ -277,15 +226,70 @@
                             <com.google.android.material.textview.MaterialTextView
                                  android:layout_height="wrap_content"
                                  android:layout_width="wrap_content"
-                                 android:layout_marginBottom="0dp"
-                                 android:gravity="center"
                                  android:textSize="15sp"
                                  android:textColor="@color/md_theme_primary"
-                                 android:text="最差的科目"
+                                 android:textStyle="bold"
+                                 android:id="@+id/graderank" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:textSize="12sp"
+                                 android:textColor="@color/md_theme_primary"
+                                 android:id="@+id/gradestunum" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:textSize="12sp"
+                                 android:textColor="@color/md_theme_primary"
+                                 android:layout_marginTop="4dp"
+                                 android:id="@+id/grade_defeat_text" />
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                 android:layout_height="6dp"
+                                 android:layout_width="match_parent"
+                                 app:trackColor="@android:color/darker_gray"
+                                 android:layout_marginTop="4dp"
+                                 android:id="@+id/grade_defeat_progress"
+                                 app:indicatorColor="@color/md_theme_primary" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:layout_marginVertical="10dp"
+                         android:background="?attr/colorOutline" />
+
+                    <LinearLayout
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"
+                         android:gravity="center"
+                         android:orientation="horizontal">
+
+                        <ImageView
+                             android:layout_height="30dp"
+                             android:layout_width="30dp"
+                             android:src="@drawable/ic_rank"
+                             android:tint="@color/md_theme_primary" />
+
+                        <LinearLayout
+                             android:layout_height="wrap_content"
+                             android:layout_width="match_parent"
+                             android:orientation="vertical"
+                             android:layout_marginLeft="10dp">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                 android:layout_height="wrap_content"
+                                 android:layout_width="wrap_content"
+                                 android:textSize="15sp"
+                                 android:textColor="@color/md_theme_primary"
                                  android:id="@+id/worstsubjecttext"
                                  android:textStyle="bold" />
 
-                            
                         </LinearLayout>
 
                     </LinearLayout>
@@ -294,7 +298,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 新增：更多考试详情卡片 -->
             <com.google.android.material.card.MaterialCardView
                  android:layout_height="wrap_content"
                  android:layout_width="fill_parent"
@@ -307,7 +310,6 @@
                      android:padding="20dp"
                      android:orientation="vertical">
 
-                    <!-- 进步情况 -->
                     <LinearLayout
                          android:layout_height="wrap_content"
                          android:layout_width="match_parent"
@@ -332,21 +334,18 @@
                                  android:textSize="15sp"
                                  android:textColor="@color/md_theme_primary"
                                  android:textStyle="bold"
-                                 android:text="进步情况"
-                                 android:id="@+id/improve_title" />
+                                 android:text="进步情况" />
 
                             <com.google.android.material.textview.MaterialTextView
                                  android:layout_height="wrap_content"
                                  android:layout_width="wrap_content"
                                  android:textSize="13sp"
-                                 android:textColor="@color/md_theme_primary"
                                  android:id="@+id/score_raise_text" />
 
                             <com.google.android.material.textview.MaterialTextView
                                  android:layout_height="wrap_content"
                                  android:layout_width="wrap_content"
                                  android:textSize="13sp"
-                                 android:textColor="@color/md_theme_primary"
                                  android:id="@+id/rank_raise_text" />
 
                         </LinearLayout>
@@ -359,7 +358,6 @@
                          android:layout_marginVertical="10dp"
                          android:background="?attr/colorOutline" />
 
-                    <!-- 失分分布 -->
                     <LinearLayout
                          android:layout_height="wrap_content"
                          android:layout_width="match_parent"
@@ -411,57 +409,6 @@
 
                     </LinearLayout>
 
-                    <com.google.android.material.divider.MaterialDivider
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"
-                         android:layout_marginVertical="10dp"
-                         android:background="?attr/colorOutline" />
-
-                    <!-- 击败比例 -->
-                    <LinearLayout
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"
-                         android:gravity="center"
-                         android:orientation="horizontal">
-
-                        <ImageView
-                             android:layout_height="30dp"
-                             android:layout_width="30dp"
-                             android:src="@drawable/ic_emoji_events"
-                             android:tint="@color/md_theme_primary" />
-
-                        <LinearLayout
-                             android:layout_height="wrap_content"
-                             android:layout_width="match_parent"
-                             android:orientation="vertical"
-                             android:layout_marginLeft="10dp">
-
-                            <com.google.android.material.textview.MaterialTextView
-                                 android:layout_height="wrap_content"
-                                 android:layout_width="wrap_content"
-                                 android:textSize="15sp"
-                                 android:textColor="@color/md_theme_primary"
-                                 android:textStyle="bold"
-                                 android:text="击败比例" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                 android:layout_height="wrap_content"
-                                 android:layout_width="wrap_content"
-                                 android:textSize="13sp"
-                                 android:textColor="@color/md_theme_primary"
-                                 android:id="@+id/class_defeat_ratio_text" />
-
-                            <com.google.android.material.textview.MaterialTextView
-                                 android:layout_height="wrap_content"
-                                 android:layout_width="wrap_content"
-                                 android:textSize="13sp"
-                                 android:textColor="@color/md_theme_primary"
-                                 android:id="@+id/grade_defeat_ratio_text" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -476,7 +423,6 @@
          app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
          android:visibility="gone"
          android:gravity="center"
-         android:background="?android:attr/windowBackground"
          android:orientation="vertical"
          android:id="@+id/error_container">
 
