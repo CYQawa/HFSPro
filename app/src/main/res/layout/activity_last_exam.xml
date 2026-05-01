@@ -436,7 +436,7 @@
              android:layout_height="wrap_content"
              android:layout_width="wrap_content"
              android:textColor="@color/md_theme_error"
-             android:text="没有data数据啦~你来晚力" />
+             android:text="没有数据 目前没有可查询的考试成绩（只有最近考的才能查得到）" />
 
     </LinearLayout>
 
