@@ -33,10 +33,18 @@ import retrofit2.Response;
 
 public class LastExamActivity extends AppCompatActivity {
   private RetrofitTools.ApiService apiService;
-  private View contentContainer; // 正常内容容器（NestedScrollView）
-  private View errorContainer; // 错误容器
-  private MaterialTextView errorText; // 错误信息文本
-  private MaterialButton retryButton; // 重试按钮
+  private View contentContainer; 
+  private View errorContainer; 
+  private MaterialTextView errorText; 
+   
+  // 新增控件
+  private MaterialTextView scoreRaiseText;
+  private MaterialTextView rankRaiseText;
+  private MaterialTextView simpleLostText;
+  private MaterialTextView middleLostText;
+  private MaterialTextView hardLostText;
+  private MaterialTextView classDefeatRatioText;
+  private MaterialTextView gradeDefeatRatioText;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +60,22 @@ public class LastExamActivity extends AppCompatActivity {
     MaterialTextView classrank = findViewById(R.id.classrank);
     MaterialTextView classstunum = findViewById(R.id.classstunum);
     MaterialTextView graderank = findViewById(R.id.graderank);
+    MaterialTextView worstsubjecttext =findViewById(R.id.worstsubjecttext);
     MaterialTextView gradestunum = findViewById(R.id.gradestunum);
     MaterialCardView top_card = findViewById(R.id.top_card);
     MaterialCardView middle_card = findViewById(R.id.middle_card);
     MaterialCardView bottom_card = findViewById(R.id.bottom_card);
     MaterialCardView bottom2_card = findViewById(R.id.bottom2_card);
     RecyclerView paperRecyclerView = findViewById(R.id.paperRecyclerView);
+
+    // 新增控件绑定
+    scoreRaiseText = findViewById(R.id.score_raise_text);
+    rankRaiseText = findViewById(R.id.rank_raise_text);
+    simpleLostText = findViewById(R.id.simple_lost_text);
+    middleLostText = findViewById(R.id.middle_lost_text);
+    hardLostText = findViewById(R.id.hard_lost_text);
+    classDefeatRatioText = findViewById(R.id.class_defeat_ratio_text);
+    gradeDefeatRatioText = findViewById(R.id.grade_defeat_ratio_text);
 
     contentContainer = findViewById(R.id.content_container);
     errorContainer = findViewById(R.id.error_container);
@@ -77,32 +95,41 @@ public class LastExamActivity extends AppCompatActivity {
             if (response.isSuccessful()) {
               GsonModel.ApiResponse<GsonModel.LastExamData> apiResponse = response.body();
               if (apiResponse != null && apiResponse.isSuccess()) {
-                // 请求成功，获取数据
                 GsonModel.LastExamData data = apiResponse.getData();
                 if (data != null) {
-                  // 使用数据，例如：
                   int examId = data.getExamId();
                   int subjectNumber = data.getSubjectNumber();
                   boolean isManfen = data.getIsManfen();
                   String worstSubject = data.getWorstSubjectText();
                   int scoreRaise = data.getScoreRaise();
                   int rankRaise = data.getRankRaise();
+                  int simpleLost = data.getSimpleQuestionLostScores();
+                  int middleLost = data.getMiddleQuestionLostScores();
+                  int hardLost = data.getHardQuestionLostScores();
 
-                  // 嵌套对象 Extend
                   GsonModel.LastExamData.Extend extend = data.getExtend();
                   if (extend != null) {
                     int classRank = extend.getClassRank();
                     int classnum = extend.getClassStuNum();
-
                     int gradeRank = extend.getGradeRank();
                     int gradenum = extend.getGradeStuNum();
                     double classDefeatRatio = extend.getClassDefeatRatio();
+                    double gradeDefeatRatio = extend.getGradeDefeatRatio();
 
                     classrank.setText("班级排名：" + classRank);
                     classstunum.setText("班级人数：" + classnum);
-
                     graderank.setText("年段排名：" + gradeRank);
                     gradestunum.setText("年段人数：" + gradenum);
+                    worstsubjecttext.setText("最差的科目：" + worstSubject);
+
+                    // 填充新增数据
+                    scoreRaiseText.setText("分数提升：+" + scoreRaise + " 分");
+                    rankRaiseText.setText("排名提升：+" + rankRaise + " 名");
+                    simpleLostText.setText("简单题失分：" + simpleLost + " 分");
+                    middleLostText.setText("中等题失分：" + middleLost + " 分");
+                    hardLostText.setText("难题失分：" + hardLost + " 分");
+                    classDefeatRatioText.setText("班级击败：" + String.format("%.1f%%", classDefeatRatio));
+                    gradeDefeatRatioText.setText("年段击败：" + String.format("%.1f%%", gradeDefeatRatio));
                   }
 
                   idtext.setText("examId：" + examId);
@@ -135,7 +162,6 @@ public class LastExamActivity extends AppCompatActivity {
                                 }
                               } catch (NumberFormatException e) {
                                 e.printStackTrace();
-                                // 分数格式非法时，进度归零
                                 progressIndicator.setProgress(0);
                               }
 
@@ -172,7 +198,6 @@ public class LastExamActivity extends AppCompatActivity {
                                   String.format("请求失败: %s\ncode: %d", errorMsg, body.getCode()));
                             }
                           } else {
-                            // HTTP错误（如404, 500等）
                             showDialog("请求失败", "服务器错误: " + response.code());
                             DialogHelp.dismiss();
                           }
@@ -187,14 +212,11 @@ public class LastExamActivity extends AppCompatActivity {
                       });
                 }
               } else {
-                // 业务错误（code != 0）
                 String errorMsg = apiResponse.getMsg();
                 DialogHelp.dismiss();
                 showError();
-                // showDialog("请求失败", String.format("请求失败: \ncode: %d", apiResponse.getCode()));
               }
             } else {
-              // HTTP 错误
               showDialog("请求失败", "服务器错误: " + response.code());
               DialogHelp.dismiss();
             }
@@ -203,7 +225,6 @@ public class LastExamActivity extends AppCompatActivity {
           @Override
           public void onFailure(
               Call<GsonModel.ApiResponse<GsonModel.LastExamData>> call, Throwable t) {
-            // 网络失败（无网络、超时、解析异常等）
             DialogHelp.dismiss();
             showDialog("请求失败", "网络请求失败！");
           }
@@ -212,7 +233,9 @@ public class LastExamActivity extends AppCompatActivity {
     setCustomCardCorners(top_card, 16, 16, 0, 0);
     setCustomCardCorners(middle_card, 1, 1, 1, 1);
     setCustomCardCorners(bottom_card, 1, 1, 1, 1);
-    setCustomCardCorners(bottom2_card, 1, 1, 16, 16);
+    setCustomCardCorners(bottom2_card, 1, 1, 1, 1);
+    // 为新增卡片也设置圆角（底部圆角）
+    setCustomCardCorners(findViewById(R.id.bottom3_card), 1, 1, 16, 16);
 
     toolbar.setNavigationOnClickListener(
         v -> {
@@ -222,13 +245,11 @@ public class LastExamActivity extends AppCompatActivity {
   }
 
   public void setCustomCardCorners(MaterialCardView cardView, int tl, int tr, int br, int bl) {
-    // 将 dp 转换为像素（根据需求设置不同圆角值）
     float topLeftPx = dpToPx(cardView.getContext(), tl);
     float topRightPx = dpToPx(cardView.getContext(), tr);
     float bottomRightPx = dpToPx(cardView.getContext(), br);
     float bottomLeftPx = dpToPx(cardView.getContext(), bl);
 
-    // 创建 ShapeAppearanceModel，分别设置四个角
     ShapeAppearanceModel shapeAppearanceModel =
         new ShapeAppearanceModel.Builder()
             .setTopLeftCorner(CornerFamily.ROUNDED, topLeftPx)
@@ -237,29 +258,20 @@ public class LastExamActivity extends AppCompatActivity {
             .setBottomLeftCorner(CornerFamily.ROUNDED, bottomLeftPx)
             .build();
 
-    // 将 ShapeAppearanceModel 应用到 MaterialCardView
     cardView.setShapeAppearanceModel(shapeAppearanceModel);
   }
 
-  // dp 转像素工具方法
   private float dpToPx(Context context, float dp) {
     return dp * context.getResources().getDisplayMetrics().density;
   }
 
   private AlertDialog createLoadingDialog() {
-    // 创建ProgressBar
-
-    // 创建对话框
     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
     builder.setTitle("请稍候");
     builder.setMessage("正在加载中...");
-    builder.setCancelable(false); // 禁止点击外部取消
-
+    builder.setCancelable(false);
     return builder.create();
   }
-
-  // 使用示例
-  
 
   private void showDialog(String title, String message) {
     runOnUiThread(

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.MainActivity;
+import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.ApiService;
@@ -53,11 +54,11 @@ public class GuideFragment3 extends Fragment {
     MaterialTextView yytext = view.findViewById(R.id.yytext);
     MaterialButton loginButton = view.findViewById(R.id.loginButton);
 
-    setAutoComplete();  
+    setAutoComplete();
 
-if (savedInstanceState == null) {
-    loginTypeText.setText("家长端", false);
-}
+    if (savedInstanceState == null) {
+      loginTypeText.setText("家长端", false);
+    }
 
     // 手动输入Token
     yytext.setOnClickListener(v -> showTokenInputDialog());
@@ -102,31 +103,33 @@ if (savedInstanceState == null) {
     logintypes.add("家长端");
     logintypes.add("学生端");
 
-    ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+    ArrayAdapter<String> adapter =
+        new ArrayAdapter<String>(
             requireContext(), android.R.layout.simple_dropdown_item_1line, logintypes) {
-        @NonNull
-        @Override
-        public Filter getFilter() {
+          @NonNull
+          @Override
+          public Filter getFilter() {
             return new Filter() {
-                @Override
-                protected FilterResults performFiltering(CharSequence constraint) {
-                    FilterResults results = new FilterResults();
-                    results.values = logintypes;  
-                    results.count = logintypes.size();
-                    return results;
-                }
+              @Override
+              protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                results.values = logintypes;
+                results.count = logintypes.size();
+                return results;
+              }
 
-                @Override
-                protected void publishResults(CharSequence constraint, FilterResults results) {
-                    notifyDataSetChanged(); 
-                }
+              @Override
+              protected void publishResults(CharSequence constraint, FilterResults results) {
+                notifyDataSetChanged();
+              }
             };
-        }
-    };
+          }
+        };
     loginTypeText.setAdapter(adapter);
-}
+  }
 
   private void performLogin(String account, String password) {
+      DialogHelp.show();
     ApiService apiService = RetrofitClient.getAuthService();
 
     int roleType = isStudent() ? 1 : 2;
@@ -147,24 +150,29 @@ if (savedInstanceState == null) {
 
                 DatabaseManager dbm = DatabaseManager.getInstance();
                 dbm.saveToken(token);
+                            
+                            DialogHelp.dismiss();
 
                 // 显示成功消息并跳转
                 showToast("登录成功");
                 navigateToMainActivity();
               } else {
                 // 业务逻辑错误
+                DialogHelp.dismiss();
                 String errorMsg = loginResponse.getMsg();
                 showDialog(
                     "登陆失败", String.format("登录失败: %s\ncode: %d", errorMsg, loginResponse.getCode()));
               }
             } else {
               // HTTP错误（如404, 500等）
+              DialogHelp.dismiss();
               showDialog("登陆失败", "服务器错误: " + response.code());
             }
           }
 
           @Override
           public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
+              DialogHelp.dismiss();
             showDialog("登陆失败", "网络请求失败！");
           }
         });
