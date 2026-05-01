@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    // 将原来 onCreate 中 setContentView 之后的逻辑全部放在这里
+   
     private void initMainUI(Bundle savedInstanceState) {
         fragmentContainerView = findViewById(R.id.fragment_container);
         BottomNavigationView bottomNavigationView = findViewById(R.id.main_nav_view);
