@@ -438,7 +438,7 @@ public class GsonModel {
             return questions;
         }
 
-        public List<String> getPaperPic() {
+    public List<String> getPaperPic() {
             return paperPic;
         }
 
