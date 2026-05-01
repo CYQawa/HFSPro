@@ -2,6 +2,8 @@ package com.cyq.awa.hfspro.fragments.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,13 +65,22 @@ public class HomeFragment extends Fragment {
         v -> {
           DialogHelp.show();
 
-          List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
+          // 把数据库查询丢到了后台
+          new Thread(
+                  () -> {
+                    List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
 
-          if (localExams.isEmpty()) {
-            loadAllExamsSilent(this::showExamListDialog);
-          } else {
-            showExamListDialog();
-          }
+                    new Handler(Looper.getMainLooper())
+                        .post(
+                            () -> {
+                              if (localExams.isEmpty()) {
+                                loadAllExamsSilent(this::showExamListDialog);
+                              } else {
+                                showExamListDialog();
+                              }
+                            });
+                  })
+              .start();
         });
     lastexam.setOnClickListener(
         v -> {
