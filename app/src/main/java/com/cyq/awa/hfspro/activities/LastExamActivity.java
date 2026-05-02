@@ -83,7 +83,6 @@ public class LastExamActivity extends AppCompatActivity {
 
     contentContainer = findViewById(R.id.content_container);
     errorContainer = findViewById(R.id.error_container);
-
     setSupportActionBar(toolbar);
     apiService = RetrofitTools.RetrofitClient.getAuthService();
 
@@ -100,7 +99,7 @@ public class LastExamActivity extends AppCompatActivity {
             if (data != null) {
               int examId = data.getExamId();
               String worstSubject = data.getWorstSubjectText();
-              int scoreRaise = data.getScoreRaise();
+              double scoreRaise = data.getScoreRaise();
               int rankRaise = data.getRankRaise();
               int simpleLost = data.getSimpleQuestionLostScores();
               int middleLost = data.getMiddleQuestionLostScores();

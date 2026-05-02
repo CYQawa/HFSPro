@@ -69,7 +69,7 @@ public class GsonModel {
         private int hardQuestionLostScores;
 
         @SerializedName("scoreRaise")
-        private int scoreRaise;
+private double scoreRaise;
 
         @SerializedName("rankRaise")
         private int rankRaise;
@@ -114,9 +114,9 @@ public class GsonModel {
             return hardQuestionLostScores;
         }
 
-        public int getScoreRaise() {
-            return scoreRaise;
-        }
+        public double getScoreRaise() {
+    return scoreRaise;
+}
 
         public int getRankRaise() {
             return rankRaise;
