@@ -88,143 +88,157 @@ public class LastExamActivity extends AppCompatActivity {
 
     Call<ApiResponse<LastExamData>> call = apiService.getLastExam();
     DialogHelp.show();
-    call.enqueue(new Callback<ApiResponse<LastExamData>>() {
-      @Override
-      public void onResponse(Call<ApiResponse<LastExamData>> call,
-                             Response<ApiResponse<LastExamData>> response) {
-        if (response.isSuccessful()) {
-          ApiResponse<LastExamData> apiResponse = response.body();
-          if (apiResponse != null && apiResponse.isSuccess()) {
-            LastExamData data = apiResponse.getData();
-            if (data != null) {
-              int examId = data.getExamId();
-              String worstSubject = data.getWorstSubjectText();
-              double scoreRaise = data.getScoreRaise();
-              int rankRaise = data.getRankRaise();
-              int simpleLost = data.getSimpleQuestionLostScores();
-              int middleLost = data.getMiddleQuestionLostScores();
-              int hardLost = data.getHardQuestionLostScores();
+    call.enqueue(
+        new Callback<ApiResponse<LastExamData>>() {
+          @Override
+          public void onResponse(
+              Call<ApiResponse<LastExamData>> call, Response<ApiResponse<LastExamData>> response) {
+            if (response.isSuccessful()) {
+              ApiResponse<LastExamData> apiResponse = response.body();
+              if (apiResponse != null && apiResponse.isSuccess()) {
+                LastExamData data = apiResponse.getData();
+                if (data != null) {
+                  int examId = data.getExamId();
+                  String worstSubject = data.getWorstSubjectText();
+                  double scoreRaise = data.getScoreRaise();
+                  int rankRaise = data.getRankRaise();
+                  double simpleLost = data.getSimpleQuestionLostScores();
+                  double middleLost = data.getMiddleQuestionLostScores();
+                  double hardLost = data.getHardQuestionLostScores();
 
-              LastExamData.Extend extend = data.getExtend();
-              if (extend != null) {
-                int classRank = extend.getClassRank();
-                int classnum = extend.getClassStuNum();
-                int gradeRank = extend.getGradeRank();
-                int gradenum = extend.getGradeStuNum();
-                double classDefeatRatio = extend.getClassDefeatRatio();
-                double gradeDefeatRatio = extend.getGradeDefeatRatio();
+                  LastExamData.Extend extend = data.getExtend();
+                  if (extend != null) {
+                    int classRank = extend.getClassRank();
+                    int classnum = extend.getClassStuNum();
+                    int gradeRank = extend.getGradeRank();
+                    int gradenum = extend.getGradeStuNum();
+                    double classDefeatRatio = extend.getClassDefeatRatio();
+                    double gradeDefeatRatio = extend.getGradeDefeatRatio();
 
-                classrank.setText("班级排名：" + classRank);
-                classstunum.setText("班级人数：" + classnum);
-                graderank.setText("年段排名：" + gradeRank);
-                gradestunum.setText("年段人数：" + gradenum);
-                worstsubjecttext.setText("最差的科目：" + worstSubject);
+                    classrank.setText("班级排名：" + classRank);
+                    classstunum.setText("班级人数：" + classnum);
+                    graderank.setText("年段排名：" + gradeRank);
+                    gradestunum.setText("年段人数：" + gradenum);
+                    worstsubjecttext.setText("最差的科目：" + worstSubject);
 
-                // 击败比例文字 + 进度条
-                classDefeatText.setText("击败了 " + String.format("%.1f", classDefeatRatio) + "% 的同学");
-                classDefeatProgress.setProgressCompat((int) Math.round(classDefeatRatio), true);
-                gradeDefeatText.setText("击败了 " + String.format("%.1f", gradeDefeatRatio) + "% 的同学");
-                gradeDefeatProgress.setProgressCompat((int) Math.round(gradeDefeatRatio), true);
+                    // 击败比例文字 + 进度条
+                    classDefeatText.setText(
+                        "击败了 " + String.format("%.1f", classDefeatRatio) + "% 的同学");
+                    classDefeatProgress.setProgressCompat((int) Math.round(classDefeatRatio), true);
+                    gradeDefeatText.setText(
+                        "击败了 " + String.format("%.1f", gradeDefeatRatio) + "% 的同学");
+                    gradeDefeatProgress.setProgressCompat((int) Math.round(gradeDefeatRatio), true);
 
-                // 进步/退步处理（对齐网页版正负号逻辑）
-                if (scoreRaise > 0) {
-                  scoreRaiseText.setText("分数提升：+" + scoreRaise + " 分");
-                  scoreRaiseText.setTextColor(Color.parseColor("#4CAF50"));
-                } else if (scoreRaise < 0) {
-                  scoreRaiseText.setText("分数下降：" + scoreRaise + " 分"); // 自带负号
-                  scoreRaiseText.setTextColor(Color.parseColor("#F44336"));
-                } else {
-                  scoreRaiseText.setText("分数变化：0 分");
-                  scoreRaiseText.setTextColor(Color.parseColor("#757575"));
-                }
-
-                if (rankRaise > 0) {
-                  rankRaiseText.setText("排名提升：+" + rankRaise + " 名");
-                  rankRaiseText.setTextColor(Color.parseColor("#4CAF50"));
-                } else if (rankRaise < 0) {
-                  rankRaiseText.setText("排名下降：" + rankRaise + " 名");
-                  rankRaiseText.setTextColor(Color.parseColor("#F44336"));
-                } else {
-                  rankRaiseText.setText("排名不变");
-                  rankRaiseText.setTextColor(Color.parseColor("#757575"));
-                }
-              }
-
-              // 失分分布
-              simpleLostText.setText("简单题失分：" + simpleLost + " 分");
-              middleLostText.setText("中等题失分：" + middleLost + " 分");
-              hardLostText.setText("难题失分：" + hardLost + " 分");
-
-              idtext.setText("examId：" + examId);
-
-              // 请求考试详情（分数、各科）
-              Call<ApiResponse<ExamOverviewData>> call2 = apiService.getExamOverview(examId);
-              call2.enqueue(new Callback<ApiResponse<ExamOverviewData>>() {
-                @Override
-                public void onResponse(Call<ApiResponse<ExamOverviewData>> call2,
-                                       Response<ApiResponse<ExamOverviewData>> response) {
-                  ApiResponse<ExamOverviewData> body = response.body();
-                  if (response.isSuccessful() && body != null && body.isSuccess()) {
-                    ExamOverviewData data = body.getData();
-                    scoretext.setText("" + data.getScore());
-                    manfent.setText("/" + data.getManfen());
-                    nametext.setText(data.getName());
-
-                    // 环形进度
-                    if (data.getManfen() > 0) {
-                      int progress = (int) Math.round((data.getScore() / data.getManfen()) * 100);
-                      progressIndicator.setProgress(progress);
+                    // 进步/退步处理（对齐网页版正负号逻辑）
+                    if (scoreRaise > 0) {
+                      scoreRaiseText.setText("分数提升：+" + scoreRaise + " 分");
+                      scoreRaiseText.setTextColor(Color.parseColor("#4CAF50"));
+                    } else if (scoreRaise < 0) {
+                      scoreRaiseText.setText("分数下降：" + scoreRaise + " 分"); // 自带负号
+                      scoreRaiseText.setTextColor(Color.parseColor("#F44336"));
                     } else {
-                      progressIndicator.setProgress(0);
+                      scoreRaiseText.setText("分数变化：0 分");
+                      scoreRaiseText.setTextColor(Color.parseColor("#757575"));
                     }
 
-                    // 各科网格
-                    GridLayoutManager layoutManager = new GridLayoutManager(LastExamActivity.this, 3);
-                    paperRecyclerView.setLayoutManager(layoutManager);
-                    List<MyPaperOverview> dataList = new ArrayList<>();
-                    for (PaperOverview e : data.getPapers()) {
-                      dataList.add(new MyPaperOverview(e));
+                    if (rankRaise > 0) {
+                      rankRaiseText.setText("排名提升：+" + rankRaise + " 名");
+                      rankRaiseText.setTextColor(Color.parseColor("#4CAF50"));
+                    } else if (rankRaise < 0) {
+                      rankRaiseText.setText("排名下降：" + rankRaise + " 名");
+                      rankRaiseText.setTextColor(Color.parseColor("#F44336"));
+                    } else {
+                      rankRaiseText.setText("排名不变");
+                      rankRaiseText.setTextColor(Color.parseColor("#757575"));
                     }
-                    PaperGridAdapter adapter = new PaperGridAdapter(dataList);
-                    adapter.setOnItemClickListener((position, item) -> {
-                      Intent intent = new Intent(LastExamActivity.this, AnswerActivity.class);
-                      intent.putExtra("paper", item);
-                      intent.putExtra("myexam", new MyExamListItem(examId, "不知道", 91L));
-                      startActivity(intent);
-                    });
-                    paperRecyclerView.setAdapter(adapter);
-
-                    DialogHelp.dismiss();
-                  } else {
-                    DialogHelp.dismiss();
-                    showDialog("请求失败", String.format("请求失败: %s\ncode: %d",
-                        body != null ? body.getMsg() : "", body != null ? body.getCode() : -1));
                   }
-                }
 
-                @Override
-                public void onFailure(Call<ApiResponse<ExamOverviewData>> call2, Throwable t) {
-                  DialogHelp.dismiss();
-                  showDialog("请求失败", "网络请求失败！");
+                  // 失分分布
+                  simpleLostText.setText("简单题失分：" + simpleLost + " 分");
+                  middleLostText.setText("中等题失分：" + middleLost + " 分");
+                  hardLostText.setText("难题失分：" + hardLost + " 分");
+
+                  idtext.setText("examId：" + examId);
+
+                  // 请求考试详情（分数、各科）
+                  Call<ApiResponse<ExamOverviewData>> call2 = apiService.getExamOverview(examId);
+                  call2.enqueue(
+                      new Callback<ApiResponse<ExamOverviewData>>() {
+                        @Override
+                        public void onResponse(
+                            Call<ApiResponse<ExamOverviewData>> call2,
+                            Response<ApiResponse<ExamOverviewData>> response) {
+                          ApiResponse<ExamOverviewData> body = response.body();
+                          if (response.isSuccessful() && body != null && body.isSuccess()) {
+                            ExamOverviewData data = body.getData();
+                            scoretext.setText("" + data.getScore());
+                            manfent.setText("/" + data.getManfen());
+                            nametext.setText(data.getName());
+
+                            // 环形进度
+                            if (data.getManfen() > 0) {
+                              int progress =
+                                  (int) Math.round((data.getScore() / data.getManfen()) * 100);
+                              progressIndicator.setProgress(progress);
+                            } else {
+                              progressIndicator.setProgress(0);
+                            }
+
+                            // 各科网格
+                            GridLayoutManager layoutManager =
+                                new GridLayoutManager(LastExamActivity.this, 3);
+                            paperRecyclerView.setLayoutManager(layoutManager);
+                            List<MyPaperOverview> dataList = new ArrayList<>();
+                            for (PaperOverview e : data.getPapers()) {
+                              dataList.add(new MyPaperOverview(e));
+                            }
+                            PaperGridAdapter adapter = new PaperGridAdapter(dataList);
+                            adapter.setOnItemClickListener(
+                                (position, item) -> {
+                                  Intent intent =
+                                      new Intent(LastExamActivity.this, AnswerActivity.class);
+                                  intent.putExtra("paper", item);
+                                  intent.putExtra("myexam", new MyExamListItem(examId, "不知道", 91L));
+                                  startActivity(intent);
+                                });
+                            paperRecyclerView.setAdapter(adapter);
+
+                            DialogHelp.dismiss();
+                          } else {
+                            DialogHelp.dismiss();
+                            showDialog(
+                                "请求失败",
+                                String.format(
+                                    "请求失败: %s\ncode: %d",
+                                    body != null ? body.getMsg() : "",
+                                    body != null ? body.getCode() : -1));
+                          }
+                        }
+
+                        @Override
+                        public void onFailure(
+                            Call<ApiResponse<ExamOverviewData>> call2, Throwable t) {
+                          DialogHelp.dismiss();
+                          showDialog("请求失败", "网络请求失败！");
+                        }
+                      });
                 }
-              });
+              } else {
+                DialogHelp.dismiss();
+                showError();
+              }
+            } else {
+              DialogHelp.dismiss();
+              showDialog("请求失败", "服务器错误: " + response.code());
             }
-          } else {
-            DialogHelp.dismiss();
-            showError();
           }
-        } else {
-          DialogHelp.dismiss();
-          showDialog("请求失败", "服务器错误: " + response.code());
-        }
-      }
 
-      @Override
-      public void onFailure(Call<ApiResponse<LastExamData>> call, Throwable t) {
-        DialogHelp.dismiss();
-        showDialog("请求失败", "网络请求失败！");
-      }
-    });
+          @Override
+          public void onFailure(Call<ApiResponse<LastExamData>> call, Throwable t) {
+            DialogHelp.dismiss();
+            showDialog("请求失败", "网络请求失败！");
+          }
+        });
 
     // 圆角设置
     setCustomCardCorners(top_card, 16, 16, 0, 0);
@@ -242,12 +256,13 @@ public class LastExamActivity extends AppCompatActivity {
     float topRightPx = dpToPx(cardView.getContext(), tr);
     float bottomRightPx = dpToPx(cardView.getContext(), br);
     float bottomLeftPx = dpToPx(cardView.getContext(), bl);
-    ShapeAppearanceModel model = new ShapeAppearanceModel.Builder()
-        .setTopLeftCorner(CornerFamily.ROUNDED, topLeftPx)
-        .setTopRightCorner(CornerFamily.ROUNDED, topRightPx)
-        .setBottomRightCorner(CornerFamily.ROUNDED, bottomRightPx)
-        .setBottomLeftCorner(CornerFamily.ROUNDED, bottomLeftPx)
-        .build();
+    ShapeAppearanceModel model =
+        new ShapeAppearanceModel.Builder()
+            .setTopLeftCorner(CornerFamily.ROUNDED, topLeftPx)
+            .setTopRightCorner(CornerFamily.ROUNDED, topRightPx)
+            .setBottomRightCorner(CornerFamily.ROUNDED, bottomRightPx)
+            .setBottomLeftCorner(CornerFamily.ROUNDED, bottomLeftPx)
+            .build();
     cardView.setShapeAppearanceModel(model);
   }
 
@@ -256,13 +271,13 @@ public class LastExamActivity extends AppCompatActivity {
   }
 
   private void showDialog(String title, String message) {
-    runOnUiThread(() ->
-        new MaterialAlertDialogBuilder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("确定", null)
-            .show()
-    );
+    runOnUiThread(
+        () ->
+            new MaterialAlertDialogBuilder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("确定", null)
+                .show());
   }
 
   private void showContent() {

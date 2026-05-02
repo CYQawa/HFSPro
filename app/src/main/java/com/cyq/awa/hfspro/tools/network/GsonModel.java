@@ -60,13 +60,13 @@ public class GsonModel {
         private String worstSubjectText;
 
         @SerializedName("simpleQuestionLostScores")
-        private int simpleQuestionLostScores;
+private double simpleQuestionLostScores;
 
-        @SerializedName("middleQuestionLostScores")
-        private int middleQuestionLostScores;
+@SerializedName("middleQuestionLostScores")
+private double middleQuestionLostScores;
 
-        @SerializedName("hardQuestionLostScores")
-        private int hardQuestionLostScores;
+@SerializedName("hardQuestionLostScores")
+private double hardQuestionLostScores;
 
         @SerializedName("scoreRaise")
 private double scoreRaise;
@@ -102,17 +102,9 @@ private double scoreRaise;
             return worstSubjectText;
         }
 
-        public int getSimpleQuestionLostScores() {
-            return simpleQuestionLostScores;
-        }
-
-        public int getMiddleQuestionLostScores() {
-            return middleQuestionLostScores;
-        }
-
-        public int getHardQuestionLostScores() {
-            return hardQuestionLostScores;
-        }
+        public double getSimpleQuestionLostScores() { return simpleQuestionLostScores; }
+public double getMiddleQuestionLostScores() { return middleQuestionLostScores; }
+public double getHardQuestionLostScores() { return hardQuestionLostScores; }
 
         public double getScoreRaise() {
     return scoreRaise;
