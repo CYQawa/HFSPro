@@ -28,6 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import io.noties.markwon.Markwon;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -204,12 +205,13 @@ public class MainActivity extends AppCompatActivity {
             bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
         }
 
-        // 设置标题与内容
+        // 设置标题，body 使用 Markwon 渲染 Markdown
         TextView titleView = sheetView.findViewById(R.id.dialog_title);
         titleView.setText("发现新版本 " + release.getTagName());
 
         TextView bodyView = sheetView.findViewById(R.id.dialog_body);
-        bodyView.setText(release.getBody() != null ? release.getBody() : "暂无更新说明");
+        Markwon markwon = Markwon.create(this);
+        markwon.setMarkdown(bodyView, release.getBody() != null ? release.getBody() : "暂无更新说明");
 
         // 前往下载更新
         MaterialButton btnDownload = sheetView.findViewById(R.id.btn_download);
