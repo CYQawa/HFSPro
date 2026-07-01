@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 .setNeutralButton(
                         "忽略本次更新",
                         (dialog, which) -> {
-                            // 保存忽略的版本号
+                            
                             prefs.edit()
                                     .putString(KEY_IGNORED_VERSION, release.getTagName())
                                     .apply();

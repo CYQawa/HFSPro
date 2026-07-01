@@ -1,62 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto"
-     android:layout_height="match_parent"
-     android:layout_width="match_parent"
-     android:id="@+id/coordinator">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:id="@+id/coordinator">
 
     <androidx.core.widget.NestedScrollView
-         android:layout_height="match_parent"
-         android:layout_width="match_parent"
-         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
-             android:layout_height="wrap_content"
-             android:layout_width="match_parent"
-             android:padding="16dp"
-             android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="16dp"
+            android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
-                 android:layout_height="wrap_content"
-                 android:layout_width="match_parent"
-                 app:cardBackgroundColor="?attr/colorPrimary"
-                 android:id="@+id/exam">
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/md_theme_primary"
+                app:cardCornerRadius="25dp">
 
                 <LinearLayout
-                     android:layout_height="wrap_content"
-                     android:layout_width="match_parent"
-                     android:gravity="center"
-                     android:padding="20dp"
-                     android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:orientation="vertical">
 
                     <ImageView
-                         android:layout_height="25dp"
-                         android:layout_width="25dp"
-                         android:src="@drawable/ic_exam"
-                         android:scaleType="fitCenter"
-                         android:layout_marginRight="16dp"
-                         android:tint="?attr/colorOnPrimary" />
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:src="@drawable/ic_update"
+                        android:scaleType="fitCenter"
+                        android:tint="?attr/colorOnPrimary" />
 
                     <LinearLayout
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"
-                         android:gravity="left|center"
-                         android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:gravity="left|center"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
 
                         <TextView
-                             android:layout_height="wrap_content"
-                             android:layout_width="match_parent"
-                             android:textColor="?attr/colorOnPrimary"
-                             android:textStyle="bold"
-                             android:text="考试" />
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:textSize="25sp"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:textStyle="bold"
+                            android:text="发现新版本" />
 
                         <TextView
-                             android:layout_height="wrap_content"
-                             android:layout_width="match_parent"
-                             android:textColor="?attr/colorOnPrimary"
-                             android:fontFamily="sans-serif-thin"
-                             android:text="点我查看考试喵 >" />
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-thin"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:text="1.91 -> 1.78" />
+
+                    </LinearLayout>
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-thin"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:text="点击查看详情" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                android:layout_marginTop="8dp"
+                android:id="@+id/exam">
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_height="25dp"
+                        android:layout_width="25dp"
+                        android:src="@drawable/ic_exam"
+                        android:scaleType="fitCenter"
+                        android:layout_marginRight="16dp"
+                        android:tint="?attr/colorOnPrimary" />
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:gravity="left|center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:textStyle="bold"
+                            android:text="考试" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:fontFamily="sans-serif-thin"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:text="点我查看考试喵 >" />
 
                     </LinearLayout>
 
@@ -65,42 +125,42 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                 android:layout_height="wrap_content"
-                 android:layout_width="match_parent"
-                 android:layout_marginTop="8dp"
-                 android:id="@+id/lastExam">
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:id="@+id/lastExam">
 
                 <LinearLayout
-                     android:layout_height="match_parent"
-                     android:layout_width="match_parent"
-                     android:gravity="center_vertical"
-                     android:padding="20dp"
-                     android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:padding="20dp"
+                    android:orientation="horizontal">
 
                     <ImageView
-                         android:layout_height="30dp"
-                         android:layout_width="30dp"
-                         android:src="@drawable/ic_lasttime"
-                         android:layout_marginRight="16dp"
-                         android:tint="@color/md_theme_primary" />
+                        android:layout_height="30dp"
+                        android:layout_width="30dp"
+                        android:src="@drawable/ic_lasttime"
+                        android:layout_marginRight="16dp"
+                        android:tint="@color/md_theme_primary" />
 
                     <LinearLayout
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"
-                         android:gravity="left|center_vertical"
-                         android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
                         <TextView
-                             android:layout_height="wrap_content"
-                             android:layout_width="wrap_content"
-                             android:textStyle="bold"
-                             android:text="最近考试排名" />
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:textStyle="bold"
+                            android:text="最近考试排名" />
 
                         <TextView
-                             android:layout_height="wrap_content"
-                             android:layout_width="wrap_content"
-                             android:fontFamily="sans-serif-thin"
-                             android:text="支持查看最近5天考试的详细排名 >" />
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:fontFamily="sans-serif-thin"
+                            android:text="支持查看最近5天考试的详细排名 >" />
 
                     </LinearLayout>
 
