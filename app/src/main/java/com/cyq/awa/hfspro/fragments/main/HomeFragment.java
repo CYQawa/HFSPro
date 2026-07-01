@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,8 +45,39 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
   private RetrofitTools.ApiService apiService;
+  private boolean updateAvailable = false;
+  private String currentVersion = "";
+  private String latestVersion = "";
+  private Runnable onUpdateClickListener;
 
   public HomeFragment() {}
+
+  /** 由 MainActivity 调用，通知是否有可用更新、版本信息及点击事件 */
+  public void setUpdateAvailable(boolean available, String curVer, String latVer, Runnable onClick) {
+    updateAvailable = available;
+    currentVersion = curVer;
+    latestVersion = latVer;
+    onUpdateClickListener = onClick;
+    updateCardUi();
+  }
+
+  private void updateCardUi() {
+    if (getView() == null) return;
+    MaterialCardView card = getView().findViewById(R.id.update_card);
+    if (card == null) return;
+    card.setVisibility(updateAvailable ? View.VISIBLE : View.GONE);
+    if (updateAvailable) {
+      TextView verText = getView().findViewById(R.id.update_version_text);
+      if (verText != null) {
+        verText.setText(currentVersion + " → " + latestVersion);
+      }
+      card.setOnClickListener(v -> {
+        if (onUpdateClickListener != null) onUpdateClickListener.run();
+      });
+    } else {
+      card.setOnClickListener(null);
+    }
+  }
 
   @Override
   public View onCreateView(
@@ -59,6 +91,9 @@ public class HomeFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     MaterialCardView exam = view.findViewById(R.id.exam);
     MaterialCardView lastexam = view.findViewById(R.id.lastExam);
+
+    // 根据更新状态控制卡片显隐和点击
+    updateCardUi();
 
     apiService = RetrofitTools.RetrofitClient.getAuthService();
     exam.setOnClickListener(

@@ -126,24 +126,37 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(
                                     Call<GitHubRelease> call, Response<GitHubRelease> response) {
+                                boolean hasUpdate = false;
+                                String latestVer = "";
+                                GitHubRelease release = null;
                                 if (response.isSuccessful() && response.body() != null) {
-                                    GitHubRelease release = response.body();
-                                    String latest = release.getTagName();
+                                    release = response.body();
+                                    latestVer = release.getTagName();
                                     String current = getCurrentVersionName();
                                     String ignored = prefs.getString(KEY_IGNORED_VERSION, "");
 
                                     // 如果最新版本大于当前版本，且（没有忽略版本 或 最新版本大于忽略版本）
-                                    if (compareVersions(latest, current) > 0
+                                    if (compareVersions(latestVer, current) > 0
                                             && (ignored.isEmpty()
-                                                    || compareVersions(latest, ignored) > 0)) {
+                                                    || compareVersions(latestVer, ignored) > 0)) {
+                                        hasUpdate = true;
                                         showUpdateDialog(MainActivity.this, release);
                                     }
+                                }
+                                // 通知 HomeFragment 更新卡片显隐、版本信息，并传入点击弹窗回调
+                                if (homefragment != null) {
+                                    GitHubRelease finalRelease = release;
+                                    homefragment.setUpdateAvailable(hasUpdate, getCurrentVersionName(), latestVer,
+                                            hasUpdate ? () -> showUpdateDialog(MainActivity.this, finalRelease) : null);
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<GitHubRelease> call, Throwable t) {
-                                // 静默失败
+                                // 网络失败时隐藏更新卡片
+                                if (homefragment != null) {
+                                    homefragment.setUpdateAvailable(false, "", "", null);
+                                }
                             }
                         });
     }

@@ -18,9 +18,11 @@
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/update_card"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 app:strokeWidth="0dp"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/md_theme_primary"
                 app:cardCornerRadius="25dp">
 
@@ -55,12 +57,13 @@
                             android:text="发现新版本" />
 
                         <TextView
+                            android:id="@+id/update_version_text"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
                             android:gravity="center"
                             android:fontFamily="sans-serif-thin"
                             android:textColor="?attr/colorOnPrimary"
-                            android:text="1.91 -> 1.78" />
+                            android:text="" />
 
                     </LinearLayout>
 
