@@ -43,6 +43,7 @@
         android:background="?attr/colorOutline" />
 
     <LinearLayout
+        android:id="@+id/button_container"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="vertical"

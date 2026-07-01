@@ -12,6 +12,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
+            android:id="@+id/card_container"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:padding="16dp"

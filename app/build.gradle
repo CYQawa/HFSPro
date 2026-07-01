@@ -11,8 +11,8 @@ android {
         applicationId 'com.cyq.awa.hfspro'
         minSdk 21
         targetSdk 34
-        versionCode 16
-        versionName "1.8.5"//1.8.5.1  --16，测试一定要记得改回来
+        versionCode 17
+        versionName "1.8.5.2"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }

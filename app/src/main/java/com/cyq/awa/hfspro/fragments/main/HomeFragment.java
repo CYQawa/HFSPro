@@ -1,5 +1,6 @@
 package com.cyq.awa.hfspro.fragments.main;
 
+import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -91,6 +93,12 @@ public class HomeFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     MaterialCardView exam = view.findViewById(R.id.exam);
     MaterialCardView lastexam = view.findViewById(R.id.lastExam);
+
+    // 卡片容器添加 LayoutTransition，update_card 显隐时有动画
+    LinearLayout cardContainer = view.findViewById(R.id.card_container);
+    LayoutTransition transition = new LayoutTransition();
+    transition.setDuration(400);
+    cardContainer.setLayoutTransition(transition);
 
     // 根据更新状态控制卡片显隐和点击
     updateCardUi();
