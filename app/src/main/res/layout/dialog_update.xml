@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:id="@+id/dialog_title"
+        android:text="发现新版本" />
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="?attr/colorOutline" />
+
+    <ScrollView
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:maxHeight="400dp">
+
+        <TextView
+            android:id="@+id/dialog_body"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:textColor="?attr/colorOnSurface" />
+
+    </ScrollView>
+
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="?attr/colorOutline" />
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="12dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_download"
+            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:text="前往下载更新" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_later"
+            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="稍后" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_ignore"
+            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="4dp"
+            android:text="忽略本次更新" />
+
+    </LinearLayout>
+
+</LinearLayout>

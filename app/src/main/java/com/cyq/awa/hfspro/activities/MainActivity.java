@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -22,6 +25,8 @@ import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.network.GsonModel.GitHubRelease;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -189,41 +194,60 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showUpdateDialog(Context context, GitHubRelease release) {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setTitle("发现新版本 " + release.getTagName())
-                .setMessage(release.getBody())
-                .setPositiveButton(
-                        "前往下载更新",
-                        (dialog, which) -> {
-                            // 原有下载逻辑
-                            String apkUrl = null;
-                            for (GitHubRelease.Asset asset : release.getAssets()) {
-                                if (asset.getName().endsWith(".apk")) {
-                                    apkUrl = asset.getDownloadUrl();
-                                    break;
-                                }
-                            }
-                            if (apkUrl != null) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkUrl));
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(context, "未找到 APK 下载链接", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                .setNegativeButton("稍后", null)
-                .setNeutralButton(
-                        "忽略本次更新",
-                        (dialog, which) -> {
-                            
-                            prefs.edit()
-                                    .putString(KEY_IGNORED_VERSION, release.getTagName())
-                                    .apply();
-                            Toast.makeText(
-                                            context,
-                                            "已忽略版本 " + release.getTagName(),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
-                        })
-                .show();
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View sheetView = LayoutInflater.from(this).inflate(R.layout.dialog_update, null);
+        dialog.setContentView(sheetView);
+
+        // 圆角背景
+        View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        if (bottomSheet != null) {
+            bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
+        }
+
+        // 设置标题与内容
+        TextView titleView = sheetView.findViewById(R.id.dialog_title);
+        titleView.setText("发现新版本 " + release.getTagName());
+
+        TextView bodyView = sheetView.findViewById(R.id.dialog_body);
+        bodyView.setText(release.getBody() != null ? release.getBody() : "暂无更新说明");
+
+        // 前往下载更新
+        MaterialButton btnDownload = sheetView.findViewById(R.id.btn_download);
+        btnDownload.setOnClickListener(v -> {
+            String apkUrl = null;
+            for (GitHubRelease.Asset asset : release.getAssets()) {
+                if (asset.getName().endsWith(".apk")) {
+                    apkUrl = asset.getDownloadUrl();
+                    break;
+                }
+            }
+            if (apkUrl != null) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(apkUrl));
+                startActivity(intent);
+            } else {
+                Toast.makeText(context, "未找到 APK 下载链接", Toast.LENGTH_SHORT).show();
+            }
+            dialog.dismiss();
+        });
+
+        // 稍后
+        MaterialButton btnLater = sheetView.findViewById(R.id.btn_later);
+        btnLater.setOnClickListener(v -> dialog.dismiss());
+
+        // 忽略本次更新
+        MaterialButton btnIgnore = sheetView.findViewById(R.id.btn_ignore);
+        btnIgnore.setOnClickListener(v -> {
+            prefs.edit()
+                    .putString(KEY_IGNORED_VERSION, release.getTagName())
+                    .apply();
+            Toast.makeText(context, "已忽略版本 " + release.getTagName(), Toast.LENGTH_SHORT).show();
+            // 忽略后隐藏更新卡片
+            if (homefragment != null) {
+                homefragment.setUpdateAvailable(false, "", "", null);
+            }
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }
