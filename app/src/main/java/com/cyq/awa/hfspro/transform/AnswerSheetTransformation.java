@@ -16,6 +16,7 @@ public class AnswerSheetTransformation extends BitmapTransformation {
     private final Paint subjectiveBoxPaint;
     private final Paint textPaint;          // 普通文本画笔（主观题得分）
     private final Paint largeTextPaint;      // 大号文本画笔（总体情况）
+    private final Paint answerPaint;        // 错误题答案提示画笔
 
     public AnswerSheetTransformation(List<MarkInfo> marks) {
         this.marks = marks;
@@ -47,6 +48,14 @@ public class AnswerSheetTransformation extends BitmapTransformation {
         largeTextPaint.setTextSize(80f);
         largeTextPaint.setAntiAlias(true);
         largeTextPaint.setTextAlign(Paint.Align.LEFT);
+
+        // 错误题答案提示画笔——红色加粗，大小适中
+        answerPaint = new Paint();
+        answerPaint.setColor(Color.RED);
+        answerPaint.setTextSize(50f);
+        answerPaint.setAntiAlias(true);
+        answerPaint.setTextAlign(Paint.Align.LEFT);
+        answerPaint.setFakeBoldText(true);
     }
 
     @Override
@@ -73,6 +82,11 @@ public class AnswerSheetTransformation extends BitmapTransformation {
                     paint = textPaint;
                 }
                 canvas.drawText(content, mark.getX(), mark.getY(), paint);
+            } else if (type == 3) { // 客观题错误答案提示（红色加粗字母）
+                String content = mark.getContent();
+                if (content != null && !content.isEmpty()) {
+                    canvas.drawText(content, mark.getX(), mark.getY(), answerPaint);
+                }
             }
         }
         return result;

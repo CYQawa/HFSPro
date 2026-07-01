@@ -178,6 +178,7 @@ public class AnswerActivity extends AppCompatActivity {
             if (type == 2) { // 客观题
                 List<AnswerOptionItem> options = q.getAnswerOption();
                 if (options != null) {
+                    boolean answerShown = false; // 每道题只显示一次正确答案
                     for (AnswerOptionItem opt : options) {
                         int idx = opt.getIndex();
                         if (idx >= 0 && idx < sheetCount) {
@@ -188,6 +189,18 @@ public class AnswerActivity extends AppCompatActivity {
                                     Float.parseFloat(opt.getH()),
                                     opt.getRight(),
                                     opt.getOption()));
+
+                            // 如果该选项错误且还未显示过答案，在框右侧用粗体显示正确答案
+                            if (!answerShown && opt.getRight() == 0) {
+                                answerShown = true;
+                                String correctAnswer = q.getAnswer();
+                                if (correctAnswer != null && !correctAnswer.isEmpty()) {
+                                    float textX = Float.parseFloat(opt.getX()) + Float.parseFloat(opt.getW()) + 8;
+                                    float textY = Float.parseFloat(opt.getY()) + Float.parseFloat(opt.getH()) / 2 + 20;
+                                    marksPerSheet.get(idx).add(new MarkInfo(
+                                            textX, textY, 0, 0, 0, null, 3, correctAnswer));
+                                }
+                            }
                         }
                     }
                 }
