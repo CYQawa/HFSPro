@@ -49,9 +49,17 @@
         android:layout_marginTop="12dp">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_direct_link"
+            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:text="直链下载"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_download"
             android:layout_height="48dp"
             android:layout_width="match_parent"
+            android:layout_marginTop="8dp"
             android:text="前往下载更新" />
 
         <com.google.android.material.button.MaterialButton
@@ -59,6 +67,8 @@
             android:layout_height="48dp"
             android:layout_width="match_parent"
             android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="?attr/colorPrimary"
             android:text="稍后" />
 
         <com.google.android.material.button.MaterialButton
@@ -66,6 +76,8 @@
             android:layout_height="48dp"
             android:layout_width="match_parent"
             android:layout_marginTop="4dp"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="?attr/colorPrimary"
             android:text="忽略本次更新" />
 
     </LinearLayout>
