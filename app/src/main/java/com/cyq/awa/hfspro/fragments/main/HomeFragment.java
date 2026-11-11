@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.ExamActivity;
-import com.cyq.awa.hfspro.activities.LastExamActivity;
+import com.cyq.awa.hfspro.activities.RankListActivity;
 import com.cyq.awa.hfspro.adapter.ExamListAdapter;
 import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment {
         });
     lastexam.setOnClickListener(
         v -> {
-          Intent intent = new Intent(requireContext(), LastExamActivity.class);
+          Intent intent = new Intent(requireContext(), RankListActivity.class);
           requireContext().startActivity(intent);
         });
   }

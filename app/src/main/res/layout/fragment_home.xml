@@ -164,7 +164,7 @@
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:fontFamily="sans-serif-thin"
-                            android:text="支持查看最近5天考试的详细排名 >" />
+                            android:text="支持查看最近7天考试的详细排名 >" />
 
                     </LinearLayout>
 

@@ -3,17 +3,20 @@ package com.cyq.awa.hfspro.tools.MyDatabases;
 import com.cyq.awa.hfspro.App;
 import com.cyq.awa.hfspro.tools.MyDatabases.Daos.*;
 import com.cyq.awa.hfspro.tools.MyModel;
+import com.cyq.awa.hfspro.tools.RankSnapshot;
 import java.util.List;
 
 public class DatabaseManager {
   private static DatabaseManager instance;
   private final TokenDao tokenDao;
   private final ExamDao examDao;
+  private final RankDao rankDao;
 
   private DatabaseManager() {
     DatabaseHelper dbHelper = App.getDatabaseHelper();
     this.tokenDao = new TokenDao(dbHelper);
     this.examDao = new ExamDao(dbHelper);
+    this.rankDao = new RankDao(dbHelper);
   }
 
   /** 获取单例 */
@@ -70,5 +73,22 @@ public class DatabaseManager {
   public void clearAllExams() {
       //，清除全部考试记录
     examDao.clearAllExams();
+  }
+
+  /** 最近考试排名快照 */
+  public void saveRankSnapshot(RankSnapshot snapshot) {
+    rankDao.save(snapshot);
+  }
+
+  public List<RankSnapshot> getAllRankSnapshots() {
+    return rankDao.getAll();
+  }
+
+  public RankSnapshot getRankSnapshot(long examId) {
+    return rankDao.getById(examId);
+  }
+
+  public void deleteRankSnapshot(long examId) {
+    rankDao.deleteById(examId);
   }
 }

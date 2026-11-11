@@ -7,7 +7,7 @@ import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "HFSPro.db";
-  private static final int DATABASE_VERSION = 2;  // 升级至2，新增exam表
+  private static final int DATABASE_VERSION = 3;  // 3: 新增 last_exam_rank 排名快照表
 
   // user表
   public static final String TABLE_USER = "user";
@@ -29,6 +29,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
           COLUMN_EXAM_TIME + " INTEGER" +
       ");";
 
+  // 最近考试排名快照表（字段常量统一定义在 Daos 中，避免多处维护）
+  private static final String CREATE_TABLE_RANK =
+      "CREATE TABLE IF NOT EXISTS " + Daos.TABLE_RANK + " (" +
+          Daos.COLUMN_RANK_EXAM_ID + " INTEGER PRIMARY KEY, " +
+          Daos.COLUMN_RANK_NAME + " TEXT, " +
+          Daos.COLUMN_RANK_TIME + " INTEGER, " +
+          Daos.COLUMN_RANK_SCORE + " REAL, " +
+          Daos.COLUMN_RANK_MANFEN + " REAL, " +
+          Daos.COLUMN_RANK_CLASS_RANK + " INTEGER, " +
+          Daos.COLUMN_RANK_CLASS_NUM + " INTEGER, " +
+          Daos.COLUMN_RANK_GRADE_RANK + " INTEGER, " +
+          Daos.COLUMN_RANK_GRADE_NUM + " INTEGER, " +
+          Daos.COLUMN_RANK_CLASS_RATIO + " REAL, " +
+          Daos.COLUMN_RANK_GRADE_RATIO + " REAL, " +
+          Daos.COLUMN_RANK_SCORE_RAISE + " REAL, " +
+          Daos.COLUMN_RANK_RANK_RAISE + " INTEGER, " +
+          Daos.COLUMN_RANK_SIMPLE_LOST + " REAL, " +
+          Daos.COLUMN_RANK_MIDDLE_LOST + " REAL, " +
+          Daos.COLUMN_RANK_HARD_LOST + " REAL, " +
+          Daos.COLUMN_RANK_WORST + " TEXT, " +
+          Daos.COLUMN_RANK_PAPERS + " TEXT, " +
+          Daos.COLUMN_RANK_SAVED_AT + " INTEGER" +
+      ");";
+
   public DatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
@@ -37,6 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     db.execSQL(CREATE_TABLE_USER);
     db.execSQL(CREATE_TABLE_EXAM);  // 创建新表
+    db.execSQL(CREATE_TABLE_RANK);
   }
 
   @Override
@@ -44,6 +69,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 从版本1升级到版本2：新增exam表
     if (oldVersion < 2) {
       db.execSQL(CREATE_TABLE_EXAM);
+    }
+    // 版本3：新增最近考试排名快照表
+    if (oldVersion < 3) {
+      db.execSQL(CREATE_TABLE_RANK);
     }
     // 后续版本升级可继续添加 else if 分支
   }
