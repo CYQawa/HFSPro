@@ -79,6 +79,21 @@ public class MainActivity extends AppCompatActivity {
         fragmentContainerView = findViewById(R.id.fragment_container);
         BottomNavigationView bottomNavigationView = findViewById(R.id.main_nav_view);
 
+        // 底部导航栏以 layout_gravity="bottom" 覆盖在内容容器之上，小屏设备（如手表 DPI）上
+        // 页面内容一长，最后一段就会被导航栏挡住、滚到底也露不出来。
+        // 给容器补上与导航栏等高的底部内边距，使内容区正好止于导航栏上沿。
+        bottomNavigationView.addOnLayoutChangeListener(
+                (view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                    int navHeight = bottom - top;
+                    if (navHeight > 0 && fragmentContainerView != null) {
+                        fragmentContainerView.setPadding(
+                                fragmentContainerView.getPaddingLeft(),
+                                fragmentContainerView.getPaddingTop(),
+                                fragmentContainerView.getPaddingRight(),
+                                navHeight);
+                    }
+                });
+
         fragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
