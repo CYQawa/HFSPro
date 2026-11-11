@@ -1,12 +1,16 @@
 package com.cyq.awa.hfspro.activities;
 
 import android.animation.LayoutTransition;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,6 +62,8 @@ public class ExamActivity extends AppCompatActivity {
   private MyExamListItem exam;
   private AAChartView aaChartView;
   private AAChartView aaChartView2;
+  private AAChartModel pieChartModel;
+  private AAOptions radarChartOptions;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -218,6 +224,7 @@ public class ExamActivity extends AppCompatActivity {
 
                 // 绘制图表
                 aaChartView.aa_drawChartWithChartModel(aaChartModel);
+                pieChartModel = aaChartModel;
 
                 String[] categories = new String[paperGson.size()];
                 Object[] percentData = new Object[paperGson.size()];
@@ -227,7 +234,8 @@ public class ExamActivity extends AppCompatActivity {
                   double score = paper.getScore();
                   double fullScore = paper.getManfen(); // 假设方法名为 getManfen()，请根据实际类调整
                   double percent = (fullScore > 0) ? (score / fullScore) * 100 : 0;
-                  percentData[i] = percent;
+                  // 百分比带小数时四舍五入取整，避免图上出现 91.00000000000001% 这类数值
+                  percentData[i] = Math.round(percent);
                 }
 
                 // 创建雷达图模型
@@ -293,6 +301,10 @@ public class ExamActivity extends AppCompatActivity {
                 params2.height = heightPx2;
                 aaChartView2.setLayoutParams(params2);
 
+                // 保存配置供全屏放大复用，并绑定点击
+                radarChartOptions = aaOptions;
+                bindChartClickListeners();
+
                 DialogHelp.dismiss();
               } else {
                 DialogHelp.dismiss();
@@ -353,6 +365,52 @@ public class ExamActivity extends AppCompatActivity {
   // dp 转像素工具方法
   private float dpToPx(Context context, float dp) {
     return dp * context.getResources().getDisplayMetrics().density;
+  }
+
+  /** 图表外层透明覆盖层接收点击（WebView 自身会消费点击事件，直接给 AAChartView 设监听不可靠）。 */
+  private void bindChartClickListeners() {
+    View pieClick = findViewById(R.id.AAChartView_click);
+    if (pieClick != null) {
+      pieClick.setOnClickListener(v -> showFullscreenChart(false));
+    }
+    View radarClick = findViewById(R.id.AAChartView2_click);
+    if (radarClick != null) {
+      radarClick.setOnClickListener(v -> showFullscreenChart(true));
+    }
+  }
+
+  /** 全屏放大查看图表：复用已构建好的图表配置，在新的 AAChartView 上重绘一次。 */
+  private void showFullscreenChart(boolean radar) {
+    AAChartModel model = pieChartModel;
+    AAOptions options = radarChartOptions;
+    if (radar ? options == null : model == null) {
+      return;
+    }
+
+    Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+    View content = LayoutInflater.from(this).inflate(R.layout.dialog_chart_fullscreen, null);
+    dialog.setContentView(content);
+
+    Window window = dialog.getWindow();
+    if (window != null) {
+      window.setLayout(
+          WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+    }
+
+    View close = content.findViewById(R.id.close_chart);
+    if (close != null) {
+      close.setOnClickListener(v -> dialog.dismiss());
+    }
+
+    dialog.show();
+
+    // show() 之后再绘制，确保 WebView 已经附着到窗口上
+    AAChartView chart = content.findViewById(R.id.fullscreen_chart);
+    if (radar) {
+      chart.aa_drawChartWithChartOptions(options);
+    } else {
+      chart.aa_drawChartWithChartModel(model);
+    }
   }
 
   private void showDialog(String title, String message) {

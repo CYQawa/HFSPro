@@ -143,17 +143,45 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+            <!-- 饼图：外层 FrameLayout + 透明点击层，WebView 自身会消费点击事件 -->
+            <FrameLayout
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
-                 android:layout_marginTop="10dp"
-                 android:id="@+id/AAChartView" />
+                 android:layout_marginTop="10dp">
 
-            <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+                 <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+                     android:layout_height="wrap_content"
+                     android:layout_width="match_parent"
+                     android:id="@+id/AAChartView" />
+
+                 <View
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:id="@+id/AAChartView_click"
+                     android:clickable="true"
+                     android:focusable="false"
+                     android:contentDescription="点击放大图表" />
+            </FrameLayout>
+
+            <!-- 雷达图：同上 -->
+            <FrameLayout
                  android:layout_height="wrap_content"
                  android:layout_width="match_parent"
-                 android:layout_marginTop="10dp"
-                 android:id="@+id/AAChartView2" />
+                 android:layout_marginTop="10dp">
+
+                 <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+                     android:layout_height="wrap_content"
+                     android:layout_width="match_parent"
+                     android:id="@+id/AAChartView2" />
+
+                 <View
+                     android:layout_height="match_parent"
+                     android:layout_width="match_parent"
+                     android:id="@+id/AAChartView2_click"
+                     android:clickable="true"
+                     android:focusable="false"
+                     android:contentDescription="点击放大图表" />
+            </FrameLayout>
 
         </LinearLayout>
 
