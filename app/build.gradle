@@ -29,7 +29,9 @@ android {
 
 dependencies {
     implementation 'io.noties.markwon:core:4.6.2'
-    implementation 'com.github.AAChartModel:AAChartCore:-SNAPSHOT'
+    // 原先用动态快照 -SNAPSHOT，JitPack 每次需现场重建并鉴权（常返回 401），
+    // 导致 CI 无法解析依赖；改为已发布的固定 tag 版本，构建可复现。
+    implementation 'com.github.AAChartModel:AAChartCore:7.3.0'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.github.bumptech.glide:glide:4.16.0'

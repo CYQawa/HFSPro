@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import com.cyq.awa.hfspro.tools.DialogHelp;
+import com.cyq.awa.hfspro.tools.ScoreFormat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,6 +18,7 @@ import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
+import com.cyq.awa.hfspro.tools.network.NetworkErrors;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -33,6 +36,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LastExamActivity extends AppCompatActivity {
+
+  private static final String TAG = "LastExamActivity";
   private RetrofitTools.ApiService apiService;
   private View contentContainer;
   private View errorContainer;
@@ -98,7 +103,7 @@ public class LastExamActivity extends AppCompatActivity {
               if (apiResponse != null && apiResponse.isSuccess()) {
                 LastExamData data = apiResponse.getData();
                 if (data != null) {
-                  int examId = data.getExamId();
+                  long examId = data.getExamId();
                   String worstSubject = data.getWorstSubjectText();
                   double scoreRaise = data.getScoreRaise();
                   int rankRaise = data.getRankRaise();
@@ -169,10 +174,13 @@ public class LastExamActivity extends AppCompatActivity {
                             Call<ApiResponse<ExamOverviewData>> call2,
                             Response<ApiResponse<ExamOverviewData>> response) {
                           ApiResponse<ExamOverviewData> body = response.body();
-                          if (response.isSuccessful() && body != null && body.isSuccess()) {
+                          if (response.isSuccessful()
+                              && body != null
+                              && body.isSuccess()
+                              && body.getData() != null) {
                             ExamOverviewData data = body.getData();
-                            scoretext.setText("" + data.getScore());
-                            manfent.setText("/" + data.getManfen());
+                            scoretext.setText(ScoreFormat.format(data.getScore()));
+                            manfent.setText("/" + ScoreFormat.format(data.getManfen()));
                             nametext.setText(data.getName());
 
                             // 环形进度
@@ -189,8 +197,10 @@ public class LastExamActivity extends AppCompatActivity {
                                 new GridLayoutManager(LastExamActivity.this, 3);
                             paperRecyclerView.setLayoutManager(layoutManager);
                             List<MyPaperOverview> dataList = new ArrayList<>();
-                            for (PaperOverview e : data.getPapers()) {
-                              dataList.add(new MyPaperOverview(e));
+                            if (data.getPapers() != null) {
+                              for (PaperOverview e : data.getPapers()) {
+                                if (e != null) dataList.add(new MyPaperOverview(e));
+                              }
                             }
                             PaperGridAdapter adapter = new PaperGridAdapter(dataList);
                             adapter.setOnItemClickListener(
@@ -206,12 +216,16 @@ public class LastExamActivity extends AppCompatActivity {
                             DialogHelp.dismiss();
                           } else {
                             DialogHelp.dismiss();
-                            showDialog(
-                                "请求失败",
-                                String.format(
-                                    "请求失败: %s\ncode: %d",
-                                    body != null ? body.getMsg() : "",
-                                    body != null ? body.getCode() : -1));
+                            if (body != null && body.isSuccess()) {
+                              showDialog("请求失败", "数据异常：考试详情为空");
+                            } else {
+                              showDialog(
+                                  "请求失败",
+                                  String.format(
+                                      "请求失败: %s\ncode: %d",
+                                      body != null ? body.getMsg() : "",
+                                      body != null ? body.getCode() : -1));
+                            }
                           }
                         }
 
@@ -219,7 +233,8 @@ public class LastExamActivity extends AppCompatActivity {
                         public void onFailure(
                             Call<ApiResponse<ExamOverviewData>> call2, Throwable t) {
                           DialogHelp.dismiss();
-                          showDialog("请求失败", "网络请求失败！");
+                          Log.e(TAG, "获取最近考试详情失败", t);
+                          showDialog("请求失败", NetworkErrors.describe(t));
                         }
                       });
                 }
@@ -236,7 +251,8 @@ public class LastExamActivity extends AppCompatActivity {
           @Override
           public void onFailure(Call<ApiResponse<LastExamData>> call, Throwable t) {
             DialogHelp.dismiss();
-            showDialog("请求失败", "网络请求失败！");
+            Log.e(TAG, "获取最近考试概览失败", t);
+            showDialog("请求失败", NetworkErrors.describe(t));
           }
         });
 

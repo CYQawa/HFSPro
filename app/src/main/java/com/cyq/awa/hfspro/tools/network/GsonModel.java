@@ -38,8 +38,9 @@ public class GsonModel {
 
     public static class LastExamData {
 
+        // 与其他接口的 examId 保持一致，避免超过 int 范围时溢出
         @SerializedName("examId")
-        private int examId;
+        private long examId;
 
         @SerializedName("subjectNumber")
         private int subjectNumber;
@@ -74,7 +75,7 @@ private double scoreRaise;
         @SerializedName("rankRaise")
         private int rankRaise;
 
-        public int getExamId() {
+        public long getExamId() {
             return examId;
         }
 
@@ -179,8 +180,9 @@ public double getHardQuestionLostScores() { return hardQuestionLostScores; }
         @SerializedName("time")
         private String time; // 原为 Long，改为 String 以匹配日期字符串
 
+        // 满分可能带小数（如 749.96），必须用 double；int 会让整个响应解析失败
         @SerializedName("manfen")
-        private int manfen;
+        private double manfen;
 
         @SerializedName("papers")
         private List<PaperOverview> papers;
@@ -201,15 +203,16 @@ public double getHardQuestionLostScores() { return hardQuestionLostScores; }
         }
 
         public long getTimeInMillis() {
+            if (time == null || time.trim().isEmpty()) return 0L;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                 return sdf.parse(time).getTime();
             } catch (ParseException e) {
-                return 0;
+                return 0L;
             }
         }
 
-        public int getManfen() {
+        public double getManfen() {
             return manfen;
         }
 
@@ -469,8 +472,9 @@ public double getHardQuestionLostScores() { return hardQuestionLostScores; }
         @SerializedName("answer")
         private String answer; // 正确答案
 
+        // 折算比例可能是小数（如 0.8/1.5），用 double 避免解析失败
         @SerializedName("trasRatio")
-        private int trasRatio; // 折算比例
+        private double trasRatio; // 折算比例
 
         @SerializedName("scoreS")
         private String scoreS; // 得分字符串（可能含小数）
@@ -514,7 +518,7 @@ public double getHardQuestionLostScores() { return hardQuestionLostScores; }
             return answer;
         }
 
-        public int getTrasRatio() {
+        public double getTrasRatio() {
             return trasRatio;
         }
 

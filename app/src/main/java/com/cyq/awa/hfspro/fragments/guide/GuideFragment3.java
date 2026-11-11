@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.activities.MainActivity;
 import com.cyq.awa.hfspro.tools.DialogHelp;
+import com.cyq.awa.hfspro.tools.network.NetworkErrors;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.ApiService;
@@ -144,7 +145,7 @@ public class GuideFragment3 extends Fragment {
             if (response.isSuccessful() && response.body() != null) {
               ApiResponse<LoginData> loginResponse = response.body();
 
-              if (loginResponse.isSuccess()) {
+              if (loginResponse.isSuccess() && loginResponse.getData() != null) {
                 // 登陆成功
                 String token = loginResponse.getData().getToken();
 
@@ -156,6 +157,10 @@ public class GuideFragment3 extends Fragment {
                 // 显示成功消息并跳转
                 showToast("登录成功");
                 navigateToMainActivity();
+              } else if (loginResponse.isSuccess()) {
+                // code=0 但 data 为空
+                DialogHelp.dismiss();
+                showDialog("登陆失败", "数据异常：登录响应为空");
               } else {
                 // 业务逻辑错误
                 DialogHelp.dismiss();
@@ -172,8 +177,8 @@ public class GuideFragment3 extends Fragment {
 
           @Override
           public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
-              DialogHelp.dismiss();
-            showDialog("登陆失败", "网络请求失败！");
+            DialogHelp.dismiss();
+            showDialog("登陆失败", NetworkErrors.describe(t));
           }
         });
   }

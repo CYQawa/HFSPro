@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.adapter.PaperGridAdapter;
 import com.cyq.awa.hfspro.tools.DialogHelp;
+import com.cyq.awa.hfspro.tools.ScoreFormat;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
+import com.cyq.awa.hfspro.tools.network.NetworkErrors;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartModel;
 import com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView;
@@ -49,6 +52,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ExamActivity extends AppCompatActivity {
+
+  private static final String TAG = "ExamActivity";
   private RetrofitTools.ApiService apiService;
   private MyExamListItem exam;
   private AAChartView aaChartView;
@@ -95,14 +100,14 @@ public class ExamActivity extends AppCompatActivity {
               Call<ApiResponse<ExamOverviewData>> call,
               Response<ApiResponse<ExamOverviewData>> response) {
             ApiResponse<ExamOverviewData> body = response.body();
-            if (response.isSuccessful() && response.body() != null) {
+            if (response.isSuccessful() && body != null) {
               ExamOverviewData data = body.getData();
-              if (body.isSuccess()) {
+              if (body.isSuccess() && data != null) {
                 MyExamListItem newMyexamlist =
                     new MyExamListItem(exam.getExamId(), data.getName(), data.getTimeInMillis());
                 dbm.insertOrUpdateExam(newMyexamlist);
-                scoretext.setText("" + data.getScore());
-                manfent.setText("/" + data.getManfen());
+                scoretext.setText(ScoreFormat.format(data.getScore()));
+                manfent.setText("/" + ScoreFormat.format(data.getManfen()));
                 tooltitle.setTitle(data.getName());
 
                 Integer rankinfo = data.getCurGradeRank();
@@ -121,7 +126,7 @@ public class ExamActivity extends AppCompatActivity {
 
                 try {
                   double score = data.getScore();
-                  int manfen = data.getManfen();
+                  double manfen = data.getManfen();
 
                   if (manfen > 0) {
                     int progress = (int) Math.round((score / manfen) * 100);
@@ -140,10 +145,11 @@ public class ExamActivity extends AppCompatActivity {
 
                 List<MyPaperOverview> dataList = new ArrayList<>();
                 List<PaperOverview> paperGson = data.getPapers();
+                if (paperGson == null) paperGson = new ArrayList<>();
 
                 for (int i = 0; i < paperGson.size(); i++) {
                   PaperOverview e = paperGson.get(i);
-                  dataList.add(new MyPaperOverview(e));
+                  if (e != null) dataList.add(new MyPaperOverview(e));
                 }
 
                 PaperGridAdapter adapter = new PaperGridAdapter(dataList);
@@ -289,9 +295,15 @@ public class ExamActivity extends AppCompatActivity {
 
                 DialogHelp.dismiss();
               } else {
-                String errorMsg = body.getMsg();
                 DialogHelp.dismiss();
-                showDialog("请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, body.getCode()));
+                if (body.isSuccess()) {
+                  // code=0 但 data 为空，属于服务端数据异常
+                  showDialog("请求失败", "数据异常：考试详情为空");
+                } else {
+                  showDialog(
+                      "请求失败",
+                      String.format("请求失败: %s\ncode: %d", body.getMsg(), body.getCode()));
+                }
               }
             } else {
               // HTTP错误（如404, 500等）
@@ -303,7 +315,8 @@ public class ExamActivity extends AppCompatActivity {
           @Override
           public void onFailure(Call<ApiResponse<ExamOverviewData>> call, Throwable t) {
             DialogHelp.dismiss();
-            showDialog("请求失败", "网络请求失败！");
+            Log.e(TAG, "获取考试概览失败", t);
+            showDialog("请求失败", NetworkErrors.describe(t));
           }
         });
 

@@ -188,7 +188,7 @@ public class RetrofitTools {
             new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(LenientGson.get()))
                 .build();
       }
       return retrofit;
@@ -204,7 +204,7 @@ public class RetrofitTools {
           new Retrofit.Builder()
               .baseUrl("https://api.github.com/")
               .client(getSafeOkHttpClient()) // 可复用 client，但不需要 token 拦截器
-              .addConverterFactory(GsonConverterFactory.create())
+              .addConverterFactory(GsonConverterFactory.create(LenientGson.get()))
               .build();
       return gitHubRetrofit.create(ApiService.class);
     }

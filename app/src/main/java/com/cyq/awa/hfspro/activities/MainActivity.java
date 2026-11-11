@@ -183,18 +183,40 @@ public class MainActivity extends AppCompatActivity {
 
     public static int compareVersions(String v1, String v2) {
 
-        String[] parts1 = v1.split("\\.");
-        String[] parts2 = v2.split("\\.");
+        String[] parts1 = normalizeVersion(v1).split("\\.");
+        String[] parts2 = normalizeVersion(v2).split("\\.");
 
         int maxLength = Math.max(parts1.length, parts2.length);
         for (int i = 0; i < maxLength; i++) {
-            int num1 = i < parts1.length ? Integer.parseInt(parts1[i]) : 0;
-            int num2 = i < parts2.length ? Integer.parseInt(parts2[i]) : 0;
+            int num1 = i < parts1.length ? parseVersionPart(parts1[i]) : 0;
+            int num2 = i < parts2.length ? parseVersionPart(parts2[i]) : 0;
             if (num1 != num2) {
                 return num1 - num2;
             }
         }
         return 0;
+    }
+
+    /** 去掉 'v'/'V' 前缀与空白，避免 "v1.8.5" 直接 parseInt 崩溃。 */
+    private static String normalizeVersion(String version) {
+        if (version == null) return "0";
+        String text = version.trim();
+        if (text.startsWith("v") || text.startsWith("V")) {
+            text = text.substring(1).trim();
+        }
+        return text.isEmpty() ? "0" : text;
+    }
+
+    /** 只取前导数字（"3-beta" -> 3，"**" -> 0），永不抛异常。 */
+    private static int parseVersionPart(String part) {
+        if (part == null) return 0;
+        String digits = part.replaceAll("[^0-9].*$", "");
+        if (digits.isEmpty()) return 0;
+        try {
+            return Integer.parseInt(digits);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     private void showUpdateDialog(Context context, GitHubRelease release) {

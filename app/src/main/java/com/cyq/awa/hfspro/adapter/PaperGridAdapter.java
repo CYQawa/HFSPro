@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
+import com.cyq.awa.hfspro.tools.ScoreFormat;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.google.android.material.textview.MaterialTextView;
 import java.util.List;
@@ -41,8 +42,8 @@ public class PaperGridAdapter extends RecyclerView.Adapter<PaperGridAdapter.View
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     int status = list.get(position).getWeakAdvantageStatus();
     holder.name.setText(list.get(position).getSubject());
-    holder.score.setText("" + list.get(position).getScore());
-    holder.manfen.setText("/" + list.get(position).getManfen());
+    holder.score.setText(ScoreFormat.format(list.get(position).getScore()));
+    holder.manfen.setText("/" + ScoreFormat.format(list.get(position).getManfen()));
     
     holder.itemView.setOnClickListener(v -> {
         if (listener != null) {

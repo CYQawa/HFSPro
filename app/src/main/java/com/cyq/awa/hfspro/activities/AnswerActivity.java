@@ -22,10 +22,12 @@ import com.bumptech.glide.request.target.Target;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.adapter.ViewPagerAdapter;
 import com.cyq.awa.hfspro.tools.DialogHelp;
+import com.cyq.awa.hfspro.tools.ScoreFormat;
 import com.cyq.awa.hfspro.tools.MyModel.MarkInfo;
 import com.cyq.awa.hfspro.tools.MyModel.MyExamListItem;
 import com.cyq.awa.hfspro.tools.MyModel.MyPaperOverview;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
+import com.cyq.awa.hfspro.tools.network.NetworkErrors;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.cyq.awa.hfspro.transform.AnswerSheetTransformation;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -93,9 +95,9 @@ public class AnswerActivity extends AppCompatActivity {
                                    @NonNull Response<ApiResponse<AnswerPictureData>> response) {
                 if (response.isSuccessful()) {
                     ApiResponse<AnswerPictureData> apiResponse = response.body();
-                    if (apiResponse != null && apiResponse.isSuccess()) {
-                        answerData = apiResponse.getData();
+                    if (apiResponse != null && apiResponse.isSuccess() && apiResponse.getData() != null) {
                         AnswerPictureData data = apiResponse.getData();
+                        answerData = data;
 
                         // 提前构建答题卡标记数据，供后续下载绘制图使用
                         buildMarksPerSheetFromData(data);
@@ -120,6 +122,9 @@ public class AnswerActivity extends AppCompatActivity {
 
                         DialogHelp.dismiss();
                         Snackbar.make(findViewById(R.id.coordinator), "请耐心等待加载", Snackbar.LENGTH_SHORT).show();
+                    } else if (apiResponse != null && apiResponse.isSuccess()) {
+                        DialogHelp.dismiss();
+                        showDialog("请求失败", "数据异常：答题卡数据为空");
                     }
                 } else {
                     showDialog("请求失败", "服务器错误: " + response.code());
@@ -129,7 +134,8 @@ public class AnswerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ApiResponse<AnswerPictureData>> call, @NonNull Throwable t) {
-                showDialog("错误", "处理失败");
+                Log.e("AnswerActivity", "获取答题卡失败", t);
+                showDialog("请求失败", NetworkErrors.describe(t));
                 DialogHelp.dismiss();
             }
         });
@@ -304,8 +310,7 @@ public class AnswerActivity extends AppCompatActivity {
     }
 
     private String formatScore(double score) {
-        if (score == (long) score) return String.valueOf((long) score);
-        return String.valueOf(score);
+        return ScoreFormat.format(score);
     }
 
     // ---------- 菜单与下载 ----------

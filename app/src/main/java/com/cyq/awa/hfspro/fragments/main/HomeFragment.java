@@ -28,6 +28,7 @@ import com.cyq.awa.hfspro.tools.DialogHelp;
 import com.cyq.awa.hfspro.tools.MyDatabases.DatabaseManager;
 import com.cyq.awa.hfspro.tools.MyModel.*;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
+import com.cyq.awa.hfspro.tools.network.NetworkErrors;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools;
 import com.cyq.awa.hfspro.tools.network.RetrofitTools.*;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -198,8 +199,12 @@ public class HomeFragment extends Fragment {
 
           @Override
           public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
+            Log.e("HomeFragment", "获取全部考试失败", t);
             if (isAdded()) {
-              Toast.makeText(requireContext(), "获取全部考试失败，请检查网络", Toast.LENGTH_SHORT)
+              Toast.makeText(
+                      requireContext(),
+                      "获取全部考试失败：" + NetworkErrors.describe(t),
+                      Toast.LENGTH_SHORT)
                   .show();
             }
             if (onComplete != null) onComplete.run();
@@ -347,6 +352,7 @@ public class HomeFragment extends Fragment {
 
               @Override
               public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
+                Log.e("HomeFragment", "获取在线考试列表失败", t);
                 if (!isAdded()) return;
                 degradeToLocal(dataList, emptyContainer, emptyText);
               }

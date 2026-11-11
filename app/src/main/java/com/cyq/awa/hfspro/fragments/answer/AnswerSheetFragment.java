@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cyq.awa.hfspro.R;
 import com.cyq.awa.hfspro.adapter.ImageAdapter;
 import com.cyq.awa.hfspro.tools.MyModel.MarkInfo;
+import com.cyq.awa.hfspro.tools.ScoreFormat;
 import com.cyq.awa.hfspro.tools.network.GsonModel.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -267,13 +268,9 @@ public class AnswerSheetFragment extends Fragment {
     }
   }
 
-  //去除末尾多余的 .0
+  // 去除末尾多余的 .0（统一由 ScoreFormat 处理）
   private String formatScore(double score) {
-    if (score == (long) score) {
-      return String.valueOf((long) score);
-    } else {
-      return String.valueOf(score);
-    }
+    return ScoreFormat.format(score);
   }
 
   @Nullable
