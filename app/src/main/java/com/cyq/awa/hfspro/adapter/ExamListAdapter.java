@@ -39,9 +39,15 @@ public class ExamListAdapter extends RecyclerView.Adapter<ExamListAdapter.ViewHo
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    // 毫秒级时间戳转标准时间
-    String time = new SimpleDateFormat("yyyy-MM-dd").format(new Date(list.get(position).getTime()));
-    holder.nametextView.setText(list.get(position).getName());
+    // 毫秒级时间戳转标准时间，缺失时间（0/负数）时给出占位文案，避免显示 1970-01-01
+    long timestamp = list.get(position).getTime();
+    String time =
+        timestamp > 0
+            ? new SimpleDateFormat("yyyy-MM-dd").format(new Date(timestamp))
+            : "时间未知";
+    String name = list.get(position).getName();
+    holder.nametextView.setText(
+        name == null || name.trim().isEmpty() ? "考试 " + list.get(position).getExamId() : name);
     holder.timetextView.setText(time);
     holder.idtextView.setText("examId：" + list.get(position).getExamId());
 

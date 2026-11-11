@@ -88,7 +88,8 @@ public class MyModel {
     public MyExamListItem(long examId, String name, Long time) {
       this.examId = examId;
       this.name = name;
-      this.time = time;
+      // time 允许为 null（例如手动输入 examId 的场景），统一归零，避免 getTime() 拆箱 NPE
+      this.time = (time == null) ? 0L : time;
       is_network = false;
     }
 

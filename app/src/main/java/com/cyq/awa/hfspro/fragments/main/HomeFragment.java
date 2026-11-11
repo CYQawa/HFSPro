@@ -39,7 +39,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -116,7 +118,13 @@ public class HomeFragment extends Fragment {
                     new Handler(Looper.getMainLooper())
                         .post(
                             () -> {
+                              if (!isAdded()) {
+                                DialogHelp.dismiss();
+                                return;
+                              }
                               if (localExams.isEmpty()) {
+                                // 本地没有记录时，先用「全部考试」接口补齐，再展示弹窗；
+                                // 补齐失败也会照常展示弹窗（空态 + 重试），不再直接报错退出。
                                 loadAllExamsSilent(this::showExamListDialog);
                               } else {
                                 showExamListDialog();
@@ -132,51 +140,9 @@ public class HomeFragment extends Fragment {
         });
   }
 
-  private void loadAllExams() {
-    Call<ApiResponse<List<moreExamlist>>> call2 =
-        RetrofitTools.RetrofitClient.getAuthService().getMoreExamList();
-    call2.enqueue(
-        new Callback<ApiResponse<List<moreExamlist>>>() {
-          @Override
-          public void onResponse(
-              Call<ApiResponse<List<moreExamlist>>> call,
-              Response<ApiResponse<List<moreExamlist>>> response) {
-            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-              List<moreExamlist> data = response.body().getData();
-              Set<Long> seenExamIds = new HashSet<>();
-              List<MyExamListItem> distinctExams = new ArrayList<>();
-
-              for (moreExamlist subject : data) {
-                for (moreExamItem exam : subject.getExamList()) {
-                  if (!seenExamIds.contains(exam.getExamId())) {
-                    seenExamIds.add(exam.getExamId());
-                    distinctExams.add(
-                        new MyExamListItem(
-                            exam.getExamId(), exam.getExamName(), exam.getExamTime()));
-                  }
-                }
-              }
-
-              DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
-
-              DialogHelp.dismiss();
-              showDialog("加载全部考试成功", "加载成功，共" + distinctExams.size() + "场考试");
-            } else {
-              String errorMsg = response.body().getMsg();
-              DialogHelp.dismiss();
-              showDialog(
-                  "请求失败", String.format("请求失败: %s\ncode: %d", errorMsg, response.body().getCode()));
-            }
-          }
-
-          @Override
-          public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
-            DialogHelp.dismiss();
-            showDialog("请求失败", "网络请求失败！");
-          }
-        });
-  }
-
+  /**
+   * 通过「全部考试」接口获取考试并写入本地库。 无论成功与否都会执行 onComplete，调用方据此决定如何展示。
+   */
   private void loadAllExamsSilent(Runnable onComplete) {
     Call<ApiResponse<List<moreExamlist>>> call = apiService.getMoreExamList();
     call.enqueue(
@@ -185,149 +151,135 @@ public class HomeFragment extends Fragment {
           public void onResponse(
               Call<ApiResponse<List<moreExamlist>>> call,
               Response<ApiResponse<List<moreExamlist>>> response) {
-            if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-              List<moreExamlist> data = response.body().getData();
-              Set<Long> seenExamIds = new HashSet<>();
-              List<MyExamListItem> distinctExams = new ArrayList<>();
-              for (moreExamlist subject : data) {
-                for (moreExamItem exam : subject.getExamList()) {
-                  if (!seenExamIds.contains(exam.getExamId())) {
-                    seenExamIds.add(exam.getExamId());
+            boolean ok = false;
+            int count = 0;
+            try {
+              ApiResponse<List<moreExamlist>> body = response.body();
+              if (response.isSuccessful()
+                  && body != null
+                  && body.isSuccess()
+                  && body.getData() != null) {
+                Set<Long> seenExamIds = new HashSet<>();
+                List<MyExamListItem> distinctExams = new ArrayList<>();
+                for (moreExamlist subject : body.getData()) {
+                  if (subject == null || subject.getExamList() == null) continue;
+                  for (moreExamItem exam : subject.getExamList()) {
+                    if (exam == null) continue;
+                    long examId;
+                    try {
+                      examId = exam.getExamId();
+                    } catch (NumberFormatException e) {
+                      // examId 是非数字字符串，跳过这一条，避免整批失败
+                      continue;
+                    }
+                    if (seenExamIds.contains(examId)) continue;
+                    seenExamIds.add(examId);
                     distinctExams.add(
-                        new MyExamListItem(
-                            exam.getExamId(), exam.getExamName(), exam.getExamTime()));
+                        new MyExamListItem(examId, exam.getExamName(), exam.getExamTime()));
                   }
                 }
+                DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
+                count = distinctExams.size();
+                ok = true;
               }
-              DatabaseManager.getInstance().insertOrUpdateExams(distinctExams);
-              Toast.makeText(requireContext(), "已获取全部考试", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+              Log.e("HomeFragment", "loadAllExamsSilent failed", e);
             }
-            if (onComplete != null) {
-              onComplete.run();
+
+            if (isAdded()) {
+              Toast.makeText(
+                      requireContext(),
+                      ok ? "已获取全部考试，共" + count + "场" : "获取全部考试失败",
+                      Toast.LENGTH_SHORT)
+                  .show();
             }
+            if (onComplete != null) onComplete.run();
           }
 
           @Override
           public void onFailure(Call<ApiResponse<List<moreExamlist>>> call, Throwable t) {
-            if (onComplete != null) {
-              onComplete.run();
+            if (isAdded()) {
+              Toast.makeText(requireContext(), "获取全部考试失败，请检查网络", Toast.LENGTH_SHORT)
+                  .show();
             }
+            if (onComplete != null) onComplete.run();
           }
         });
   }
 
+  /**
+   * 展示考试列表底部弹窗。
+   *
+   * <p>关键点：弹窗的显示不再依赖 /v3/exam/list 是否成功——先用本地缓存立即渲染并 show，
+   * 在线列表只作为「增量刷新」，失败时静默降级，避免接口返回 code=1（暂无数据）时整个弹窗都不出现。
+   */
   private void showExamListDialog() {
+    if (!isAdded() || getContext() == null) {
+      DialogHelp.dismiss();
+      return;
+    }
     BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
     View sheetView =
         LayoutInflater.from(requireContext()).inflate(R.layout.exam_list_bottom_sheet_dialog, null);
     dialog.setContentView(sheetView);
-
-    List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
 
     View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
     if (bottomSheet != null) {
       bottomSheet.setBackgroundResource(R.drawable.bg_bottom_sheet_rounded_top);
     }
 
-    Call<ApiResponse<ExamListData>> call = apiService.getExamList();
-    call.enqueue(
-        new Callback<ApiResponse<ExamListData>>() {
-          @Override
-          public void onResponse(
-              Call<ApiResponse<ExamListData>> call, Response<ApiResponse<ExamListData>> response) {
-            if (response.isSuccessful() && response.body() != null) {
-              ApiResponse<ExamListData> examlistResponse = response.body();
-              if (examlistResponse.isSuccess()) {
-                List<ExamListItem> listexamtiem = examlistResponse.getData().getList();
-                RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+    RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
+    recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-                List<MyExamListItem> dataList = new ArrayList<>();
-                for (ExamListItem e : listexamtiem) {
-                  dataList.add(new MyExamListItem(e));
-                }
+    View emptyContainer = sheetView.findViewById(R.id.empty_container);
+    TextView emptyText = sheetView.findViewById(R.id.empty_text);
+    View emptyRetry = sheetView.findViewById(R.id.empty_retry);
 
-                Set<Long> networkExamIds = new HashSet<>();
-                for (MyExamListItem item : dataList) {
-                  networkExamIds.add(item.getExamId());
-                }
+    final List<MyExamListItem> dataList = new ArrayList<>();
+    final ExamListAdapter adapter = new ExamListAdapter(requireContext(), dataList);
+    recyclerView.setAdapter(adapter);
 
-                for (MyExamListItem localExam : localExams) {
-                  if (!networkExamIds.contains(localExam.getExamId())) {
-                    dataList.add(localExam);
-                  }
-                }
+    // 1. 先用本地数据立即渲染，保证弹窗一定能出现
+    List<MyExamListItem> localExams = DatabaseManager.getInstance().getAllExams();
+    renderExams(dataList, adapter, emptyContainer, mergeExams(localExams, null));
 
-                ExamListAdapter adapter = new ExamListAdapter(requireContext(), dataList);
-                dataList.sort((o1, o2) -> Long.compare(o2.getTime(), o1.getTime()));
-                recyclerView.setAdapter(adapter);
-
-                dialog.show();
-                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
-                DialogHelp.dismiss();
-              } else {
-                DialogHelp.dismiss();
-                showDialog(
-                    "请求失败",
-                    String.format(
-                        "请求失败: %s\ncode: %d",
-                        examlistResponse.getMsg(), examlistResponse.getCode()));
-              }
-            } else {
-              DialogHelp.dismiss();
-              showDialog("请求失败", "服务器错误: " + response.code());
-            }
-          }
-
-          @Override
-          public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
-            DialogHelp.dismiss();
-            showDialog("请求失败", "网络请求失败！");
-          }
-        });
     ExtendedFloatingActionButton edit = sheetView.findViewById(R.id.edit_fab);
     ExtendedFloatingActionButton load = sheetView.findViewById(R.id.load_fab);
     hide(load, 1);
     hide(edit, 1);
 
-    edit.setOnClickListener(
-        vv -> {
-          View dialogView =
-              LayoutInflater.from(requireContext()).inflate(R.layout.dialog_input, null);
-          TextInputEditText inputEditText = dialogView.findViewById(R.id.token_text);
-          new MaterialAlertDialogBuilder(requireContext())
-              .setTitle("请输入examid")
-              .setMessage("输入examId查看考试，超过120天的也能看。\n请求成功后，会自动记录到本地")
-              .setView(dialogView)
-              .setPositiveButton(
-                  "确定",
-                  (dialog1, which) -> {
-                    String inputText = inputEditText.getText().toString().trim();
-                    if (!inputText.isEmpty()) {
-                      try {
-                        Long id = Long.parseLong(inputText);
-                        MyExamListItem item = new MyExamListItem(id, null, null);
-                        Intent intent = new Intent(requireContext(), ExamActivity.class);
-                        intent.putExtra("myexam", item);
-                        requireContext().startActivity(intent);
-                      } catch (NumberFormatException e) {
-                        new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("提示")
-                            .setMessage("请输入有效的数字ID哦~")
-                            .setPositiveButton("确定", null)
-                            .show();
-                      }
-                    }
-                  })
-              .setNegativeButton("取消", null)
-              .show();
-        });
+    edit.setOnClickListener(vv -> showExamIdInputDialog());
 
     load.setOnClickListener(
-        vvv -> {
-          loadAllExams(); // 保留原带对话框的加载方法
-          dialog.dismiss();
-        });
+        vvv ->
+            loadAllExamsSilent(
+                () -> {
+                  if (!isAdded()) return;
+                  renderExams(
+                      dataList,
+                      adapter,
+                      emptyContainer,
+                      mergeExams(DatabaseManager.getInstance().getAllExams(), null));
+                }));
+
+    if (emptyRetry != null) {
+      emptyRetry.setOnClickListener(
+          v -> {
+            if (emptyText != null) emptyText.setText("正在重新获取考试列表…");
+            if (emptyContainer != null) emptyContainer.setVisibility(View.VISIBLE);
+            loadAllExamsSilent(
+                () -> {
+                  if (!isAdded()) return;
+                  renderExams(
+                      dataList,
+                      adapter,
+                      emptyContainer,
+                      mergeExams(DatabaseManager.getInstance().getAllExams(), null));
+                  fetchOnlineExams(dataList, adapter, emptyContainer, emptyText);
+                });
+          });
+    }
+
     final int[] type = {1}; // 使用数组包装，数组引用是final，但内容可修改
     FloatingActionButton fab = sheetView.findViewById(R.id.floating_button);
 
@@ -347,6 +299,155 @@ public class HomeFragment extends Fragment {
             fab.setImageResource(R.drawable.ic_up);
           }
         });
+
+    // 2. 先显示弹窗，再拉在线列表
+    dialog.show();
+    if (bottomSheet != null) {
+      BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+    DialogHelp.dismiss();
+
+    // 3. 在线列表只做增量刷新，失败静默降级
+    fetchOnlineExams(dataList, adapter, emptyContainer, emptyText);
+  }
+
+  /** 请求 /v3/exam/list：成功则与本地数据合并刷新；失败/无数据只降级提示，绝不阻断弹窗。 */
+  private void fetchOnlineExams(
+      List<MyExamListItem> dataList,
+      ExamListAdapter adapter,
+      View emptyContainer,
+      TextView emptyText) {
+    apiService
+        .getExamList()
+        .enqueue(
+            new Callback<ApiResponse<ExamListData>>() {
+              @Override
+              public void onResponse(
+                  Call<ApiResponse<ExamListData>> call,
+                  Response<ApiResponse<ExamListData>> response) {
+                if (!isAdded()) return;
+                ApiResponse<ExamListData> body = response.body();
+                List<ExamListItem> onlineList = null;
+                if (response.isSuccessful()
+                    && body != null
+                    && body.isSuccess()
+                    && body.getData() != null) {
+                  onlineList = body.getData().getList();
+                }
+                if (onlineList != null && !onlineList.isEmpty()) {
+                  renderExams(
+                      dataList,
+                      adapter,
+                      emptyContainer,
+                      mergeExams(DatabaseManager.getInstance().getAllExams(), onlineList));
+                } else {
+                  degradeToLocal(dataList, emptyContainer, emptyText);
+                }
+              }
+
+              @Override
+              public void onFailure(Call<ApiResponse<ExamListData>> call, Throwable t) {
+                if (!isAdded()) return;
+                degradeToLocal(dataList, emptyContainer, emptyText);
+              }
+            });
+  }
+
+  /** 在线接口不可用时的降级：有本地数据就提示一句，没有就显示空态让用户重试。 */
+  private void degradeToLocal(
+      List<MyExamListItem> dataList, View emptyContainer, TextView emptyText) {
+    if (!isAdded()) return;
+    if (dataList.isEmpty()) {
+      if (emptyContainer != null) emptyContainer.setVisibility(View.VISIBLE);
+      if (emptyText != null) {
+        emptyText.setText("暂无考试数据\n在线列表接口不可用，可点「重试」重新获取");
+      }
+    } else {
+      Toast.makeText(requireContext(), "在线列表接口无数据，已展示本地考试", Toast.LENGTH_SHORT)
+          .show();
+    }
+  }
+
+  /**
+   * 合并本地记录与在线列表：按 examId 去重，在线项覆盖本地项，最后按考试时间倒序。
+   *
+   * <p>这样即使 /v3/exam/list 返回 code=1，已经由「全部考试」接口写入本地的记录也能正常展示。
+   */
+  private List<MyExamListItem> mergeExams(
+      List<MyExamListItem> local, List<ExamListItem> online) {
+    Map<Long, MyExamListItem> merged = new LinkedHashMap<>();
+    if (local != null) {
+      for (MyExamListItem item : local) {
+        if (item == null) continue;
+        merged.put(item.getExamId(), normalizeExam(item));
+      }
+    }
+    if (online != null) {
+      for (ExamListItem item : online) {
+        if (item == null) continue;
+        MyExamListItem examItem = new MyExamListItem(item);
+        if (examItem.getName() == null || examItem.getName().trim().isEmpty()) {
+          examItem =
+              new MyExamListItem(
+                  examItem.getExamId(), "考试 " + examItem.getExamId(), examItem.getTime());
+          examItem.setIs_network(true);
+        }
+        merged.put(examItem.getExamId(), examItem);
+      }
+    }
+    List<MyExamListItem> result = new ArrayList<>(merged.values());
+    result.sort((a, b) -> Long.compare(b.getTime(), a.getTime()));
+    return result;
+  }
+
+  private MyExamListItem normalizeExam(MyExamListItem item) {
+    String name = item.getName();
+    if (name != null && !name.trim().isEmpty()) return item;
+    return new MyExamListItem(item.getExamId(), "考试 " + item.getExamId(), item.getTime());
+  }
+
+  private void renderExams(
+      List<MyExamListItem> dataList,
+      ExamListAdapter adapter,
+      View emptyContainer,
+      List<MyExamListItem> exams) {
+    dataList.clear();
+    dataList.addAll(exams);
+    adapter.notifyDataSetChanged();
+    if (emptyContainer != null) {
+      emptyContainer.setVisibility(dataList.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+  }
+
+  private void showExamIdInputDialog() {
+    View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_input, null);
+    TextInputEditText inputEditText = dialogView.findViewById(R.id.token_text);
+    new MaterialAlertDialogBuilder(requireContext())
+        .setTitle("请输入examid")
+        .setMessage("输入examId查看考试，超过120天的也能看。\n请求成功后，会自动记录到本地")
+        .setView(dialogView)
+        .setPositiveButton(
+            "确定",
+            (dialog1, which) -> {
+              String inputText = inputEditText.getText().toString().trim();
+              if (!inputText.isEmpty()) {
+                try {
+                  Long id = Long.parseLong(inputText);
+                  MyExamListItem item = new MyExamListItem(id, null, null);
+                  Intent intent = new Intent(requireContext(), ExamActivity.class);
+                  intent.putExtra("myexam", item);
+                  requireContext().startActivity(intent);
+                } catch (NumberFormatException e) {
+                  new MaterialAlertDialogBuilder(requireContext())
+                      .setTitle("提示")
+                      .setMessage("请输入有效的数字ID哦~")
+                      .setPositiveButton("确定", null)
+                      .show();
+                }
+              }
+            })
+        .setNegativeButton("取消", null)
+        .show();
   }
 
   private void showDialog(String title, String message) {
